@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-accent="rose">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="theme-color" content="#121020" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BUDDY" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <meta name="description" content="BUDDY – Your private space for real, meaningful conversations." />
+  <title>BUDDY – Private Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=155" />
+  <script>
+    (function () {
+      try {
+        var isIos = /iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+        var isStandalone = window.navigator.standalone === true ||
+          (window.matchMedia && (window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches));
+        if (isStandalone) {
+          document.documentElement.classList.add('is-standalone');
+          if (isIos) {
+            document.documentElement.classList.add('is-ios-standalone');
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+
+<body>
+
+  <div id="auth-screen" class="screen">
+    <div class="auth-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+
+    <!-- 1. LOGIN VIEW -->
+    <div id="login-view" class="auth-view">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="logo-bubble">
+            <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2C8.27 2 2 8.27 2 16c0 2.56.67 4.97 1.84 7.07L2 30l7.18-1.82A14 14 0 1016 2z"
+                fill="url(#g1)" />
+              <defs>
+                <linearGradient id="g1" x1="2" y1="2" x2="30" y2="30">
+                  <stop stop-color="#fff" stop-opacity=".9" />
+                  <stop offset="1" stop-color="#fff" stop-opacity=".5" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="logo-wordmark">BUDDY</span>
+        </div>
+        <h1 class="auth-heading">Welcome to BUDDY</h1>
+        <p class="auth-sub">Your private verified space</p>
+
+        <!-- SOCIAL AUTH BUTTONS (APPLE ID & GOOGLE) -->
+        <div class="social-auth-grid">
+          <!-- APPLE SIGN IN BUTTON -->
+          <button type="button" class="social-auth-btn btn-apple" id="apple-login-btn">
+            <svg width="18" height="18" viewBox="0 0 170 170" fill="currentColor">
+              <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.58-7.7-11.63-13.99-5.22-8.05-9.33-17.13-12.33-27.24-3-10.11-4.51-19.98-4.51-29.62 0-13.68 3.55-25.21 10.65-34.6 7.1-9.39 16.03-14.19 26.8-14.39 4.9 0 10.42 1.3 16.55 3.91 6.13 2.61 10.11 3.96 11.94 4.07 1.83-.11 6.02-1.52 12.57-4.24 6.55-2.72 12.18-3.96 16.89-3.74 12.77.65 22.84 5.37 30.21 14.17-11.08 6.74-16.51 16.05-16.3 27.93.22 9.56 3.88 17.65 10.98 24.28 7.1 6.63 15.42 10.43 24.96 11.41-2.18 6.74-4.89 13.69-8.13 20.85zM119.22 31.84c0-7.39 2.66-14.28 7.99-20.67 5.32-6.39 11.83-10.37 19.52-11.94.33 1.3.49 2.5.49 3.59 0 7.39-2.77 14.39-8.32 20.99-5.54 6.61-12.23 10.65-20.06 12.12-.22-1.41-.33-2.78-.33-4.09z"/>
+            </svg>
+            <span>Continue with Apple</span>
+          </button>
+
+          <!-- GOOGLE SIGN IN BUTTON -->
+          <button type="button" class="social-auth-btn btn-google" id="google-login-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#FBBC05"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+              <path fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+            </svg>
+            <span>Continue with Google</span>
+          </button>
+        </div>
+
+        <div class="auth-divider"><span>or sign in with</span></div>
+
+        <!-- AUTH TABS (Email vs Phone) -->
+
+
+        <!-- EMAIL LOGIN FORM -->
+        <form id="login-form" class="auth-form" novalidate>
+          <div class="field-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" />
+          </div>
+          <div class="field-group">
+            <label for="login-password">Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="login-password" placeholder="Your password" autocomplete="current-password" />
+              <button type="button" class="eye-btn" data-for="login-password" aria-label="Show password">
+                <svg class="eye-open" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <svg class="eye-closed" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" style="display:none">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <button type="button" class="forgot-link" id="forgot-btn">Forgot password?</button>
+          <button type="submit" class="btn-primary" id="login-submit-btn">Sign In</button>
+        </form>
+
+        <!-- PHONE LOGIN FORM (HIDDEN INITIALLY) -->
+
+
+        <p class="auth-toggle-text">Don't have an account? <button type="button" id="go-signup-btn">Sign Up</button></p>
+      </div>
+    </div>
+
+    <!-- 2. SIGNUP VIEW (VERIFIED REGISTRATION) -->
+    <div id="signup-view" class="auth-view hidden">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="logo-bubble">
+            <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2C8.27 2 2 8.27 2 16c0 2.56.67 4.97 1.84 7.07L2 30l7.18-1.82A14 14 0 1016 2z"
+                fill="url(#g2)" />
+              <defs>
+                <linearGradient id="g2" x1="2" y1="2" x2="30" y2="30">
+                  <stop stop-color="#fff" stop-opacity=".9" />
+                  <stop offset="1" stop-color="#fff" stop-opacity=".5" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="logo-wordmark">BUDDY</span>
+        </div>
+        <h1 class="auth-heading">Create Account</h1>
+        <p class="auth-sub">Verified 1-to-1 private chatting</p>
+
+        <!-- SOCIAL SIGNUP BUTTONS (APPLE ID & GOOGLE) -->
+        <div class="social-auth-grid">
+          <button type="button" class="social-auth-btn btn-apple" id="apple-signup-btn">
+            <svg width="18" height="18" viewBox="0 0 170 170" fill="currentColor">
+              <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.58-7.7-11.63-13.99-5.22-8.05-9.33-17.13-12.33-27.24-3-10.11-4.51-19.98-4.51-29.62 0-13.68 3.55-25.21 10.65-34.6 7.1-9.39 16.03-14.19 26.8-14.39 4.9 0 10.42 1.3 16.55 3.91 6.13 2.61 10.11 3.96 11.94 4.07 1.83-.11 6.02-1.52 12.57-4.24 6.55-2.72 12.18-3.96 16.89-3.74 12.77.65 22.84 5.37 30.21 14.17-11.08 6.74-16.51 16.05-16.3 27.93.22 9.56 3.88 17.65 10.98 24.28 7.1 6.63 15.42 10.43 24.96 11.41-2.18 6.74-4.89 13.69-8.13 20.85zM119.22 31.84c0-7.39 2.66-14.28 7.99-20.67 5.32-6.39 11.83-10.37 19.52-11.94.33 1.3.49 2.5.49 3.59 0 7.39-2.77 14.39-8.32 20.99-5.54 6.61-12.23 10.65-20.06 12.12-.22-1.41-.33-2.78-.33-4.09z"/>
+            </svg>
+            <span>Sign up with Apple</span>
+          </button>
+          <button type="button" class="social-auth-btn btn-google" id="google-signup-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#FBBC05"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+              <path fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+            </svg>
+            <span>Sign up with Google</span>
+          </button>
+        </div>
+
+        <div class="auth-divider"><span>or register with email</span></div>
+
+        <form id="signup-form" class="auth-form" novalidate>
+          <div class="field-group">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" placeholder="Your name" autocomplete="name" required />
+          </div>
+          <div class="field-group">
+            <label for="signup-username">Unique Username (Friends will search this)</label>
+            <input type="text" id="signup-username" placeholder="@yourname" required />
+          </div>
+          <div class="field-group">
+            <label for="signup-email">Email Address (e.g. you@gmail.com)</label>
+            <input type="email" id="signup-email" placeholder="you@gmail.com" autocomplete="email" required />
+          </div>
+          <div class="field-group">
+            <label for="signup-password">Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="signup-password" placeholder="Min. 6 characters" autocomplete="new-password"
+                required />
+              <button type="button" class="eye-btn" data-for="signup-password" aria-label="Show password">
+                <svg class="eye-open" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <svg class="eye-closed" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" style="display:none">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" id="signup-submit-btn">Create & Verify</button>
+        </form>
+        <p class="auth-toggle-text">Already verified? <button type="button" id="go-login-btn">Log In</button></p>
+      </div>
+    </div>
+
+    <!-- 3. OTP VERIFICATION VIEW -->
+    <div id="otp-view" class="auth-view hidden">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="logo-bubble">
+            <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2C8.27 2 2 8.27 2 16c0 2.56.67 4.97 1.84 7.07L2 30l7.18-1.82A14 14 0 1016 2z"
+                fill="url(#gOtp)" />
+              <defs>
+                <linearGradient id="gOtp" x1="2" y1="2" x2="30" y2="30">
+                  <stop stop-color="#fff" stop-opacity=".9" />
+                  <stop offset="1" stop-color="#fff" stop-opacity=".5" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="logo-wordmark">BUDDY</span>
+        </div>
+        <h1 class="auth-heading">Verify Code</h1>
+        <p class="auth-sub" id="otp-target-label">Enter the 6-digit code sent to your email/phone</p>
+
+        <form id="otp-form" class="auth-form" novalidate>
+          <div class="field-group">
+            <label for="otp-code-input">6-Digit Verification Code</label>
+            <input type="text" id="otp-code-input" class="otp-input-field" placeholder="123456" maxlength="6"
+              autocomplete="one-time-code" required />
+          </div>
+          <button type="submit" class="btn-primary" id="verify-submit-btn">Verify & Enter BUDDY</button>
+        </form>
+        <p class="auth-toggle-text"><button type="button" id="otp-back-btn">← Back to Login</button></p>
+      </div>
+    </div>
+
+    <!-- 4. FORGOT PASSWORD VIEW -->
+    <div id="forgot-view" class="auth-view hidden">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="logo-bubble">
+            <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2C8.27 2 2 8.27 2 16c0 2.56.67 4.97 1.84 7.07L2 30l7.18-1.82A14 14 0 1016 2z"
+                fill="url(#g3)" />
+              <defs>
+                <linearGradient id="g3" x1="2" y1="2" x2="30" y2="30">
+                  <stop stop-color="#fff" stop-opacity=".9" />
+                  <stop offset="1" stop-color="#fff" stop-opacity=".5" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="logo-wordmark">BUDDY</span>
+        </div>
+        <h1 class="auth-heading">Reset Password</h1>
+        <p class="auth-sub">Enter your email to receive a reset link</p>
+        <form id="forgot-form" class="auth-form" novalidate>
+          <div class="field-group">
+            <label for="forgot-email">Email</label>
+            <input type="email" id="forgot-email" placeholder="you@example.com" autocomplete="email" />
+          </div>
+          <button type="submit" class="btn-primary">Send Reset Link</button>
+        </form>
+        <p class="auth-toggle-text"><button type="button" id="back-login-btn">← Back to Login</button></p>
+      </div>
+    </div>
+  </div><!-- /auth-screen -->
+
+
+  <!-- APP SCREEN -->
+  <div id="app-screen" class="screen hidden">
+    <!-- Ambient Aurora Glow & Floating Sparkles -->
+    <div class="ambient-mesh" aria-hidden="true">
+      <div class="ambient-orb ambient-orb-1"></div>
+      <div class="ambient-orb ambient-orb-2"></div>
+      <div class="ambient-orb ambient-orb-3"></div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <header class="sidebar-header">
+        <div class="app-logo">
+          <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+            <path d="M16 2C8.27 2 2 8.27 2 16c0 2.56.67 4.97 1.84 7.07L2 30l7.18-1.82A14 14 0 1016 2z"
+              fill="url(#gSide)" />
+            <defs>
+              <linearGradient id="gSide" x1="2" y1="2" x2="30" y2="30">
+                <stop stop-color="#6366F1" />
+                <stop offset="1" stop-color="#8B5CF6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <span>BUDDY</span>
+        </div>
+        <div class="sidebar-actions">
+          <button class="icon-btn" id="mobile-connect-btn" title="Open on Mobile (Android & iPhone)" aria-label="Open on Mobile">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="2" width="14" height="20" rx="3" ry="3"/>
+              <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/>
+            </svg>
+          </button>
+          <button class="icon-btn" id="theme-toggle-btn" title="Toggle theme" aria-label="Toggle theme">
+            <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+            </svg>
+          </button>
+          <button class="icon-btn new-chat-fab" id="new-chat-btn" title="New Chat" aria-label="New chat">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </button>
+          <button class="user-avatar-btn" id="profile-open-btn" aria-label="Profile">
+            <span id="sidebar-user-initials">U</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="sidebar-search">
+        <div class="search-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" id="chat-search-input" placeholder="Search conversations…" aria-label="Search chats" />
+        </div>
+      </div>
+
+      <!-- Segmented Navigation (Chats vs Games) -->
+      <div class="sidebar-nav-tabs">
+        <button type="button" class="sidebar-tab-btn active" id="tab-chats-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Chats</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" id="tab-games-btn">
+          <span style="font-size:15px;">🎮</span>
+          <span>Games</span>
+          <span class="tab-badge-new">NEW</span>
+        </button>
+      </div>
+
+      <!-- Chats List View -->
+      <div class="chat-list" id="chat-list" role="list"></div>
+
+      <!-- Games Library / Hub View -->
+      <div class="games-hub-view hidden" id="games-hub-view">
+        <div class="games-hub-header">
+          <div class="games-hub-title">BUDDY Games 🎮</div>
+          <div class="games-hub-subtitle">Fun interactive friendship games & quizzes</div>
+        </div>
+
+        <div class="games-list-grid">
+          <!-- Game 1: Don't Block Me 💗 -->
+          <div class="game-hub-card active-game-card" id="card-game-dont-block-me">
+            <div class="game-hub-card-art">
+              <span class="game-hub-mascot">☁️💗</span>
+              <span class="game-hub-tag popular">🔥 Trending</span>
+            </div>
+            <div class="game-hub-card-info">
+              <h3 class="game-hub-name">Don't Block Me 💗</h3>
+              <p class="game-hub-desc">Find out which friends really know you! Create a 10-question quiz & share it.</p>
+              <div class="game-hub-meta">
+                <span>👥 2+ Friends</span> • <span>🌸 10 Questions</span> • <span>🏆 Live Scores</span>
+              </div>
+            </div>
+            <button type="button" class="game-hub-play-btn" id="btn-launch-dbm">
+              Play Game ➔
+            </button>
+          </div>
+
+          <!-- Game 2: Couple Match 💑 (Coming Soon) -->
+          <div class="game-hub-card disabled-game-card">
+            <div class="game-hub-card-art" style="background: linear-gradient(135deg, #f472b6, #fb7185);">
+              <span class="game-hub-mascot">💑✨</span>
+              <span class="game-hub-tag">🔒 Coming Soon</span>
+            </div>
+            <div class="game-hub-card-info">
+              <h3 class="game-hub-name">Couple Match 💑</h3>
+              <p class="game-hub-desc">Test romantic & bestie compatibility with cute trivia!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CHAT AREA -->
+    <main class="chat-area" id="chat-area">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-visual">
+          <svg width="70" height="70" viewBox="0 0 32 32" fill="none">
+            <path d="M16 2C8.27 2 2 8.27 2 16c0 2.56.67 4.97 1.84 7.07L2 30l7.18-1.82A14 14 0 1016 2z"
+              fill="url(#gEmp)" />
+            <defs>
+              <linearGradient id="gEmp" x1="2" y1="2" x2="30" y2="30">
+                <stop stop-color="#6366F1" />
+                <stop offset="1" stop-color="#8B5CF6" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h2>Your private space</h2>
+        <p>Select a person to start chatting.</p>
+        <button class="btn-primary" id="empty-start-chat-btn" style="margin-top:16px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Start a Chat
+        </button>
+      </div>
+
+      <div class="active-chat hidden" id="active-chat">
+        <!-- CHAT WALLPAPER BACKDROP -->
+        <div class="chat-wallpaper-backdrop" id="chat-wallpaper-backdrop">
+          <div class="chat-wallpaper-img" id="chat-wallpaper-img"></div>
+          <div class="chat-wallpaper-dim" id="chat-wallpaper-dim"></div>
+        </div>
+
+        <header class="chat-header">
+          <button class="back-btn" id="back-btn" aria-label="Back">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <div class="chat-peer-info" id="chat-peer-info-click">
+            <div class="chat-peer-avatar" id="chat-peer-avatar">A</div>
+            <div>
+              <div class="chat-peer-name-wrap">
+                <div class="chat-peer-name" id="chat-peer-name">Name</div>
+                <span class="pinned-indicator hidden" id="chat-pinned-tag" title="Pinned chat">📌</span>
+              </div>
+              <div class="chat-peer-status" id="chat-peer-status">Online</div>
+            </div>
+          </div>
+          <div class="chat-header-actions">
+            <button class="icon-btn love-buzz-header-btn" id="love-buzz-btn" title="Send Love Buzz 💖"
+              aria-label="Send Love Buzz">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#FF2E7E" stroke="none">
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </button>
+            <button class="icon-btn" id="call-audio-btn" title="Audio Call" aria-label="Audio Call">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+              </svg>
+            </button>
+            <button class="icon-btn" id="call-video-btn" title="Video Call" aria-label="Video Call">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="23 7 16 12 23 17 23 7" />
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+              </svg>
+            </button>
+            <button class="icon-btn" id="chat-info-btn" title="Conversation Details" aria-label="Chat Details">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
+            </button>
+            <div style="position:relative">
+              <button class="icon-btn" id="chat-more-btn" aria-label="More options">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="5" r="1.2" fill="currentColor" />
+                  <circle cx="12" cy="12" r="1.2" fill="currentColor" />
+                  <circle cx="12" cy="19" r="1.2" fill="currentColor" />
+                </svg>
+              </button>
+              <div class="more-drop hidden" id="chat-more-drop">
+                <button class="more-drop-item" id="view-profile-item">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="7" r="4" />
+                    <path d="M5.5 21a8.5 8.5 0 0 1 13 0" />
+                  </svg>
+                  <span>Contact details</span>
+                </button>
+                <button class="more-drop-item" id="toggle-pin-item">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="17" x2="12" y2="22" />
+                    <path d="M5 17h14l-2-7V4H7v6l-2 7z" />
+                  </svg>
+                  <span>Pin / Unpin chat</span>
+                </button>
+                <button class="more-drop-item" id="change-wallpaper-item">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                  <span>Chat Wallpaper & Theme</span>
+                </button>
+                <div class="more-drop-divider"></div>
+                <button class="more-drop-item danger-item" id="clear-chat-item">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14H6L5 6" />
+                    <path d="M10 11v6" />
+                    <path d="M14 11v6" />
+                  </svg>
+                  <span>Clear chat</span>
+                </button>
+                <button class="more-drop-item danger-item" id="remove-friend-item">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="8.5" cy="7" r="4" />
+                    <line x1="18" y1="8" x2="23" y2="13" />
+                    <line x1="23" y1="8" x2="18" y2="13" />
+                  </svg>
+                  <span>Remove friend</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="messages-area" id="messages-area" role="log" aria-live="polite"></div>
+
+        <footer class="composer">
+          <div class="attach-menu hidden" id="attach-menu">
+            <button class="attach-opt" id="attach-photo-btn">
+              <span class="attach-opt-icon photo-opt-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+              </span>
+              <span>Photo</span>
+            </button>
+            <button class="attach-opt" id="attach-video-btn">
+              <span class="attach-opt-icon video-opt-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="23 7 16 12 23 17 23 7" />
+                  <rect x="1" y="5" width="15" height="14" rx="2" />
+                </svg>
+              </span>
+              <span>Video</span>
+            </button>
+          </div>
+          <input type="file" id="photo-file-input" accept="image/*" style="display:none" />
+          <input type="file" id="video-file-input" accept="video/*" style="display:none" />
+
+          <!-- VOICE RECORDING BAR -->
+          <div class="voice-record-bar hidden" id="voice-record-bar">
+            <div class="rec-dot-pulse"></div>
+            <span class="rec-timer" id="rec-timer">0:00</span>
+            <div class="rec-waves">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <button class="rec-cancel-btn" id="rec-cancel-btn" title="Cancel recording">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+              </svg>
+            </button>
+            <button class="rec-send-btn" id="rec-send-btn" title="Send voice note">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- EMOJI PICKER POPOVER -->
+
+          <div class="emoji-picker-popover hidden" id="emoji-picker-popover">
+            <div class="emoji-picker-tabs">
+              <button class="emoji-tab active" data-cat="love">❤️ Love</button>
+              <button class="emoji-tab" data-cat="smileys">😊 Smiles</button>
+              <button class="emoji-tab" data-cat="gestures">🙌 Hands</button>
+              <button class="emoji-tab" data-cat="vibe">✨ Vibe</button>
+            </div>
+            <div class="emoji-grid" id="emoji-grid"></div>
+          </div>
+
+          <div class="composer-row">
+            <button class="composer-icon-btn" id="attach-toggle-btn" title="Attach Media" aria-label="Attachment">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+            </button>
+
+            <button class="composer-icon-btn" id="emoji-toggle-btn" title="Emojis" aria-label="Emoji Picker">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                <line x1="9" y1="9" x2="9.01" y2="9" />
+                <line x1="15" y1="9" x2="15.01" y2="9" />
+              </svg>
+            </button>
+
+            <div class="msg-input-wrap">
+              <input type="text" id="message-input" placeholder="Message..." autocomplete="off" maxlength="2000"
+                aria-label="Message" />
+            </div>
+
+            <!-- VOICE NOTE MIC BUTTON -->
+            <button class="composer-icon-btn" id="mic-btn" title="Record Voice Note" aria-label="Voice Note">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+                <path d="M19 10v2a7 7 0 01-14 0v-2" />
+                <line x1="12" y1="19" x2="12" y2="23" />
+                <line x1="8" y1="23" x2="16" y2="23" />
+              </svg>
+            </button>
+
+            <!-- QUICK HEART (shown when input is empty) -->
+            <button type="button" class="composer-icon-btn heart-quick-btn" id="quick-heart-btn" title="Send Love"
+              aria-label="Send Heart">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#F43F5E" stroke="#F43F5E" stroke-width="1.5">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+              </svg>
+            </button>
+
+            <!-- SEND ARROW (shown when text is entered) -->
+            <button type="button" class="send-btn" id="send-btn" title="Send message" aria-label="Send">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+            </button>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div><!-- /app-screen -->
+
+
+  <!-- NEW CHAT MODAL -->
+  <div class="modal-overlay hidden" id="new-chat-overlay">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <h2>New Chat</h2>
+        <button class="modal-x-btn" id="close-new-chat-btn" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-search-wrap">
+        <div class="search-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" id="new-chat-search-input" placeholder="Search people…" aria-label="Search users" />
+        </div>
+      </div>
+      <div class="modal-list" id="user-list-container"></div>
+    </div>
+  </div>
+
+
+  <!-- PROFILE MODAL -->
+  <div class="modal-overlay hidden" id="profile-overlay">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <h2>Profile</h2>
+        <button class="modal-x-btn" id="close-profile-btn" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="profile-body">
+        <div class="profile-big-avatar" id="profile-big-avatar">U</div>
+        <div class="profile-details">
+          <div class="profile-full-name" id="profile-full-name">User Name</div>
+          <div class="profile-uname" id="profile-uname">@username</div>
+          <div class="profile-email-text" id="profile-email-text">user@example.com</div>
+        </div>
+
+        <div class="profile-section-title">Avatar Color Preset</div>
+        <div class="avatar-palette" id="avatar-presets">
+          <button class="avatar-swatch active" data-color="#6366F1"
+            style="background: linear-gradient(135deg, #6366F1, #8B5CF6);"></button>
+          <button class="avatar-swatch" data-color="#F43F5E"
+            style="background: linear-gradient(135deg, #F43F5E, #FB7185);"></button>
+          <button class="avatar-swatch" data-color="#8B5CF6"
+            style="background: linear-gradient(135deg, #8B5CF6, #C084FC);"></button>
+          <button class="avatar-swatch" data-color="#0284C7"
+            style="background: linear-gradient(135deg, #0284C7, #38BDF8);"></button>
+          <button class="avatar-swatch" data-color="#F97316"
+            style="background: linear-gradient(135deg, #F97316, #FB923C);"></button>
+          <button class="avatar-swatch" data-color="#10B981"
+            style="background: linear-gradient(135deg, #10B981, #34D399);"></button>
+        </div>
+
+        <div class="profile-section-title">My Bio & Mood</div>
+        <div class="field-group" style="margin-bottom:10px;">
+          <input type="text" id="profile-bio-input" placeholder="Set a bio (e.g. In my own little world ✨)" />
+        </div>
+        <div class="mood-chips" id="mood-chips">
+          <button class="mood-chip active" data-mood="✨ Available">✨ Available</button>
+          <button class="mood-chip" data-mood="❤️ Missing you">❤️ Missing you</button>
+          <button class="mood-chip" data-mood="😴 Sleeping">😴 Sleeping</button>
+          <button class="mood-chip" data-mood="💼 Busy">💼 Busy</button>
+        </div>
+
+        <button class="btn-primary" id="save-profile-btn" style="width:100%; margin-top:8px;">Save Profile</button>
+        <div class="profile-sep"></div>
+
+        <div class="profile-row">
+          <span class="profile-row-label">App Appearance</span>
+          <button class="theme-toggle-pill" id="profile-theme-btn">
+            <span id="profile-theme-label">Dark</span>
+          </button>
+        </div>
+
+        <div class="profile-section-title" style="margin-top:16px;">Couple Love Theme</div>
+        <div class="chat-accent-swatches" id="profile-accent-swatches">
+          <button class="accent-dot active" data-accent="rose" style="background:#F43F5E;"
+            title="Romantic Rose (Default)"></button>
+          <button class="accent-dot" data-accent="velvet" style="background:#E11D48;" title="Passion Velvet"></button>
+          <button class="accent-dot" data-accent="violet" style="background:#8B5CF6;" title="Sweet Lavender"></button>
+          <button class="accent-dot" data-accent="sunset" style="background:#F97316;" title="Sunset Amber"></button>
+          <button class="accent-dot" data-accent="ocean" style="background:#0284C7;" title="Ocean Hug"></button>
+          <button class="accent-dot" data-accent="emerald" style="background:#10B981;" title="Emerald Love"></button>
+        </div>
+
+        <div class="custom-color-row"
+          style="display:flex; align-items:center; justify-content:space-between; margin-top:10px; padding:10px 14px; background:var(--bg-input); border-radius:14px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:18px;">🎨</span>
+            <div>
+              <div style="font-size:13px; font-weight:700; color:var(--text);">Custom Couple Color</div>
+              <div style="font-size:11px; color:var(--text-3);">Pick your favorite shared color</div>
+            </div>
+          </div>
+          <input type="color" id="profile-custom-color" value="#F43F5E"
+            style="width:34px; height:34px; border:none; border-radius:50%; cursor:pointer; background:transparent;"
+            title="Pick custom color" />
+        </div>
+        <div class="profile-sep"></div>
+
+        <button class="btn-logout" id="logout-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Log Out
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONVERSATION DETAILS / INFO MODAL -->
+  <div class="modal-overlay hidden" id="chat-info-overlay">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <h2>Conversation Details</h2>
+        <button class="modal-x-btn" id="close-info-btn" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="profile-body">
+        <div class="profile-big-avatar" id="info-peer-avatar">A</div>
+        <div class="profile-details">
+          <div class="profile-full-name" id="info-peer-name">Aarav Shah</div>
+          <div class="profile-uname" id="info-peer-uname">@aarav</div>
+          <div class="profile-email-text" id="info-peer-status-text">Active now</div>
+        </div>
+
+        <div class="profile-section-title">Sweet Touch: Nickname</div>
+        <div class="nickname-form">
+          <input type="text" id="info-nickname-input" placeholder="e.g. My Love ❤️, Bestie 🌟" />
+          <button class="btn-secondary" id="save-nickname-btn">Set</button>
+        </div>
+
+        <div class="profile-row" style="margin-top:14px;">
+          <div>
+            <div class="profile-row-label">Pin this Chat 📌</div>
+            <div style="font-size:12px; color:var(--text-3);">Keep pinned to the top of list</div>
+          </div>
+          <input type="checkbox" id="pin-chat-toggle" class="custom-toggle" />
+        </div>
+
+        <div class="profile-section-title" style="margin-top:16px;">Chat Accent Theme</div>
+        <div class="chat-accent-swatches" id="chat-accent-swatches">
+          <button class="accent-dot active" data-accent="rose" style="background:#F43F5E;"
+            title="Romantic Rose"></button>
+          <button class="accent-dot" data-accent="velvet" style="background:#E11D48;" title="Passion Velvet"></button>
+          <button class="accent-dot" data-accent="violet" style="background:#8B5CF6;" title="Sweet Lavender"></button>
+          <button class="accent-dot" data-accent="sunset" style="background:#F97316;" title="Sunset Amber"></button>
+          <button class="accent-dot" data-accent="ocean" style="background:#0284C7;" title="Ocean Hug"></button>
+          <button class="accent-dot" data-accent="emerald" style="background:#10B981;" title="Emerald Love"></button>
+        </div>
+
+        <div class="custom-color-row"
+          style="display:flex; align-items:center; justify-content:space-between; margin-top:10px; padding:10px 14px; background:var(--bg-input); border-radius:14px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:18px;">🎨</span>
+            <div>
+              <div style="font-size:13px; font-weight:700; color:var(--text);">Custom Chat Color</div>
+              <div style="font-size:11px; color:var(--text-3);">Choose any color for this chat</div>
+            </div>
+          </div>
+          <input type="color" id="chat-custom-color" value="#F43F5E"
+            style="width:34px; height:34px; border:none; border-radius:50%; cursor:pointer; background:transparent;"
+            title="Pick custom color" />
+        </div>
+
+        <button class="btn-secondary" id="modal-wallpaper-btn" style="width:100%; margin-top:12px; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <span style="font-size:16px;">🖼️</span>
+          <span>Change Chat Wallpaper & Theme</span>
+        </button>
+
+        <div class="profile-sep"></div>
+
+        <button class="btn-secondary danger-text" id="modal-clear-chat-btn" style="width:100%; margin-bottom:10px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+          </svg>
+          Clear Chat History
+        </button>
+        <button class="btn-secondary danger-text" id="modal-remove-friend-btn"
+          style="width:100%; margin-bottom:10px; color:#EF4444; border-color:rgba(239,68,68,0.25);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="8.5" cy="7" r="4" />
+            <line x1="18" y1="8" x2="23" y2="13" />
+            <line x1="23" y1="8" x2="18" y2="13" />
+          </svg>
+          Remove Friend
+        </button>
+        <button class="btn-secondary" id="block-user-btn" style="width:100%;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+          </svg>
+          <span id="block-btn-text">Block Contact</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALL MODAL (TRUE WEBRTC AUDIO & VIDEO CALLING WITH AI FACE TRACKING) -->
+  <div class="modal-overlay hidden" id="call-overlay">
+    <!-- VOICE CALL CARD -->
+    <audio id="webrtc-remote-audio" autoplay playsinline webkit-playsinline style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;"></audio>
+    <div class="call-card" id="call-audio-card">
+      <div class="call-type-badge" id="call-type-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+        </svg>
+        <span id="call-type-label">BUDDY Voice Call</span>
+      </div>
+
+      <div class="call-avatar-wrap">
+        <div class="call-ring r1"></div>
+        <div class="call-ring r2"></div>
+        <div class="call-ring r3"></div>
+        <div class="call-avatar" id="call-peer-avatar">A</div>
+      </div>
+
+      <div class="call-peer-name" id="call-peer-name">Friend</div>
+      <div class="call-status-timer" id="call-status-timer">Ringing...</div>
+
+      <!-- ACTIVE CALL ACTIONS -->
+      <div class="call-actions" id="call-active-actions">
+        <button class="call-btn-circle" id="call-mute-btn" title="Mute Microphone">
+          <svg class="mic-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+            <path d="M19 10v2a7 7 0 01-14 0v-2" />
+            <line x1="12" y1="19" x2="12" y2="23" />
+            <line x1="8" y1="23" x2="16" y2="23" />
+          </svg>
+        </button>
+        <button class="call-btn-circle" id="call-speaker-btn" title="Speaker">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
+          </svg>
+        </button>
+        <button class="call-btn-circle call-end-btn" id="call-hangup-btn" title="End Call">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- INCOMING CALL ACTIONS -->
+      <div class="call-actions hidden" id="call-incoming-actions" style="gap:24px;">
+        <button class="call-btn-circle call-accept-btn" id="call-accept-btn" title="Accept Call" style="background:#10B981; color:#fff; width:56px; height:56px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+          </svg>
+        </button>
+        <button class="call-btn-circle call-end-btn" id="call-decline-btn" title="Decline Call" style="width:56px; height:56px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- PERMISSION ASSISTANT CARD (HIDDEN) -->
+    <div class="call-card call-permission-card hidden" id="call-permission-card" style="display: none !important;">
+      <div class="call-perm-icon" id="call-perm-icon">🎙️</div>
+      <div class="call-peer-name" id="call-perm-title">Allow Camera & Microphone</div>
+      <p class="call-perm-desc" id="call-perm-desc">
+        BUDDY needs camera & microphone access to connect this call.
+      </p>
+
+      <div class="call-perm-actions">
+        <button type="button" class="btn-perm-grant" id="btn-perm-grant">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span id="btn-perm-grant-text">Allow & Start Call</span>
+        </button>
+
+        <button type="button" class="btn-perm-audio-fallback hidden" id="btn-perm-audio-only">
+          <span>📞 Switch to Audio-Only Call</span>
+        </button>
+
+        <button type="button" class="btn-perm-cancel" id="btn-perm-cancel">
+          Cancel Call
+        </button>
+      </div>
+
+      <!-- Quick Helper Tips For Devices -->
+      <div class="call-perm-guide" id="call-perm-guide">
+        <div class="perm-guide-item" id="guide-perm-text">
+          💡 Tap <b>"Allow"</b> in the browser prompt. Once allowed, calls will connect automatically without asking again.
+        </div>
+      </div>
+    </div>
+
+    <!-- FULL 2-WAY VIDEO CALL ROOM -->
+    <div class="video-room-wrap hidden" id="video-room-wrap">
+      <!-- Remote Video Feed -->
+      <video id="webrtc-remote-video" class="remote-video-feed" autoplay playsinline webkit-playsinline muted></video>
+
+      <!-- Remote Video Connecting Placeholder -->
+      <div class="remote-video-placeholder" id="remote-video-placeholder">
+        <div class="call-avatar-wrap">
+          <div class="call-ring r1"></div>
+          <div class="call-ring r2"></div>
+          <div class="call-ring r3"></div>
+          <div class="call-avatar" id="video-remote-avatar">F</div>
+        </div>
+        <div class="call-peer-name" id="video-remote-name" style="margin-top:14px; color:#fff;">Connecting Video...</div>
+      </div>
+
+      <!-- Top Overlay Bar -->
+      <div class="video-top-bar">
+        <div class="video-peer-info">
+          <div class="video-dot-live"></div>
+          <span id="video-name-display">Friend</span>
+          <span id="video-timer-display" style="opacity:0.75; font-size:11px; margin-left:4px;">00:00</span>
+        </div>
+        <button type="button" class="video-top-btn" id="call-flip-cam-btn" title="Flip Camera (Mobile Front/Back)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Draggable / Corner Tap Local PiP Preview with Live AR Emoji Preview -->
+      <div class="local-video-pip" id="local-video-pip" title="Tap to switch corner">
+        <video id="webrtc-local-video" class="local-video-feed" autoplay playsinline webkit-playsinline muted></video>
+        <canvas id="webrtc-filter-canvas" style="display:none;"></canvas>
+        <div class="pip-label" id="pip-track-status">You</div>
+      </div>
+
+      <!-- Snapchat Style AR Filters & Emojis Bar -->
+      <div class="snap-filters-bar hidden" id="snap-filters-bar">
+        <div class="filter-item active" data-filter="none">
+          <div class="filter-circle">🚫</div>
+          <span>None</span>
+        </div>
+        <div class="filter-item" data-filter="laugh">
+          <div class="filter-circle">😂</div>
+          <span>Laugh</span>
+        </div>
+        <div class="filter-item" data-filter="shades">
+          <div class="filter-circle">😎</div>
+          <span>Cool</span>
+        </div>
+        <div class="filter-item" data-filter="puppy">
+          <div class="filter-circle">🐶</div>
+          <span>Puppy</span>
+        </div>
+        <div class="filter-item" data-filter="crown">
+          <div class="filter-circle">👑</div>
+          <span>Crown</span>
+        </div>
+        <div class="filter-item" data-filter="hearts">
+          <div class="filter-circle">💖</div>
+          <span>Hearts</span>
+        </div>
+        <div class="filter-item" data-filter="party">
+          <div class="filter-circle">🥳</div>
+          <span>Party</span>
+        </div>
+        <div class="filter-item" data-filter="angel">
+          <div class="filter-circle">😇</div>
+          <span>Angel</span>
+        </div>
+        <div class="filter-item" data-filter="devil">
+          <div class="filter-circle">😈</div>
+          <span>Devil</span>
+        </div>
+        <div class="filter-item" data-filter="fire">
+          <div class="filter-circle">🔥</div>
+          <span>Fire</span>
+        </div>
+        <div class="filter-item" data-filter="blossom">
+          <div class="filter-circle">🌸</div>
+          <span>Flower</span>
+        </div>
+        <div class="filter-item" data-filter="cyber">
+          <div class="filter-circle">🌈</div>
+          <span>Cyber</span>
+        </div>
+        <div class="filter-item" data-filter="beauty">
+          <div class="filter-circle">✨</div>
+          <span>Glow</span>
+        </div>
+      </div>
+
+      <!-- Video Bottom Controls Bar -->
+      <div class="video-bottom-controls">
+        <button type="button" class="call-btn-circle" id="video-mute-btn" title="Mute Microphone">
+          <svg class="mic-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+            <path d="M19 10v2a7 7 0 01-14 0v-2" />
+            <line x1="12" y1="19" x2="12" y2="23" />
+            <line x1="8" y1="23" x2="16" y2="23" />
+          </svg>
+        </button>
+        <button type="button" class="call-btn-circle" id="video-cam-toggle-btn" title="Camera On/Off">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="23 7 16 12 23 17 23 7" />
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+          </svg>
+        </button>
+        <button type="button" class="call-btn-circle" id="toggle-filter-carousel-btn" title="AR Face Filters & Emojis">
+          <span style="font-size:20px;">✨</span>
+        </button>
+        <button type="button" class="call-btn-circle" id="call-screenshare-btn" title="Share Screen">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+            <line x1="8" y1="21" x2="16" y2="21" />
+            <line x1="12" y1="17" x2="12" y2="21" />
+          </svg>
+        </button>
+        <button type="button" class="call-btn-circle call-end-btn" id="video-hangup-btn" title="End Video Call">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+      <div class="call-peer-name" id="call-peer-name">Aarav Shah</div>
+      <div class="call-status-timer" id="call-status-timer">Ringing...</div>
+
+      <div class="call-actions">
+        <button class="call-btn-circle" id="call-mute-btn" title="Mute Microphone">
+          <svg class="mic-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+            <path d="M19 10v2a7 7 0 01-14 0v-2" />
+            <line x1="12" y1="19" x2="12" y2="23" />
+            <line x1="8" y1="23" x2="16" y2="23" />
+          </svg>
+        </button>
+        <button class="call-btn-circle" id="call-speaker-btn" title="Speaker">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
+          </svg>
+        </button>
+        <button class="call-btn-circle call-end-btn" id="call-hangup-btn" title="End Call">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/theme.js?v=160"></script>
+  <script src="js/wallpaper.js?v=160"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js?v=160"></script>
+  <script src="js/webrtc-call.js?v=160"></script>
+  <script src="js/chat.js?v=160"></script>
+  <script src="js/auth.js?v=160"></script>
+  <script src="js/app.js?v=160"></script>
+  <script src="js/dont-block-me-game.js?v=160"></script>
+  <!-- Live Auto-Reload -->
+  <script>
+    (function () {
+      if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') return;
+      let es, t;
+      function connect() {
+        try {
+          if (es) es.close();
+          es = new EventSource('/live-reload');
+          es.onmessage = function (e) {
+            if (e.data === 'reload') {
+              const toast = document.getElementById('toast');
+              if (toast) { toast.textContent = '✨ Auto-Updated!'; toast.classList.remove('hidden'); }
+              setTimeout(() => location.reload(), 150);
+            }
+          };
+          es.onerror = function () {
+            if (es) es.close();
+            clearTimeout(t);
+            t = setTimeout(connect, 2000);
+          };
+        } catch (e) {
+          t = setTimeout(connect, 3000);
+        }
+      }
+      connect();
+    })();
+  
+    // Games Navigation & Don't Block Me Game Launcher
+    const tabChatsBtn = document.getElementById('tab-chats-btn');
+    const tabGamesBtn = document.getElementById('tab-games-btn');
+    const chatList = document.getElementById('chat-list');
+    const gamesHub = document.getElementById('games-hub-view');
+    const btnLaunchDbm = document.getElementById('btn-launch-dbm');
+    const cardDbm = document.getElementById('card-game-dont-block-me');
+
+    function switchToChatsTab() {
+      if (tabChatsBtn) tabChatsBtn.classList.add('active');
+      if (tabGamesBtn) tabGamesBtn.classList.remove('active');
+      if (chatList) chatList.classList.remove('hidden');
+      if (gamesHub) gamesHub.classList.add('hidden');
+    }
+
+    function switchToGamesTab() {
+      if (tabGamesBtn) tabGamesBtn.classList.add('active');
+      if (tabChatsBtn) tabChatsBtn.classList.remove('active');
+      if (chatList) chatList.classList.add('hidden');
+      if (gamesHub) gamesHub.classList.remove('hidden');
+    }
+
+    if (tabChatsBtn) tabChatsBtn.onclick = () => switchToChatsTab();
+    if (tabGamesBtn) tabGamesBtn.onclick = () => switchToGamesTab();
+
+    if (btnLaunchDbm) {
+      btnLaunchDbm.onclick = (e) => {
+        e.stopPropagation();
+        if (window.DontBlockMeGame) window.DontBlockMeGame.openGame();
+      };
+    }
+    if (cardDbm) {
+      cardDbm.onclick = () => {
+        if (window.DontBlockMeGame) window.DontBlockMeGame.openGame();
+      };
+    }
+
+    
+    // Mobile Connect Modal Controller
+    const mobileConnectBtn = document.getElementById('mobile-connect-btn');
+    const mobileConnectOverlay = document.getElementById('mobile-connect-overlay');
+    const closeMobileConnectBtn = document.getElementById('close-mobile-connect-btn');
+    const btnCopyMobileUrl = document.getElementById('btn-copy-mobile-url');
+    const mobileUrlInput = document.getElementById('mobile-url-input');
+    const mobileCopyText = document.getElementById('mobile-copy-text');
+    const mobileQrImg = document.getElementById('mobile-qr-img');
+
+    function openMobileConnectModal() {
+      if (!mobileConnectOverlay) return;
+      const host = window.location.hostname;
+      const isLocal = host === 'localhost' || host === '127.0.0.1';
+      // If opened on local desktop, point to Wi-Fi IP; otherwise use current origin
+      const mobileUrl = isLocal ? 'http://192.168.1.16:3456/' : (window.location.origin + '/');
+      if (mobileUrlInput) mobileUrlInput.value = mobileUrl;
+      if (mobileQrImg) {
+        mobileQrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(mobileUrl) + '&bgcolor=ffffff&color=090b10&qzone=2';
+      }
+      mobileConnectOverlay.classList.remove('hidden');
+    }
+
+    function closeMobileConnectModal() {
+      if (mobileConnectOverlay) mobileConnectOverlay.classList.add('hidden');
+    }
+
+    if (mobileConnectBtn) mobileConnectBtn.onclick = () => openMobileConnectModal();
+    if (closeMobileConnectBtn) closeMobileConnectBtn.onclick = () => closeMobileConnectModal();
+    if (mobileConnectOverlay) {
+      mobileConnectOverlay.onclick = (e) => {
+        if (e.target === mobileConnectOverlay) closeMobileConnectModal();
+      };
+    }
+
+    if (btnCopyMobileUrl && mobileUrlInput) {
+      btnCopyMobileUrl.onclick = () => {
+        navigator.clipboard.writeText(mobileUrlInput.value).then(() => {
+          if (mobileCopyText) mobileCopyText.textContent = 'Copied! ✓';
+          if (window.showToast) window.showToast('📋 Mobile link copied to clipboard!');
+          setTimeout(() => { if (mobileCopyText) mobileCopyText.textContent = 'Copy'; }, 2200);
+        }).catch(() => {
+          mobileUrlInput.select();
+          document.execCommand('copy');
+          if (mobileCopyText) mobileCopyText.textContent = 'Copied! ✓';
+          setTimeout(() => { if (mobileCopyText) mobileCopyText.textContent = 'Copy'; }, 2200);
+        });
+      };
+    }
+
+    // Register Service Worker for PWA (if supported)
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    // Initialize Don't Block Me game
+    if (window.DontBlockMeGame) {
+      window.DontBlockMeGame.init();
+    }
+
+  </script>
+
+  <!-- DON'T BLOCK ME 💗 GAME MODAL (FULL INTERACTIVE GAMEPLAY) -->
+  <div class="modal-overlay hidden" id="dbm-game-modal-overlay">
+    <div class="dbm-game-viewport">
+      <!-- Sky Blue Floating Clouds Background -->
+      <div class="dbm-sky-bg">
+        <div class="dbm-cloud c1"></div>
+        <div class="dbm-cloud c2"></div>
+        <div class="dbm-cloud c3"></div>
+        <span class="dbm-star s1">✨</span>
+        <span class="dbm-star s2">⭐</span>
+        <span class="dbm-star s3">✨</span>
+        <span class="dbm-heart h1">💖</span>
+        <span class="dbm-heart h2">🌸</span>
+      </div>
+
+      <!-- Top Bar -->
+      <div class="dbm-top-bar">
+        <div class="dbm-brand-pill">
+          <span class="dbm-brand-emoji">💗</span>
+          <span>Don't Block Me</span>
+        </div>
+        <button type="button" class="dbm-close-btn" id="dbm-game-close-btn" title="Close Game">✕</button>
+      </div>
+
+      <!-- Active Screen Container (Screens 1 to 6 rendered dynamically) -->
+      <div class="dbm-screen-container" id="dbm-screen-container">
+        <!-- Rendered by DontBlockMeGame -->
+      </div>
+
+      <!-- DEDICATED BUDDY FRIENDS INVITE MODAL OVERLAY (With Real-Time Search) -->
+      <div class="dbm-invite-modal-overlay hidden" id="dbm-friends-modal">
+        <div class="dbm-invite-sheet">
+          <div class="dbm-invite-sheet-header">
+            <div class="dbm-invite-sheet-title">
+              <span>💬</span> Send Quiz to Friends
+            </div>
+            <button type="button" class="dbm-invite-sheet-close" id="dbm-btn-close-friends-modal" title="Close">✕</button>
+          </div>
+
+          <p class="dbm-invite-sheet-sub">Select any friend in BUDDY to drop your quiz challenge directly into their chat!</p>
+
+          <div class="dbm-invite-search-box">
+            <span class="dbm-invite-search-icon">🔍</span>
+            <input 
+              type="text" 
+              id="dbm-friends-search-input" 
+              class="dbm-invite-search-input" 
+              placeholder="Search by name or @username..." 
+              autocomplete="off" 
+            />
+            <button type="button" class="dbm-invite-clear-search hidden" id="dbm-btn-clear-search" title="Clear search">✕</button>
+          </div>
+
+          <div class="dbm-friends-list-scroll" id="dbm-friends-list-container">
+            <div style="padding: 30px 10px; text-align: center; color: #64748b;">
+              Loading BUDDY friends... ⏳
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MOBILE CONNECT MODAL (ANDROID & IPHONE WEB ACCESS) -->
+  <div class="modal-overlay hidden" id="mobile-connect-overlay">
+    <div class="modal-sheet mobile-connect-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <div class="modal-title">
+          <span style="font-size:22px; margin-right:6px;">📱</span> Open on Mobile
+        </div>
+        <button class="modal-x-btn" id="close-mobile-connect-btn" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <p class="mobile-connect-desc">Open BUDDY seamlessly in your phone's browser on the same Wi-Fi network!</p>
+
+      <!-- QR CODE CONTAINER -->
+      <div class="mobile-qr-wrap">
+        <div class="mobile-qr-box">
+          <img id="mobile-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=http://192.168.1.16:3456/&bgcolor=ffffff&color=090b10&qzone=2" alt="BUDDY Mobile QR Code" />
+        </div>
+        <div class="mobile-qr-hint">Scan with iPhone Camera or Android Google Lens / Camera</div>
+      </div>
+
+      <!-- DIRECT URL COPY BOX -->
+      <div class="mobile-url-card">
+        <div class="mobile-url-label">Direct Wi-Fi Link:</div>
+        <div class="mobile-url-row">
+          <input type="text" readonly id="mobile-url-input" class="mobile-url-input" value="http://192.168.1.16:3456/" />
+          <button type="button" class="btn-primary mobile-copy-btn" id="btn-copy-mobile-url">
+            <span id="mobile-copy-text">Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- INSTRUCTIONS GRID -->
+      <div class="mobile-guide-grid">
+        <div class="mobile-guide-card">
+          <div class="mobile-guide-badge android-badge">🤖 Android (Chrome)</div>
+          <ol class="mobile-guide-steps">
+            <li>Open link in <strong>Chrome</strong>.</li>
+            <li>Tap <strong>⋮</strong> (menu in top right).</li>
+            <li>Tap <strong>"Add to Home screen"</strong>.</li>
+          </ol>
+        </div>
+        <div class="mobile-guide-card">
+          <div class="mobile-guide-badge ios-badge">🍏 iPhone (Safari)</div>
+          <ol class="mobile-guide-steps">
+            <li>Open link in <strong>Safari</strong>.</li>
+            <li>Tap <strong>Share</strong> (⬆️ bottom bar).</li>
+            <li>Tap <strong>"Add to Home Screen"</strong>.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="mobile-connect-status">
+        <span class="live-dot"></span> Wi-Fi Server Active on Port 3456
+      </div>
+    </div>
+  </div>
+
+  <!-- WALLPAPER & CHAT THEME PICKER MODAL -->
+  <div class="modal-overlay hidden" id="wallpaper-overlay">
+    <div class="modal-sheet" style="max-width: 520px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <h2>Chat Wallpaper & Theme</h2>
+        <button class="modal-x-btn" id="close-wallpaper-btn" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="profile-body">
+        <!-- Custom Photo Upload -->
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <button class="btn-primary" id="upload-wallpaper-btn" style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            <span>Upload from Phone</span>
+          </button>
+          <input type="file" id="wallpaper-file-input" accept="image/*" style="display:none;" />
+          <button class="btn-secondary" id="reset-wallpaper-btn">Reset</button>
+        </div>
+
+        <!-- Custom URL Input -->
+        <div style="display:flex; gap:8px; margin-bottom:14px;">
+          <input type="text" id="custom-wallpaper-url" placeholder="Or paste image URL / Pinterest link..." style="flex:1; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:13px;" />
+          <button class="btn-secondary" id="apply-wallpaper-url-btn">Apply</button>
+        </div>
+
+        <!-- Active Custom Preview Box -->
+        <div id="custom-wallpaper-preview-box" style="display:none; align-items:center; justify-content:space-between; padding:8px 12px; background:var(--bg-card); border-radius:10px; margin-bottom:12px; border:1px solid var(--border);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img id="custom-wallpaper-thumb" src="" style="width:40px; height:40px; border-radius:8px; object-fit:cover; border:1px solid var(--border);" alt="Custom Preview" />
+            <span style="font-size:13px; font-weight:700;">Custom Photo Active</span>
+          </div>
+          <button class="btn-secondary danger-text" id="remove-custom-wallpaper-btn" style="padding:4px 10px; font-size:12px;">Remove</button>
+        </div>
+
+        <!-- Presets Grid -->
+        <div class="profile-section-title" style="margin-top:8px;">Aesthetic Themes & Presets</div>
+        <div class="wallpaper-grid" id="wallpaper-grid"></div>
+
+        <!-- Adjustments Panel -->
+        <div class="wallpaper-adjust-panel">
+          <div class="adjust-control-row">
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span>Darken / Dim</span><span id="wp-dim-val" style="font-weight:700;">35%</span>
+            </div>
+            <input type="range" id="wp-dim-slider" min="0" max="85" value="35" style="width:100%; accent-color:var(--primary);" />
+          </div>
+          <div class="adjust-control-row">
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span>Background Blur</span><span id="wp-blur-val" style="font-weight:700;">0px</span>
+            </div>
+            <input type="range" id="wp-blur-slider" min="0" max="25" value="0" style="width:100%; accent-color:var(--primary);" />
+          </div>
+          <div class="adjust-control-row">
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span>Zoom / Scale</span><span id="wp-scale-val" style="font-weight:700;">100%</span>
+            </div>
+            <input type="range" id="wp-scale-slider" min="100" max="160" value="100" style="width:100%; accent-color:var(--primary);" />
+          </div>
+          <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+            <button class="btn-secondary" id="reset-adjust-btn" style="padding:4px 10px; font-size:11px;">Reset Sliders</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

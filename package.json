@@ -1,0 +1,23 @@
+{
+  "name": "buddy-chat",
+  "version": "1.0.0",
+  "description": "BUDDY - Modern Romantic & Realtime Social Messaging Web App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "chat",
+    "realtime",
+    "pwa",
+    "webrtc",
+    "supabase"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
