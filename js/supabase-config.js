@@ -278,12 +278,14 @@ const BuddySupabase = (() => {
 
         if (!peerProfile) continue;
 
-        // Fetch last message
+        // Fetch last message (only within 24 hours)
+        const cutoff24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
         const { data: lastMsgs } = await c
           .from('messages')
           .select('*')
           .eq('conversation_id', cid)
           .neq('body', '[cleared]')
+          .gte('created_at', cutoff24h)
           .order('created_at', { ascending: false })
           .limit(1);
 
@@ -324,11 +326,14 @@ const BuddySupabase = (() => {
     const c = getClient();
     if (!c || !conversationId) return [];
     try {
+      // 24-Hour Auto-Expire: Messages older than 24 hours are automatically cleared
+      const cutoff24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
       const { data, error } = await c
         .from('messages')
         .select('*')
         .eq('conversation_id', conversationId)
         .neq('body', '[cleared]')
+        .gte('created_at', cutoff24h)
         .order('created_at', { ascending: true });
       if (error) {
         console.warn('[BUDDY] fetchMessages error:', error.message);
@@ -501,6 +506,30 @@ const BuddySupabase = (() => {
     }
   }
 
+  async function deleteConversation(conversationId, userId) {
+    const c = getClient();
+    if (!c || !conversationId) return false;
+    try {
+      // 1. Remove user membership from conversation_members so it never shows up again
+      if (userId) {
+        try {
+          await c.from('conversation_members')
+            .delete()
+            .eq('conversation_id', conversationId)
+            .eq('user_id', userId);
+        } catch(e) {
+          console.warn('[BUDDY] delete membership notice:', e);
+        }
+      }
+      // 2. Clear all messages
+      await deleteConversationMessages(conversationId);
+      return true;
+    } catch(err) {
+      console.error('[BUDDY] deleteConversation exception:', err);
+      return false;
+    }
+  }
+
   async function markConversationMessagesAsSeen(conversationId, recipientUserId) {
     const c = getClient();
     if (!c || !conversationId) return false;
@@ -610,6 +639,7 @@ const BuddySupabase = (() => {
     sendCallSignal,
     subscribeToAllMessages,
     deleteConversationMessages,
+    deleteConversation,
     markConversationMessagesAsSeen,
     trackPresence,
     isUserOnline,

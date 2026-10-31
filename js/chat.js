@@ -553,30 +553,30 @@ const ChatManager = (() => {
     if (!conv.isAI && window.BuddySupabase) {
       try {
         const dbMsgs = await BuddySupabase.fetchMessages(conv.id);
-        if (dbMsgs && dbMsgs.length > 0) {
-          const clearedTime = localStorage.getItem('buddy_cleared_' + conv.id + '_' + currentUser.id);
-          const clearedTs = clearedTime ? parseInt(clearedTime, 10) : 0;
+        const clearedTime = localStorage.getItem('buddy_cleared_' + conv.id + '_' + currentUser.id);
+        const clearedTs = clearedTime ? parseInt(clearedTime, 10) : 0;
+        const cutoff24h = Date.now() - 24 * 60 * 60 * 1000;
+        const effectiveCutoff = Math.max(clearedTs, cutoff24h);
 
-          conv.messages = dbMsgs
-            .filter(m => {
-              const msgTs = new Date(m.created_at).getTime();
-              return !clearedTs || msgTs > clearedTs;
-            })
-            .map(m => ({
-              id: m.id,
-              from: m.sender_id === currentUser.id ? 'me' : 'them',
-              type: m.type || 'text',
-              body: m.body || '',
-              media: m.media_url,
-              duration: m.duration,
-              time: new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-              seen: true,
-              reactions: []
-            }));
-          _renderMessages(conv);
-          _saveCachedConversations();
-    _renderChatList();
-        }
+        conv.messages = (dbMsgs || [])
+          .filter(m => {
+            const msgTs = new Date(m.created_at).getTime();
+            return !isNaN(msgTs) && msgTs >= effectiveCutoff;
+          })
+          .map(m => ({
+            id: m.id,
+            from: m.sender_id === currentUser.id ? 'me' : 'them',
+            type: m.type || 'text',
+            body: m.body || '',
+            media: m.media_url,
+            duration: m.duration,
+            time: new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            seen: true,
+            reactions: []
+          }));
+        _renderMessages(conv);
+        _saveCachedConversations();
+        _renderChatList();
       } catch (err) {
         console.warn('[BUDDY] Error loading messages from DB:', err);
       }
@@ -633,6 +633,23 @@ const ChatManager = (() => {
     const area = document.getElementById('messages-area');
     if (!area) return;
     area.innerHTML = '';
+
+    // 24-Hour Auto-Expire: Filter out messages older than 24 hours (except AI welcome)
+    if (!conv.isAI && conv.messages) {
+      const cutoff24h = Date.now() - 24 * 60 * 60 * 1000;
+      conv.messages = conv.messages.filter(m => {
+        let t = 0;
+        if (m.created_at) t = new Date(m.created_at).getTime();
+        else if (m.timestamp) t = new Date(m.timestamp).getTime();
+        else if (m.id && typeof m.id === 'string' && m.id.startsWith('msg_')) {
+          const parts = m.id.split('_');
+          t = parseInt(parts[1], 10) || Date.now();
+        } else {
+          t = Date.now();
+        }
+        return !isNaN(t) && t >= cutoff24h;
+      });
+    }
 
     const dateDivider = document.createElement('div');
     dateDivider.className = 'msg-date-divider';
@@ -1611,12 +1628,12 @@ const ChatManager = (() => {
       showToast(conv.pinned ? '📌 Chat pinned to top!' : 'Chat unpinned');
     });
 
-    function clearChatForThisDevice() {
+    async function clearChatForThisDevice() {
       if (!activeConvId) return;
       const conv = conversations.find(c => c.id === activeConvId);
       if (!conv) return;
 
-      if (!confirm('Clear chat on this device only? (Your partner will still have the chat)')) {
+      if (!confirm('Clear all chat messages?')) {
         return;
       }
 
@@ -1624,13 +1641,19 @@ const ChatManager = (() => {
       localStorage.setItem('buddy_cleared_' + conv.id + '_' + currentUser.id, now.toString());
 
       conv.messages = [];
+      conv.lastMsgPreview = '';
       _renderMessages(conv);
       _saveCachedConversations();
-    _renderChatList();
+      _renderChatList();
+
+      // Permanent cloud deletion so messages never reappear
+      if (!conv.isAI && window.BuddySupabase && BuddySupabase.deleteConversationMessages) {
+        BuddySupabase.deleteConversationMessages(conv.id).catch(e => console.warn(e));
+      }
 
       document.getElementById('chat-info-overlay')?.classList.add('hidden');
       document.getElementById('chat-more-drop')?.classList.add('hidden');
-      showToast('🗑️ Chat cleared on this device only');
+      showToast('🗑️ Chat cleared permanently');
     }
 
     function togglePinCurrentChat() {
@@ -1640,13 +1663,15 @@ const ChatManager = (() => {
       conv.pinned = !conv.pinned;
       document.getElementById('chat-pinned-tag')?.classList.toggle('hidden', !conv.pinned || conv.isAI);
       _saveCachedConversations();
-    _renderChatList();
+      _renderChatList();
       showToast(conv.pinned ? '📌 Chat pinned to top!' : 'Chat unpinned');
     }
 
     if (clearBtn) clearBtn.addEventListener('click', clearChatForThisDevice);
+    const clearItem = document.getElementById('clear-chat-item');
+    if (clearItem) clearItem.addEventListener('click', clearChatForThisDevice);
 
-    function removeCurrentFriend() {
+    async function removeCurrentFriend() {
       if (!activeConvId) return;
       const conv = conversations.find(c => c.id === activeConvId);
       if (!conv) return;
@@ -1657,7 +1682,7 @@ const ChatManager = (() => {
       }
 
       const displayName = conv.nickname || conv.name || conv.username || 'this user';
-      if (!confirm('Remove ' + displayName + ' from your chats?\n\nYou can add them back anytime by searching ' + (conv.username || '') + '.')) {
+      if (!confirm('Permanently delete chat with ' + displayName + '?\n\nThis chat will be removed permanently and won\'t reappear.')) {
         return;
       }
 
@@ -1665,6 +1690,11 @@ const ChatManager = (() => {
       localStorage.setItem('buddy_removed_conv_' + conv.id + '_' + currentUser.id, 'true');
       if (peerId) {
         localStorage.setItem('buddy_removed_peer_' + peerId + '_' + currentUser.id, 'true');
+      }
+
+      // Permanent cloud deletion: remove membership and clear messages in Supabase
+      if (!conv.isAI && window.BuddySupabase && BuddySupabase.deleteConversation) {
+        BuddySupabase.deleteConversation(conv.id, currentUser.id).catch(e => console.warn(e));
       }
 
       conversations = conversations.filter(c => c.id !== conv.id);
@@ -1675,9 +1705,9 @@ const ChatManager = (() => {
 
       openChat('buddy_ai');
       _saveCachedConversations();
-    _renderChatList();
+      _renderChatList();
 
-      showToast('🗑️ ' + displayName + ' removed from chats');
+      showToast('🗑️ ' + displayName + ' removed permanently');
     }
 
     const removeFriendBtn = document.getElementById('modal-remove-friend-btn');
@@ -2412,43 +2442,10 @@ const ChatManager = (() => {
     openChat,
     openNewChat: () => document.getElementById('new-chat-overlay')?.classList.remove('hidden'),
     removeFriend: () => {
-      const conv = conversations.find(c => c.id === activeConvId);
-      if (!conv) return;
-      if (conv.isAI) {
-        showToast('✨ BUDDY AI cannot be removed');
-        return;
-      }
-      const displayName = conv.nickname || conv.name || conv.username || 'this user';
-      if (!confirm('Remove ' + displayName + ' from your chats?\n\nYou can add them back anytime by searching ' + (conv.username || '') + '.')) {
-        return;
-      }
-      const peerId = conv.userId || (conv.peer ? conv.peer.id : '');
-      localStorage.setItem('buddy_removed_conv_' + conv.id + '_' + currentUser.id, 'true');
-      if (peerId) {
-        localStorage.setItem('buddy_removed_peer_' + peerId + '_' + currentUser.id, 'true');
-      }
-      conversations = conversations.filter(c => c.id !== conv.id);
-      _saveCachedConversations();
-      document.getElementById('chat-info-overlay')?.classList.add('hidden');
-      document.getElementById('chat-more-drop')?.classList.add('hidden');
-      openChat('buddy_ai');
-      _saveCachedConversations();
-    _renderChatList();
-      showToast('🗑️ ' + displayName + ' removed from chats');
+      removeCurrentFriend();
     },
     clearChat: () => {
-      const conv = conversations.find(c => c.id === activeConvId);
-      if (!conv) return;
-      if (!confirm('Clear chat on this device only? (Your partner will still have the chat)')) return;
-      const now = Date.now();
-      localStorage.setItem('buddy_cleared_' + conv.id + '_' + currentUser.id, now.toString());
-      conv.messages = [];
-      _renderMessages(conv);
-      _saveCachedConversations();
-    _renderChatList();
-      document.getElementById('chat-info-overlay')?.classList.add('hidden');
-      document.getElementById('chat-more-drop')?.classList.add('hidden');
-      showToast('🗑️ Chat cleared on this device only');
+      clearChatForThisDevice();
     },
     togglePin: () => {
       const conv = conversations.find(c => c.id === activeConvId);
