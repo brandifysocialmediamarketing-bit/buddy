@@ -145,6 +145,7 @@ const ChatManager = (() => {
       ...conversations.filter(c => !c.pinned && c.id !== conv.id)
     ];
 
+    _saveCachedConversations();
     _renderChatList();
   }
 
@@ -154,7 +155,8 @@ const ChatManager = (() => {
     if (!_isInitialized) {
       _isInitialized = true;
       _initConversations();
-      _renderChatList();
+      _saveCachedConversations();
+    _renderChatList();
       _bindEvents();
       _bindComposer();
       _bindReactionsAndDoubleTap();
@@ -167,7 +169,8 @@ const ChatManager = (() => {
       _bindProfile();
       // App always opens on Home screen / conversations list (never auto-opens buddy_ai)
     } else {
-      _renderChatList();
+      _saveCachedConversations();
+    _renderChatList();
     }
 
     // Sync cloud conversations for real users
@@ -180,8 +183,50 @@ const ChatManager = (() => {
       }
   }
 
+  function _saveCachedConversations() {
+    if (!currentUser || !currentUser.id || currentUser.id === 'guest') return;
+    try {
+      const toCache = conversations
+        .filter(c => !c.isAI)
+        .map(c => ({
+          id: c.id,
+          userId: c.userId,
+          name: c.nickname || c.name || c.username,
+          username: c.username,
+          color: c.color,
+          status: c.status,
+          nickname: c.nickname || '',
+          pinned: !!c.pinned,
+          accent: c.accent || 'indigo',
+          unread: c.unread || 0,
+          lastMsgPreview: c.lastMsgPreview || '',
+          lastMsgTime: c.lastMsgTime || ''
+        }));
+      localStorage.setItem('buddy_cached_convs_' + currentUser.id, JSON.stringify(toCache));
+    } catch(e) {}
+  }
+
   function _initConversations() {
     conversations = [_getBuddyAIConv()];
+    if (currentUser && currentUser.id && currentUser.id !== 'guest') {
+      try {
+        const raw = localStorage.getItem('buddy_cached_convs_' + currentUser.id);
+        if (raw) {
+          const cached = JSON.parse(raw);
+          if (Array.isArray(cached)) {
+            cached.forEach(c => {
+              const isRemoved = localStorage.getItem('buddy_removed_conv_' + c.id + '_' + currentUser.id) === 'true' ||
+                                (c.userId && localStorage.getItem('buddy_removed_peer_' + c.userId + '_' + currentUser.id) === 'true');
+              if (!isRemoved) {
+                c.messages = c.messages || [];
+                c.isAI = false;
+                conversations.push(c);
+              }
+            });
+          }
+        }
+      } catch(e) {}
+    }
   }
 
   function _getBuddyAIConv() {
@@ -288,7 +333,9 @@ const ChatManager = (() => {
       });
 
       if (changed || !isSilent) {
-        _renderChatList();
+        _saveCachedConversations();
+        _saveCachedConversations();
+    _renderChatList();
       }
     } catch (err) {
       console.warn('[BUDDY] _syncConversationsFromSupabase error:', err);
@@ -345,7 +392,8 @@ const ChatManager = (() => {
 
             if (hasNew) {
               _renderMessages(conv);
-              _renderChatList();
+              _saveCachedConversations();
+    _renderChatList();
             }
           }
         }
@@ -444,6 +492,7 @@ const ChatManager = (() => {
 
     // Immediately reset unread count and re-render so badge disappears instantly
     conv.unread = 0;
+    _saveCachedConversations();
     _renderChatList();
 
     // Mark all unseen messages as seen in Supabase database
@@ -494,6 +543,7 @@ const ChatManager = (() => {
     window.scrollTo(0, 0);
     if (window.WallpaperManager) window.WallpaperManager.apply(window.WallpaperManager.getActive());
 
+    _saveCachedConversations();
     _renderChatList();
     _renderMessages(conv);
     _closeAttachMenu();
@@ -524,7 +574,8 @@ const ChatManager = (() => {
               reactions: []
             }));
           _renderMessages(conv);
-          _renderChatList();
+          _saveCachedConversations();
+    _renderChatList();
         }
       } catch (err) {
         console.warn('[BUDDY] Error loading messages from DB:', err);
@@ -560,7 +611,8 @@ const ChatManager = (() => {
             };
             conv.messages.push(incoming);
             _renderMessages(conv);
-            _renderChatList();
+            _saveCachedConversations();
+    _renderChatList();
           }
         }
       });
@@ -587,13 +639,19 @@ const ChatManager = (() => {
     dateDivider.innerHTML = '<span>Today</span>';
     area.appendChild(dateDivider);
 
+    function _isOnlyEmoji(text) {
+      if (!text) return false;
+      const trimmed = text.trim();
+      return /^(\p{Extended_Pictographic}|\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200D|\p{Emoji_Modifier}){1,3}$/u.test(trimmed);
+    }
+
     conv.messages.forEach((msg, idx) => {
       const isSent = msg.from === 'me';
       const prevMsg = idx > 0 ? conv.messages[idx - 1] : null;
-      const isFirstOfGroup = !prevMsg || prevMsg.from !== msg.from || (msg.time && prevMsg.time && msg.time !== prevMsg.time);
+      const isFirstOfGroup = !prevMsg || prevMsg.from !== msg.from;
 
       let senderHeaderHtml = '';
-      if (!isSent && isFirstOfGroup) {
+      if (Boolean(conv.isGroup) && !isSent && isFirstOfGroup) {
         const senderName = msg.sender_name || msg.senderName || conv.nickname || conv.name || 'Friend';
         const senderAvatarContent = conv.isAI
           ? '✨'
@@ -630,6 +688,8 @@ const ChatManager = (() => {
               </button>
             </div>
           `;
+        } else if (_isOnlyEmoji(msg.body)) {
+          content = `<div class="msg-bubble is-emoji-only ${isSent ? 'sent' : 'received'}" data-msg-id="${msg.id}">${_esc(msg.body)}</div>`;
         } else {
           content = `<div class="msg-bubble ${isSent ? 'sent' : 'received'}" data-msg-id="${msg.id}">${_esc(msg.body)}</div>`;
         }
@@ -1055,6 +1115,7 @@ const ChatManager = (() => {
     }
     conv.messages.push(msg);
     _renderMessages(conv);
+    _saveCachedConversations();
     _renderChatList();
 
     if (conv.isAI) {
@@ -1101,7 +1162,8 @@ const ChatManager = (() => {
 
       conv.messages.push(aiMsg);
       _renderMessages(conv);
-      _renderChatList();
+      _saveCachedConversations();
+    _renderChatList();
 
       if (statusEl) statusEl.textContent = 'Online • AI Companion';
     }, 1100);
@@ -1534,7 +1596,8 @@ const ChatManager = (() => {
 
       const display = conv.nickname || conv.name;
       document.getElementById('chat-peer-name').innerHTML = _esc(display) + (conv.isAI ? '<span class="ai-badge">AI</span>' : '');
-      _renderChatList();
+      _saveCachedConversations();
+    _renderChatList();
       showToast('✏️ Nickname updated to "' + display + '"');
     });
 
@@ -1543,7 +1606,8 @@ const ChatManager = (() => {
       if (!conv) return;
       conv.pinned = pinToggle.checked;
       document.getElementById('chat-pinned-tag')?.classList.toggle('hidden', !conv.pinned);
-      _renderChatList();
+      _saveCachedConversations();
+    _renderChatList();
       showToast(conv.pinned ? '📌 Chat pinned to top!' : 'Chat unpinned');
     });
 
@@ -1561,7 +1625,8 @@ const ChatManager = (() => {
 
       conv.messages = [];
       _renderMessages(conv);
-      _renderChatList();
+      _saveCachedConversations();
+    _renderChatList();
 
       document.getElementById('chat-info-overlay')?.classList.add('hidden');
       document.getElementById('chat-more-drop')?.classList.add('hidden');
@@ -1574,7 +1639,8 @@ const ChatManager = (() => {
       if (!conv) return;
       conv.pinned = !conv.pinned;
       document.getElementById('chat-pinned-tag')?.classList.toggle('hidden', !conv.pinned || conv.isAI);
-      _renderChatList();
+      _saveCachedConversations();
+    _renderChatList();
       showToast(conv.pinned ? '📌 Chat pinned to top!' : 'Chat unpinned');
     }
 
@@ -1602,12 +1668,14 @@ const ChatManager = (() => {
       }
 
       conversations = conversations.filter(c => c.id !== conv.id);
+      _saveCachedConversations();
 
       document.getElementById('chat-info-overlay')?.classList.add('hidden');
       document.getElementById('chat-more-drop')?.classList.add('hidden');
 
       openChat('buddy_ai');
-      _renderChatList();
+      _saveCachedConversations();
+    _renderChatList();
 
       showToast('🗑️ ' + displayName + ' removed from chats');
     }
@@ -1782,6 +1850,8 @@ const ChatManager = (() => {
     } else {
       existing.id = convId;
     }
+    _saveCachedConversations();
+    _saveCachedConversations();
     _renderChatList();
     openChat(existing.id);
     showToast('✓ ' + (u.full_name || u.username) + ' added to your chats!');
@@ -2049,6 +2119,8 @@ const ChatManager = (() => {
     if (activeConvId === targetConvId) {
       _renderMessages(targetConv);
     }
+    _saveCachedConversations();
+    _saveCachedConversations();
     _renderChatList();
 
     // Sync to Supabase if real conversation
@@ -2261,7 +2333,8 @@ const ChatManager = (() => {
         document.getElementById('message-input')?.blur();
         window.scrollTo(0, 0);
         document.body.scrollTop = 0;
-        _renderChatList();
+        _saveCachedConversations();
+    _renderChatList();
       });
     }
 
@@ -2355,10 +2428,12 @@ const ChatManager = (() => {
         localStorage.setItem('buddy_removed_peer_' + peerId + '_' + currentUser.id, 'true');
       }
       conversations = conversations.filter(c => c.id !== conv.id);
+      _saveCachedConversations();
       document.getElementById('chat-info-overlay')?.classList.add('hidden');
       document.getElementById('chat-more-drop')?.classList.add('hidden');
       openChat('buddy_ai');
-      _renderChatList();
+      _saveCachedConversations();
+    _renderChatList();
       showToast('🗑️ ' + displayName + ' removed from chats');
     },
     clearChat: () => {
@@ -2369,7 +2444,8 @@ const ChatManager = (() => {
       localStorage.setItem('buddy_cleared_' + conv.id + '_' + currentUser.id, now.toString());
       conv.messages = [];
       _renderMessages(conv);
-      _renderChatList();
+      _saveCachedConversations();
+    _renderChatList();
       document.getElementById('chat-info-overlay')?.classList.add('hidden');
       document.getElementById('chat-more-drop')?.classList.add('hidden');
       showToast('🗑️ Chat cleared on this device only');
@@ -2379,14 +2455,15 @@ const ChatManager = (() => {
       if (!conv) return;
       conv.pinned = !conv.pinned;
       document.getElementById('chat-pinned-tag')?.classList.toggle('hidden', !conv.pinned || conv.isAI);
-      _renderChatList();
+      _saveCachedConversations();
+    _renderChatList();
       showToast(conv.pinned ? '📌 Chat pinned to top!' : 'Chat unpinned');
     },
     getAllFriendsAndProfiles: async () => {
       const list = [];
       const seenIds = new Set();
 
-      // 1. All existing active conversations
+      // Only existing active conversations (no random unsearched strangers)
       (conversations || []).forEach(c => {
         seenIds.add(c.id);
         if (c.userId) seenIds.add(c.userId);
@@ -2401,35 +2478,6 @@ const ChatManager = (() => {
           isAI: !!c.isAI
         });
       });
-
-      // 2. Fetch all registered profiles in the app from Supabase
-      if (window.BuddySupabase && typeof window.BuddySupabase.searchProfiles === 'function') {
-        try {
-          const profiles = await window.BuddySupabase.searchProfiles('', currentUser?.id);
-          if (Array.isArray(profiles)) {
-            profiles.forEach(p => {
-              if (currentUser && p.id === currentUser.id) return;
-              if (!seenIds.has(p.id) && !seenIds.has('c_' + p.id)) {
-                seenIds.add(p.id);
-                list.push({
-                  id: 'c_' + p.id,
-                  userId: p.id,
-                  full_name: p.full_name,
-                  name: p.full_name || p.username || 'Friend',
-                  username: p.username ? (p.username.startsWith('@') ? p.username : '@' + p.username) : '',
-                  avatar: null,
-                  color: p.avatar_color || '#6366F1',
-                  status: p.status || 'Active now',
-                  isAI: false,
-                  rawUser: p
-                });
-              }
-            });
-          }
-        } catch(e) {
-          console.warn('[BUDDY] searchProfiles notice:', e);
-        }
-      }
 
       return list;
     },

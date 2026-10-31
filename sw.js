@@ -1,10 +1,14 @@
 // BUDDY Service Worker for PWA Installation & Offline Support
-const CACHE_NAME = 'buddy-cache-v160';
+const CACHE_NAME = 'buddy-cache-v190';
 const URLS_TO_CACHE = [
   './',
   './index.html',
   './css/style.css',
   './assets/logo.png',
+  './assets/icon-adaptive.svg',
+  './assets/icon-monochrome.svg',
+  './assets/icon-light.svg',
+  './assets/icon-dark.svg',
   './manifest.json'
 ];
 

@@ -153,17 +153,21 @@ const BuddySupabase = (() => {
     }
   }
 
-        async function searchProfiles(query, excludeUserId) {
+  async function searchProfiles(query, excludeUserId) {
     const c = getClient();
     if (!c) return [];
     try {
       const clean = (query || '').replace(/^@/, '').trim().toLowerCase();
+      // Only return users when a specific username is searched
+      if (!clean || clean.length < 2) {
+        return [];
+      }
 
-      // Fetch all registered profiles
       const { data, error } = await c
         .from('profiles')
         .select('id, username, full_name, avatar_color, bio, status, mood')
-        .limit(50);
+        .or(`username.ilike.%${clean}%,full_name.ilike.%${clean}%`)
+        .limit(20);
 
       if (error || !data) {
         console.warn('[BUDDY Supabase] searchProfiles notice:', error ? error.message : 'no data');
@@ -171,16 +175,7 @@ const BuddySupabase = (() => {
       }
 
       let results = data;
-
-      if (clean) {
-        // When searching, match any username or name containing the query
-        results = results.filter(p => {
-          const u = (p.username || '').toLowerCase();
-          const fn = (p.full_name || '').toLowerCase();
-          return u.includes(clean) || fn.includes(clean);
-        });
-      } else if (excludeUserId) {
-        // When not searching, show others
+      if (excludeUserId) {
         results = results.filter(p => p.id !== excludeUserId);
       }
 

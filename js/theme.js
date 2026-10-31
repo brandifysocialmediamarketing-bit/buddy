@@ -52,6 +52,12 @@ const ThemeManager = (() => {
     localStorage.setItem(KEY_THEME, t);
     _updateLabels(t);
 
+    try {
+      const metaThemes = document.querySelectorAll('meta[name="theme-color"]');
+      const hex = t === 'light' ? '#F8F9FE' : '#090A11';
+      metaThemes.forEach(m => m.setAttribute('content', hex));
+    } catch(e) {}
+
     // Refresh contrast calculation
     const custom = localStorage.getItem(KEY_CUSTOM_COLOR);
     if (custom) {
