@@ -24,9 +24,34 @@ const AuthManager = (() => {
 
   /* ── 1. SESSION CHECK ── */
   async function _checkExistingSession() {
+    // If arriving from a Password Reset email link, immediately show the Set New Password view!
+    if (window.location.hash.includes('type=recovery') || window.location.hash.includes('recovery')) {
+      _showAuthScreen();
+      _showView('reset-password');
+      showToast('🔑 Please enter your new password below.');
+      return;
+    }
+
     if (window.BuddySupabase) {
+      const c = BuddySupabase.getClient();
+      if (c && c.auth) {
+        c.auth.onAuthStateChange((event) => {
+          if (event === 'PASSWORD_RECOVERY') {
+            _showAuthScreen();
+            _showView('reset-password');
+            showToast('🔑 Please enter your new password below.');
+          }
+        });
+      }
+
       const session = await BuddySupabase.getSession();
       if (session && session.user) {
+        if (window.location.hash.includes('type=recovery') || window.location.hash.includes('recovery')) {
+          _showAuthScreen();
+          _showView('reset-password');
+          return;
+        }
+
         const meta = session.user.user_metadata || {};
         const email = session.user.email || session.user.phone || '';
         const name = meta.full_name || meta.name || _nameFromEmail(email) || 'Buddy User';
@@ -177,10 +202,12 @@ const AuthManager = (() => {
     if (forgotBtn) forgotBtn.addEventListener('click', () => _showView('forgot'));
     if (backLoginBtn) backLoginBtn.addEventListener('click', () => _showView('login'));
     if (otpBackBtn) otpBackBtn.addEventListener('click', () => _showView('login'));
+    const resetBackBtn = document.getElementById('reset-back-login-btn');
+    if (resetBackBtn) resetBackBtn.addEventListener('click', () => _showView('login'));
   }
 
   function _showView(name) {
-    ['login', 'signup', 'otp', 'forgot'].forEach(v => {
+    ['login', 'signup', 'otp', 'forgot', 'reset-password'].forEach(v => {
       const el = document.getElementById(v + '-view');
       if (el) el.classList.add('hidden');
     });
@@ -232,6 +259,15 @@ const AuthManager = (() => {
       forgotForm.addEventListener('submit', e => {
         e.preventDefault();
         _handleForgot();
+      });
+    }
+
+    // Set New Password Form (Change Password)
+    const resetForm = document.getElementById('reset-password-form');
+    if (resetForm) {
+      resetForm.addEventListener('submit', e => {
+        e.preventDefault();
+        _handleResetPassword();
       });
     }
   }
@@ -477,12 +513,97 @@ const AuthManager = (() => {
     }
   }
 
-  function _handleForgot() {
-    const email = document.getElementById('forgot-email').value.trim();
-    if (!email) { showToast('⚠️ Enter your email first.'); return; }
-    BuddySupabase.sendEmailOtp(email);
-    showToast('📧 Reset link sent! Check your inbox.');
-    setTimeout(() => _showView('login'), 1500);
+  async function _handleForgot() {
+    const rawInput = document.getElementById('forgot-email').value.trim();
+    if (!rawInput) {
+      showToast('⚠️ Please enter your email or username first.');
+      return;
+    }
+
+    let targetEmail = rawInput.toLowerCase();
+    const isEmail = targetEmail.includes('@') && targetEmail.includes('.');
+
+    if (!isEmail) {
+      const cleanUname = rawInput.replace(/^@/, '').trim().toLowerCase();
+      showToast('🔍 Finding email for @' + cleanUname + '...');
+      const cached = localStorage.getItem('buddy_u2e_' + cleanUname);
+      if (cached) {
+        targetEmail = cached;
+      } else if (window.BuddySupabase) {
+        try {
+          const c = BuddySupabase.getClient();
+          if (c) {
+            const { data: profs } = await c
+              .from('profiles')
+              .select('*')
+              .or(`username.ilike.@${cleanUname},username.ilike.${cleanUname}`)
+              .limit(1);
+            if (profs && profs.length > 0) {
+              const prof = profs[0];
+              if (prof.status && prof.status.includes('@') && prof.status.includes('.')) {
+                targetEmail = prof.status;
+              } else if (prof.bio && prof.bio.includes('@') && prof.bio.includes('.')) {
+                targetEmail = prof.bio;
+              } else {
+                targetEmail = cleanUname + '@thebrandify.in';
+              }
+            } else {
+              targetEmail = cleanUname + '@thebrandify.in';
+            }
+          }
+        } catch(e) {
+          targetEmail = cleanUname + '@thebrandify.in';
+        }
+      }
+    }
+
+    showToast('🔄 Sending Password Reset link...');
+    const res = await BuddySupabase.resetPasswordForEmail(targetEmail);
+    if (res && res.error) {
+      showToast('❌ ' + res.error.message);
+      return;
+    }
+    showToast('📧 Password Reset link sent! Open the email to set your new password.', 6000);
+    setTimeout(() => _showView('login'), 2000);
+  }
+
+  async function _handleResetPassword() {
+    const p1 = document.getElementById('new-password-input').value;
+    const p2 = document.getElementById('confirm-password-input').value;
+
+    if (!p1 || p1.length < 6) {
+      showToast('⚠️ New password must be at least 6 characters.');
+      return;
+    }
+    if (p1 !== p2) {
+      showToast('⚠️ Passwords do not match. Please verify.');
+      return;
+    }
+
+    showToast('🔄 Updating your password...');
+    const res = await BuddySupabase.updatePassword(p1);
+    if (res && res.error) {
+      showToast('❌ ' + res.error.message);
+      return;
+    }
+
+    showToast('🎉 Password successfully changed! Signing in...');
+    try { window.location.hash = ''; } catch(e) {}
+
+    const session = await BuddySupabase.getSession();
+    if (session && session.user) {
+      const suUser = session.user;
+      const u = {
+        id: suUser.id,
+        name: suUser.user_metadata?.full_name || _nameFromEmail(suUser.email),
+        username: suUser.user_metadata?.username || '@' + (suUser.email ? suUser.email.split('@')[0] : 'user'),
+        email: suUser.email,
+        color: '#6366F1'
+      };
+      _enterApp(u, true);
+    } else {
+      setTimeout(() => _showView('login'), 1500);
+    }
   }
 
   /* ── 6. ENTER APP ── */

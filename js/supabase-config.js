@@ -104,6 +104,29 @@ const BuddySupabase = (() => {
     }
   }
 
+  async function resetPasswordForEmail(email) {
+    const c = getClient();
+    if (!c) return { error: { message: 'Supabase client not initialized' } };
+    try {
+      const redirectUrl = window.location.origin + window.location.pathname;
+      return await c.auth.resetPasswordForEmail(email, {
+        redirectTo: redirectUrl
+      });
+    } catch (err) {
+      return { error: err };
+    }
+  }
+
+  async function updatePassword(newPassword) {
+    const c = getClient();
+    if (!c) return { error: { message: 'Supabase client not initialized' } };
+    try {
+      return await c.auth.updateUser({ password: newPassword });
+    } catch (err) {
+      return { error: err };
+    }
+  }
+
   async function verifyOtp(identifier, token, type = 'email') {
     const c = getClient();
     if (!c) return { error: { message: 'Supabase client not initialized' } };
@@ -625,6 +648,8 @@ const BuddySupabase = (() => {
     signInWithEmail,
     sendPhoneOtp,
     sendEmailOtp,
+    resetPasswordForEmail,
+    updatePassword,
     verifyOtp,
     signOut,
     getSession,

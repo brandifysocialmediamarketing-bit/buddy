@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=192" />
+  <link rel="stylesheet" href="css/style.css?v=193" />
   <script>
     (function () {
       try {
@@ -218,15 +218,67 @@
           <span class="logo-wordmark">BUDDY</span>
         </div>
         <h1 class="auth-heading">Reset Password</h1>
-        <p class="auth-sub">Enter your email to receive a reset link</p>
+        <p class="auth-sub">Enter your Username or Email to receive a reset link</p>
         <form id="forgot-form" class="auth-form" novalidate>
           <div class="field-group">
-            <label for="forgot-email">Email</label>
-            <input type="email" id="forgot-email" placeholder="you@example.com" autocomplete="email" />
+            <label for="forgot-email">Username or Email</label>
+            <input type="text" id="forgot-email" placeholder="Username (e.g. @yourname) or Email" autocomplete="username" />
           </div>
           <button type="submit" class="btn-primary">Send Reset Link</button>
         </form>
         <p class="auth-toggle-text"><button type="button" id="back-login-btn">← Back to Login</button></p>
+      </div>
+    </div>
+
+    <!-- 5. SET NEW PASSWORD VIEW (AFTER CLICKING RESET LINK IN EMAIL) -->
+    <div id="reset-password-view" class="auth-view hidden">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="logo-bubble">
+            <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2C8.27 2 2 8.27 2 16c0 2.56.67 4.97 1.84 7.07L2 30l7.18-1.82A14 14 0 1016 2z" fill="url(#g3)" />
+            </svg>
+          </div>
+          <span class="logo-wordmark">BUDDY</span>
+        </div>
+        <h1 class="auth-heading">Set New Password</h1>
+        <p class="auth-sub">Enter your new password below</p>
+        <form id="reset-password-form" class="auth-form" novalidate>
+          <div class="field-group">
+            <label for="new-password-input">New Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="new-password-input" placeholder="Min. 6 characters" autocomplete="new-password" required />
+              <button type="button" class="eye-btn" data-for="new-password-input" aria-label="Show password">
+                <svg class="eye-open" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <svg class="eye-closed" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+                  <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="field-group">
+            <label for="confirm-password-input">Confirm New Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="confirm-password-input" placeholder="Repeat new password" autocomplete="new-password" required />
+              <button type="button" class="eye-btn" data-for="confirm-password-input" aria-label="Show password">
+                <svg class="eye-open" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <svg class="eye-closed" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+                  <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" id="save-new-password-btn">Change Password & Sign In</button>
+        </form>
+        <p class="auth-toggle-text"><button type="button" id="reset-back-login-btn">← Back to Login</button></p>
       </div>
     </div>
   </div><!-- /auth-screen -->
@@ -1080,15 +1132,15 @@
 
   <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/theme.js?v=192"></script>
-  <script src="js/wallpaper.js?v=192"></script>
+  <script src="js/theme.js?v=193"></script>
+  <script src="js/wallpaper.js?v=193"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=192"></script>
-  <script src="js/webrtc-call.js?v=192"></script>
-  <script src="js/chat.js?v=192"></script>
-  <script src="js/auth.js?v=192"></script>
-  <script src="js/app.js?v=192"></script>
-  <script src="js/dont-block-me-game.js?v=192"></script>
+  <script src="js/supabase-config.js?v=193"></script>
+  <script src="js/webrtc-call.js?v=193"></script>
+  <script src="js/chat.js?v=193"></script>
+  <script src="js/auth.js?v=193"></script>
+  <script src="js/app.js?v=193"></script>
+  <script src="js/dont-block-me-game.js?v=193"></script>
   <!-- Live Auto-Reload -->
   <script>
     (function () {
