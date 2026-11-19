@@ -275,7 +275,9 @@ const AuthManager = (() => {
   /* ── Username or Email Login Handler ── */
   const KNOWN_USER_EMAILS = {
     'brandify_social_media': 'brandifysocialmediamarketing@gmail.com',
-    'brandify': 'brandifysocialmediamarketing@gmail.com'
+    'brandify': 'brandifysocialmediamarketing@gmail.com',
+    'keyur_007': 'keyursohaliya28@gmail.com',
+    'keyur': 'keyursohaliya28@gmail.com'
   };
 
   async function _handleEmailLogin() {
@@ -586,23 +588,35 @@ const AuthManager = (() => {
       return;
     }
 
-    showToast('🎉 Password successfully changed! Signing in...');
+    showToast('🎉 Password successfully changed! Kripya apne naye password se login karein.', 4000);
     try { window.location.hash = ''; } catch(e) {}
 
-    const session = await BuddySupabase.getSession();
-    if (session && session.user) {
-      const suUser = session.user;
-      const u = {
-        id: suUser.id,
-        name: suUser.user_metadata?.full_name || _nameFromEmail(suUser.email),
-        username: suUser.user_metadata?.username || '@' + (suUser.email ? suUser.email.split('@')[0] : 'user'),
-        email: suUser.email,
-        color: '#6366F1'
-      };
-      _enterApp(u, true);
-    } else {
-      setTimeout(() => _showView('login'), 1500);
-    }
+    // Link email to username in localStorage and database
+    try {
+      const session = await BuddySupabase.getSession();
+      if (session && session.user) {
+        const suUser = session.user;
+        const cleanUname = (suUser.user_metadata?.username || '').replace(/^@/, '').toLowerCase();
+        if (cleanUname && suUser.email) {
+          try { localStorage.setItem('buddy_u2e_' + cleanUname, suUser.email); } catch(e) {}
+        }
+        await BuddySupabase.upsertProfile({
+          id: suUser.id,
+          username: suUser.user_metadata?.username || ('@' + cleanUname),
+          full_name: suUser.user_metadata?.full_name || 'User',
+          avatar_color: '#6366F1',
+          status: suUser.email
+        });
+
+        // Pre-fill username or email in login box for user convenience
+        const loginInp = document.getElementById('login-email');
+        if (loginInp) loginInp.value = suUser.user_metadata?.username || suUser.email;
+      }
+    } catch(e) {}
+
+    // Do NOT open app directly! Go to Login view so user enters credentials
+    try { await BuddySupabase.signOut(); } catch(e) {}
+    _showView('login');
   }
 
   /* ── 6. ENTER APP ── */
