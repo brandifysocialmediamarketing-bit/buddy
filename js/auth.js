@@ -236,35 +236,103 @@ const AuthManager = (() => {
     }
   }
 
-  /* ── Email Login Handler ── */
+  /* ── Username or Email Login Handler ── */
+  const KNOWN_USER_EMAILS = {
+    'brandify_social_media': 'brandifysocialmediamarketing@gmail.com',
+    'brandify': 'brandifysocialmediamarketing@gmail.com'
+  };
+
   async function _handleEmailLogin() {
-    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    const rawInput = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value;
 
-    if (!email || !password) {
-      showToast('⚠️ Please enter your email and password.');
+    if (!rawInput || !password) {
+      showToast('⚠️ Please enter your Username/Email and password.');
       return;
     }
 
+    let targetEmail = rawInput.toLowerCase();
+    const isEmail = targetEmail.includes('@') && targetEmail.includes('.');
+
+    if (!isEmail) {
+      const cleanUname = rawInput.replace(/^@/, '').trim().toLowerCase();
+      showToast('🔍 Finding account for @' + cleanUname + '...');
+
+      // 1. Check known list or local storage mapping
+      const cached = KNOWN_USER_EMAILS[cleanUname] || localStorage.getItem('buddy_u2e_' + cleanUname);
+      if (cached) {
+        targetEmail = cached;
+      } else if (window.BuddySupabase) {
+        // 2. Query Supabase profiles table for this username
+        try {
+          const c = BuddySupabase.getClient();
+          if (c) {
+            const { data: profs } = await c
+              .from('profiles')
+              .select('*')
+              .or(`username.ilike.@${cleanUname},username.ilike.${cleanUname}`)
+              .limit(1);
+
+            if (profs && profs.length > 0) {
+              const prof = profs[0];
+              if (prof.status && prof.status.includes('@') && prof.status.includes('.')) {
+                targetEmail = prof.status;
+              } else if (prof.bio && prof.bio.includes('@') && prof.bio.includes('.')) {
+                targetEmail = prof.bio;
+              } else {
+                targetEmail = cleanUname + '@thebrandify.in';
+              }
+            } else {
+              targetEmail = cleanUname + '@thebrandify.in';
+            }
+          }
+        } catch (err) {
+          console.warn('Profile search error:', err);
+          targetEmail = cleanUname + '@thebrandify.in';
+        }
+      } else {
+        targetEmail = cleanUname + '@thebrandify.in';
+      }
+    }
+
     showToast('🔄 Signing in...');
-    const res = await BuddySupabase.signInWithEmail(email, password);
+    let res = await BuddySupabase.signInWithEmail(targetEmail, password);
+
+    // If failed and was a username input, try fallback domain
+    if (res && res.error && !isEmail && !targetEmail.endsWith('@thebrandify.in')) {
+      const fallbackEmail = rawInput.replace(/^@/, '').trim().toLowerCase() + '@thebrandify.in';
+      const fallbackRes = await BuddySupabase.signInWithEmail(fallbackEmail, password);
+      if (fallbackRes && fallbackRes.data && fallbackRes.data.user) {
+        res = fallbackRes;
+        targetEmail = fallbackEmail;
+      }
+    }
 
     if (res && res.data && res.data.user) {
       const suUser = res.data.user;
       const u = {
         id: suUser.id,
-        name: suUser.user_metadata?.full_name || _nameFromEmail(email),
-        username: suUser.user_metadata?.username || '@' + email.split('@')[0],
-        email: suUser.email,
+        name: suUser.user_metadata?.full_name || _nameFromEmail(targetEmail),
+        username: suUser.user_metadata?.username || (rawInput.startsWith('@') ? rawInput : ('@' + rawInput)),
+        email: suUser.email || targetEmail,
         color: '#6366F1'
       };
-      // Upsert profile in Supabase
+
+      // Save username to email mapping for future instant login
+      const cleanUname = (u.username || '').replace(/^@/, '').toLowerCase();
+      if (cleanUname && targetEmail) {
+        try { localStorage.setItem('buddy_u2e_' + cleanUname, targetEmail); } catch(e) {}
+      }
+
+      // Upsert profile in Supabase so status maintains email link
       await BuddySupabase.upsertProfile({
         id: u.id,
         username: u.username,
         full_name: u.name,
-        avatar_color: u.color
+        avatar_color: u.color,
+        status: targetEmail
       });
+
       _enterApp(u, true);
       showToast('👋 Welcome back, ' + u.name + '!');
       return;
@@ -273,6 +341,8 @@ const AuthManager = (() => {
     if (res && res.error) {
       if (res.error.message.includes('Email not confirmed') || res.error.message.includes('email_not_confirmed')) {
         showToast('📧 Kripya apne Email inbox me jakar confirmation link dabayein ya Supabase me Confirm Email OFF karein!', 6000);
+      } else if (res.error.message.includes('Invalid login credentials')) {
+        showToast('❌ Invalid Username/Email or Password. Please check again.');
       } else {
         showToast('❌ ' + res.error.message);
       }
@@ -345,11 +415,17 @@ const AuthManager = (() => {
         color: _randColor()
       };
 
+      const cleanUname = (u.username || '').replace(/^@/, '').toLowerCase();
+      if (cleanUname && email) {
+        try { localStorage.setItem('buddy_u2e_' + cleanUname, email); } catch(e) {}
+      }
+
       await BuddySupabase.upsertProfile({
         id: u.id,
         username: u.username,
         full_name: u.name,
-        avatar_color: u.color
+        avatar_color: u.color,
+        status: email
       });
 
       if (res.data.session) {
@@ -382,11 +458,17 @@ const AuthManager = (() => {
         color: _randColor()
       };
       // Upsert profile in Supabase
+      const cleanUname = (u.username || '').replace(/^@/, '').toLowerCase();
+      if (cleanUname && email) {
+        try { localStorage.setItem('buddy_u2e_' + cleanUname, email); } catch(e) {}
+      }
+
       await BuddySupabase.upsertProfile({
         id: u.id,
         username: u.username,
         full_name: u.name,
-        avatar_color: u.color
+        avatar_color: u.color,
+        status: email
       });
       _enterApp(u, true);
       showToast('✅ Account verified successfully! Welcome!');
