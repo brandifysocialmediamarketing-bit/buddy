@@ -527,7 +527,7 @@ const AuthManager = (() => {
       const cleanUname = rawInput.replace(/^@/, '').trim().toLowerCase();
       showToast('🔍 Finding email for @' + cleanUname + '...');
       const cached = localStorage.getItem('buddy_u2e_' + cleanUname);
-      if (cached) {
+      if (cached && cached.includes('@') && cached.includes('.')) {
         targetEmail = cached;
       } else if (window.BuddySupabase) {
         try {
@@ -544,16 +544,15 @@ const AuthManager = (() => {
                 targetEmail = prof.status;
               } else if (prof.bio && prof.bio.includes('@') && prof.bio.includes('.')) {
                 targetEmail = prof.bio;
-              } else {
-                targetEmail = cleanUname + '@thebrandify.in';
               }
-            } else {
-              targetEmail = cleanUname + '@thebrandify.in';
             }
           }
-        } catch(e) {
-          targetEmail = cleanUname + '@thebrandify.in';
-        }
+        } catch(e) {}
+      }
+
+      if (!targetEmail || !targetEmail.includes('@') || !targetEmail.includes('.')) {
+        showToast('⚠️ Is username ka email linked nahi mila. Kripya apna registered Email address daalein taaki link aapke inbox me ja sake.', 6000);
+        return;
       }
     }
 
