@@ -3597,7 +3597,7 @@ html, body {
 
 
 
-/* ─── NEW USER-BRANDED CUSTOM LOGO STYLES (WITH WHITE BACKDROP & GLOWING SHADOW) ─── */
+/* ─── USER-BRANDED CUSTOM LOGO STYLES (THEME-ADAPTIVE & GLOWING) ─── */
 
 /* 1. Sidebar Header Logo Container */
 .app-logo {
@@ -3607,27 +3607,39 @@ html, body {
   font-size: 19px !important;
   font-weight: 900 !important;
   letter-spacing: 0.08em !important;
+  user-select: none;
 }
 
 .app-logo-badge {
-  width: 44px !important;
-  height: 44px !important;
-  border-radius: 14px !important;
-  background: #ffffff !important; /* Pure white backdrop ensures dark blue "Buddy" is 100% readable */
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   padding: 3px !important;
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5), 0 0 12px rgba(236, 72, 153, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
   flex-shrink: 0 !important;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease !important;
   cursor: pointer !important;
 }
 
+[data-theme="dark"] .app-logo-badge {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 4px 18px rgba(99, 102, 241, 0.4), 0 0 12px rgba(236, 72, 153, 0.25) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+[data-theme="light"] .app-logo-badge {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.2), 0 1px 4px rgba(0, 0, 0, 0.06) !important;
+}
+
 .app-logo:hover .app-logo-badge {
   transform: scale(1.08) rotate(-2deg) !important;
-  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.7), 0 0 16px rgba(236, 72, 153, 0.5) !important;
+  box-shadow: 0 8px 26px rgba(99, 102, 241, 0.6) !important;
 }
 
 .brand-logo-img {
@@ -3635,29 +3647,48 @@ html, body {
   height: 100% !important;
   object-fit: contain !important;
   display: block !important;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25)) !important;
 }
 
-/* 2. Auth Screens Logo Badge */
+/* 2. Auth Screens Logo Badge (Login, Signup, Forgot, Reset Password) */
 .auth-logo {
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
+  justify-content: flex-start !important;
+  gap: 14px !important;
   margin-bottom: 24px !important;
 }
 
 .auth-logo-badge {
-  width: 100px !important;
-  height: 100px !important;
-  border-radius: 26px !important;
-  background: #ffffff !important; /* Pure white card for razor sharp contrast */
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 16px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 8px !important;
-  margin: 0 auto !important;
-  box-shadow: 0 16px 40px rgba(99, 102, 241, 0.45), 0 0 24px rgba(236, 72, 153, 0.3), 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-  border: 2px solid rgba(255, 255, 255, 0.95) !important;
+  padding: 4px !important;
+  flex-shrink: 0 !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+  cursor: pointer !important;
   animation: popInLogo 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+[data-theme="dark"] .auth-logo-badge {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45), 0 0 16px rgba(236, 72, 153, 0.25) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+[data-theme="light"] .auth-logo-badge {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.22), 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+}
+
+.auth-logo:hover .auth-logo-badge {
+  transform: translateY(-2px) scale(1.05) !important;
 }
 
 .auth-brand-logo {
@@ -3665,6 +3696,19 @@ html, body {
   height: 100% !important;
   object-fit: contain !important;
   display: block !important;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)) !important;
+}
+
+.logo-wordmark {
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.12em !important;
+  background: var(--primary-grad) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: var(--text) !important;
+  filter: drop-shadow(0 2px 8px var(--primary-glow)) !important;
 }
 
 @keyframes popInLogo {
@@ -3674,18 +3718,29 @@ html, body {
 
 /* 3. Empty State Screen Logo */
 .empty-visual {
-  width: 130px !important;
-  height: 130px !important;
-  background: #ffffff !important; /* Pure white backdrop */
-  border-radius: 36px !important;
+  width: 104px !important;
+  height: 104px !important;
+  border-radius: 28px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 12px !important;
-  box-shadow: 0 20px 48px rgba(99, 102, 241, 0.45), 0 0 28px rgba(236, 72, 153, 0.3), 0 6px 16px rgba(0, 0, 0, 0.15) !important;
-  border: 2px solid rgba(255, 255, 255, 0.95) !important;
-  margin-bottom: 22px !important;
+  padding: 10px !important;
+  margin: 0 auto 20px !important;
   animation: floatEmptyLogo 3.2s ease-in-out infinite !important;
+}
+
+[data-theme="dark"] .empty-visual {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 2px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 16px 44px rgba(99, 102, 241, 0.45), 0 0 24px rgba(236, 72, 153, 0.3) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+[data-theme="light"] .empty-visual {
+  background: #ffffff !important;
+  border: 2px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 16px 40px rgba(99, 102, 241, 0.22), 0 4px 12px rgba(0, 0, 0, 0.06) !important;
 }
 
 .empty-brand-logo {
@@ -3693,6 +3748,8 @@ html, body {
   height: 100% !important;
   object-fit: contain !important;
   display: block !important;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3)) !important;
+}
 }
 
 @keyframes floatEmptyLogo {
