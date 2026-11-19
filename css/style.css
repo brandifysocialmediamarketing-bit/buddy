@@ -244,11 +244,35 @@ input {
 }
 .field-group input::placeholder { color: var(--text-3); }
 
-.input-with-icon { position: relative; display: flex; align-items: center; }
-.input-with-icon input { width: 100%; padding-right: 44px; }
+.pass-wrap,
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.pass-wrap input,
+.input-with-icon input {
+  width: 100%;
+  padding-right: 44px !important;
+  box-sizing: border-box;
+}
 .eye-btn {
-  position: absolute; right: 12px; color: var(--text-3);
-  display: flex; align-items: center; justify-content: center;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+  z-index: 2;
 }
 .eye-btn:hover { color: var(--text); }
 
