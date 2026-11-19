@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=198" />
+  <link rel="stylesheet" href="css/style.css?v=199" />
   <script>
     (function () {
       try {
@@ -52,11 +52,9 @@
     <!-- 1. LOGIN VIEW -->
     <div id="login-view" class="auth-view">
       <div class="auth-card">
-        <div class="auth-logo">
-          <div class="auth-logo-badge">
-            <img src="assets/logo-icon.png?v=198" alt="BUDDY Mascot" class="auth-brand-logo" />
-          </div>
-          <span class="logo-wordmark">BUDDY</span>
+        <div class="auth-brand-center">
+          <img src="assets/logo-dark.png?v=199" alt="BUDDY" class="auth-full-logo dark-theme-logo" />
+          <img src="assets/logo.png?v=199" alt="BUDDY" class="auth-full-logo light-theme-logo" />
         </div>
         <h1 class="auth-heading">Welcome to BUDDY</h1>
         <p class="auth-sub">Sign in with your Username or Email</p>
@@ -100,11 +98,9 @@
     <!-- 2. SIGNUP VIEW (VERIFIED REGISTRATION) -->
     <div id="signup-view" class="auth-view hidden">
       <div class="auth-card">
-        <div class="auth-logo">
-          <div class="auth-logo-badge">
-            <img src="assets/logo-icon.png?v=198" alt="BUDDY Mascot" class="auth-brand-logo" />
-          </div>
-          <span class="logo-wordmark">BUDDY</span>
+        <div class="auth-brand-center">
+          <img src="assets/logo-dark.png?v=199" alt="BUDDY" class="auth-full-logo dark-theme-logo" />
+          <img src="assets/logo.png?v=199" alt="BUDDY" class="auth-full-logo light-theme-logo" />
         </div>
         <h1 class="auth-heading">Create Account</h1>
         <p class="auth-sub">Sign up with your email to get started</p>
@@ -151,11 +147,9 @@
     <!-- 3. OTP VERIFICATION VIEW -->
     <div id="otp-view" class="auth-view hidden">
       <div class="auth-card">
-        <div class="auth-logo">
-          <div class="auth-logo-badge">
-            <img src="assets/logo-icon.png?v=198" alt="BUDDY Mascot" class="auth-brand-logo" />
-          </div>
-          <span class="logo-wordmark">BUDDY</span>
+        <div class="auth-brand-center">
+          <img src="assets/logo-dark.png?v=199" alt="BUDDY" class="auth-full-logo dark-theme-logo" />
+          <img src="assets/logo.png?v=199" alt="BUDDY" class="auth-full-logo light-theme-logo" />
         </div>
         <h1 class="auth-heading">Verify Code</h1>
         <p class="auth-sub" id="otp-target-label">Enter the 6-digit code sent to your email/phone</p>
@@ -175,11 +169,9 @@
     <!-- 4. FORGOT PASSWORD VIEW -->
     <div id="forgot-view" class="auth-view hidden">
       <div class="auth-card">
-        <div class="auth-logo">
-          <div class="auth-logo-badge">
-            <img src="assets/logo-icon.png?v=198" alt="BUDDY Mascot" class="auth-brand-logo" />
-          </div>
-          <span class="logo-wordmark">BUDDY</span>
+        <div class="auth-brand-center">
+          <img src="assets/logo-dark.png?v=199" alt="BUDDY" class="auth-full-logo dark-theme-logo" />
+          <img src="assets/logo.png?v=199" alt="BUDDY" class="auth-full-logo light-theme-logo" />
         </div>
         <h1 class="auth-heading">Reset Password</h1>
         <p class="auth-sub">Enter your registered Email (or Username) to receive a reset link</p>
@@ -197,11 +189,9 @@
     <!-- 5. SET NEW PASSWORD VIEW (AFTER CLICKING RESET LINK IN EMAIL) -->
     <div id="reset-password-view" class="auth-view hidden">
       <div class="auth-card">
-        <div class="auth-logo">
-          <div class="auth-logo-badge">
-            <img src="assets/logo-icon.png?v=198" alt="BUDDY Mascot" class="auth-brand-logo" />
-          </div>
-          <span class="logo-wordmark">BUDDY</span>
+        <div class="auth-brand-center">
+          <img src="assets/logo-dark.png?v=199" alt="BUDDY" class="auth-full-logo dark-theme-logo" />
+          <img src="assets/logo.png?v=199" alt="BUDDY" class="auth-full-logo light-theme-logo" />
         </div>
         <h1 class="auth-heading">Set New Password</h1>
         <p class="auth-sub">Enter your new password below</p>
@@ -259,10 +249,8 @@
     <aside class="sidebar" id="sidebar">
       <header class="sidebar-header">
         <div class="app-logo">
-          <div class="app-logo-badge">
-            <img src="assets/logo-icon.png?v=198" alt="BUDDY" class="brand-logo-img" />
-          </div>
-          <span>BUDDY</span>
+          <img src="assets/logo-horizontal-dark.png?v=199" alt="BUDDY" class="sidebar-brand-logo dark-theme-logo" />
+          <img src="assets/logo-horizontal-light.png?v=199" alt="BUDDY" class="sidebar-brand-logo light-theme-logo" />
         </div>
         <div class="sidebar-actions">
           <button class="icon-btn" id="mobile-connect-btn" title="Open on Mobile (Android & iPhone)" aria-label="Open on Mobile">
@@ -371,8 +359,9 @@
     <!-- CHAT AREA -->
     <main class="chat-area" id="chat-area">
       <div class="empty-state" id="empty-state">
-        <div class="empty-visual">
-          <img src="assets/logo-icon.png?v=198" alt="BUDDY Mascot" class="empty-brand-logo" />
+        <div class="empty-brand-center">
+          <img src="assets/logo-dark.png?v=199" alt="BUDDY" class="empty-full-logo dark-theme-logo" />
+          <img src="assets/logo.png?v=199" alt="BUDDY" class="empty-full-logo light-theme-logo" />
         </div>
         <h2>Your private space</h2>
         <p>Select a person to start chatting.</p>
@@ -1078,15 +1067,15 @@
 
   <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/theme.js?v=198"></script>
-  <script src="js/wallpaper.js?v=198"></script>
+  <script src="js/theme.js?v=199"></script>
+  <script src="js/wallpaper.js?v=199"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=198"></script>
-  <script src="js/webrtc-call.js?v=198"></script>
-  <script src="js/chat.js?v=198"></script>
-  <script src="js/auth.js?v=198"></script>
-  <script src="js/app.js?v=198"></script>
-  <script src="js/dont-block-me-game.js?v=198"></script>
+  <script src="js/supabase-config.js?v=199"></script>
+  <script src="js/webrtc-call.js?v=199"></script>
+  <script src="js/chat.js?v=199"></script>
+  <script src="js/auth.js?v=199"></script>
+  <script src="js/app.js?v=199"></script>
+  <script src="js/dont-block-me-game.js?v=199"></script>
   <!-- Live Auto-Reload -->
   <script>
     (function () {
