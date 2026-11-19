@@ -277,7 +277,13 @@ const AuthManager = (() => {
     'brandify_social_media': 'brandifysocialmediamarketing@gmail.com',
     'brandify': 'brandifysocialmediamarketing@gmail.com',
     'keyur_007': 'keyursohaliya28@gmail.com',
-    'keyur': 'keyursohaliya28@gmail.com'
+    'keyur': 'keyursohaliya28@gmail.com',
+    'sk': 'keyurasohaliya12@gmail.com',
+    'jigarpatel': 'jigarnaliyadhara11@gmail.com',
+    'jigar': 'jigarnaliyadhara11@gmail.com',
+    'kd': 'desaiharsh6724@gmail.com',
+    'keval': 'desaiharsh6724@gmail.com',
+    'keval_desai': 'desaiharsh6724@gmail.com'
   };
 
   async function _handleEmailLogin() {
@@ -528,7 +534,7 @@ const AuthManager = (() => {
     if (!isEmail) {
       const cleanUname = rawInput.replace(/^@/, '').trim().toLowerCase();
       showToast('🔍 Finding email for @' + cleanUname + '...');
-      const cached = localStorage.getItem('buddy_u2e_' + cleanUname);
+      const cached = KNOWN_USER_EMAILS[cleanUname] || localStorage.getItem('buddy_u2e_' + cleanUname);
       if (cached && cached.includes('@') && cached.includes('.')) {
         targetEmail = cached;
       } else if (window.BuddySupabase) {
@@ -576,8 +582,12 @@ const AuthManager = (() => {
       showToast('⚠️ New password must be at least 6 characters.');
       return;
     }
+    if (!p2) {
+      showToast('⚠️ Kripya "Confirm New Password" box me bhi wahi password dobara daalein.');
+      return;
+    }
     if (p1 !== p2) {
-      showToast('⚠️ Passwords do not match. Please verify.');
+      showToast('⚠️ Dono password match nahi kar rahe. Kripya check karein.');
       return;
     }
 
