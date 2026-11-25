@@ -1,205 +1,92 @@
 /**
- * BUDDY - couple-match-game.js
- * Game 2: "Couple Match 💑" - Ultimate Romantic Compatibility Quiz & Love Dice
+ * BUDDY - couple-match-game.js (v201)
+ * Game 2: "Couple Match 💑" - Ultimate Romantic Couple Arcade
+ * 
+ * 100% UNIQUE GAMEPLAY (NO QUESTION POOLS / QUIZZES!):
+ * 1. 🎡 Romantic Love Wheel (Spin the Bottle / Wheel with physics, sweet/spicy/funny modes)
+ * 2. 🎟️ Secret Love Scratch Card (Real-time HTML5 Canvas foil scratch-off, custom romantic rewards)
+ * 3. ❌⭕ Love XO Battle (Neon romantic Tic-Tac-Toe with victory rewards & dares)
  * 
  * Features:
- * - Stunning romantic rose-gold & neon-magenta aesthetic with floating hearts & sparkles
- * - Cute vector couple mascots ("Romeo & Juliet" / "Bubbly Doves")
- * - 2 Addictive Couple Modes:
- *   Mode 1: 💘 Couple Compatibility Quiz (30+ romantic questions, swap, side-by-side answers, Love Meter, Couple Dares)
- *   Mode 2: 🎲 Love Dice & Romantic Truth/Dare (Interactive dice roll, spicy/sweet/playful categories, send to chat)
- * - Real-time Buddy Chat integration (send directly to partner in 1 tap)
- * - Seamless mobile-friendly touch design, offline local storage, cloud sync
+ * - Real-time scratch foil physics & particle effects
+ * - Direct 1-tap BUDDY Chat integration (send scratch cards & spin challenges directly into chat)
+ * - Mobile-first touch & drag gestures
+ * - Offline localStorage + server + Supabase cloud sync
  */
 
 const CoupleMatchGame = (() => {
-  // ── 30+ Curated Romantic Couple Questions ──
-  const QUESTION_BANK = [
-    {
-      id: 101,
-      category: "Romantic Story & Firsts",
-      title: "Who fell in love first in our story? 💍",
-      options: ["Definitely Me! (Struck by cupid ❤️)", "My Partner! (Could not take eyes off me 😜)", "At the exact same moment ✨", "Took time, but deep love grew 🌸"]
-    },
-    {
-      id: 102,
-      category: "Firsts & Dates",
-      title: "What is my absolute dream romantic date? 🕯️",
-      options: ["Cozy Candle-light Dinner & Wine 🍷", "Late Night Long Drive & Roadside Chai 🚗", "Beach Sunset Stroll holding hands 🏖️", "Blanket Fort, Pizza & Netflix at home 🍕"]
-    },
-    {
-      id: 103,
-      category: "Moods & Love",
-      title: "What melts my anger instantly after a fight? 🥺",
-      options: ["A tight, warm, silent hug 🫂", "My favorite food / sweet chocolates 🍫", "A sincere cute apology holding ears 🙈", "A silly joke that makes me burst into laughter 😂"]
-    },
-    {
-      id: 104,
-      category: "Vacation & Dreams",
-      title: "Our dream romantic holiday escape together? ✈️",
-      options: ["Sunny Goa or Maldives Beach Villa 🏝️", "Snowy Himachal / Swiss Mountain Resort ❄️", "Peaceful Kerala Backwaters Houseboat 🛶", "Paris or Rome Romantic Heritage Stroll 🗼"]
-    },
-    {
-      id: 105,
-      category: "Chatting Habits",
-      title: "What's my biggest cute habit when texting you? 📱",
-      options: ["Sending 10 rapid messages in 1 second 💬", "Spamming cute reels & relatable couple memes 📲", "Long emotional voice notes 🎙️", "Always demanding good morning & night calls 📞"]
-    },
-    {
-      id: 106,
-      category: "Cuddle & Romance",
-      title: "What is my vibe when we are cozying up? 🧸",
-      options: ["Must hold hands or cuddle non-stop 🧸", "Talking for hours about our future & dreams 🌙", "Watching a movie while sharing snacks 🍿", "Stealing the entire blanket 🙈"]
-    },
-    {
-      id: 107,
-      category: "Fun & Teasing",
-      title: "Who is more likely to overspend on shopping? 🛍️",
-      options: ["100% Me! (Retail therapy lover 🛍️)", "My Partner! (Buys things impulsively 💳)", "Both of us together (Shopping disasters 💸)", "Neither (We are super budget-conscious 💰)"]
-    },
-    {
-      id: 108,
-      category: "Deep Connection",
-      title: "What would hurt me the most in our relationship? 💔",
-      options: ["Hiding things or broken trust 🚫", "Being ignored or left on read 📱", "Cold distant behavior when I need you 🥺", "Forgetting special dates & promises 🗓️"]
-    },
-    {
-      id: 109,
-      category: "Jealousy & Protection",
-      title: "Who gets more possessive or jealous? 🙈",
-      options: ["Secretly Me! (Cute jealousy only 😜)", "My Partner! (Protective lover vibe 🛡️)", "Equal! (We both protect our love ❤️)", "Zero (We have 100% blind mutual trust 🕊️)"]
-    },
-    {
-      id: 110,
-      category: "Midnight Vibe",
-      title: "Our ideal late night date plan? 🌙",
-      options: ["Long drive with romantic songs playing 🚗", "Sitting on rooftop watching the stars ✨", "Cooking Maggi / late snacks together at 2 AM 🍜", "Deep 3 AM pillow talk about life 💭"]
-    },
-    {
-      id: 111,
-      category: "Sweet Weakness",
-      title: "What's my secret cute weakness? 🌸",
-      options: ["Forehead kisses 💋", "When you gently play with my hair 💆", "When you call me by my cute private nickname 🌸", "Surprise visits or fresh flowers 💐"]
-    },
-    {
-      id: 112,
-      category: "Daily Life",
-      title: "Who takes longer to get ready before going out? 👗",
-      options: ["Definitely Me! (Every detail must be perfect 👗)", "My Partner! ('5 minutes' means 1 hour ⏳)", "We take equal time ⌛", "Both of us get ready in 10 minutes ⚡"]
-    },
-    {
-      id: 113,
-      category: "Fights & Apologies",
-      title: "Who says 'Sorry' first after an argument? 🗣️",
-      options: ["Me, because your smile matters more 💖", "My partner, after realizing their mistake 😇", "Whoever's fault it was ⚖️", "Neither, we just start laughing & talking normally 🤝"]
-    },
-    {
-      id: 114,
-      category: "Gifts & Surprises",
-      title: "What's the best surprise gift I could receive from you? 🎁",
-      options: ["A handwritten heartfelt love letter 💌", "A planned surprise weekend getaway ✈️", "That special thing I've been eyeing for months 🛍️", "A surprise date with my favorite cake 🎂"]
-    },
-    {
-      id: 115,
-      category: "Couple Dynamic",
-      title: "How would you describe our couple vibe in one phrase? ✨",
-      options: ["Tom & Jerry (Fight a lot, can't live without each other) 🐱🐭", "Romeo & Juliet (Pure fairytale romance) 👑", "Partners in Crime & Besties (Laugh 24/7) 👯", "Power Couple (Growing & winning together) 🚀"]
-    },
-    {
-      id: 116,
-      category: "Morning Vibe",
-      title: "My go-to morning mood with you? ☕",
-      options: ["'Don't let me leave the bed' cuddle 😴", "Ready to conquer the world with coffee/chai ☕", "Need 30 minutes of quiet sleepy time first 🤫", "Checking phone for sweet good morning texts 📱"]
-    },
-    {
-      id: 117,
-      category: "Movie Night",
-      title: "Movie pick when we are cuddling together? 🍿",
-      options: ["Emotional Romantic Drama with happy tears 🥺", "Spooky Horror where we cling together 👻", "Stomach-hurting Comedy 😂", "Action Thriller keeping us on edge 💥"]
-    },
-    {
-      id: 118,
-      category: "Food Love",
-      title: "What meal would I want you to make for me? 🍲",
-      options: ["Comforting Dal Rice / Khichdi with love 🍚", "Cheesy Italian Pasta or Lasagna 🍝", "Crispy hot Pakodas / Maggi during rain 🌧️", "Pancake / Waffle breakfast in bed 🥞"]
-    },
-    {
-      id: 119,
-      category: "The Spark",
-      title: "When did I realize you were 'The One'? 💍",
-      options: ["When you stayed with me through my lowest day 🫂", "The very first time our eyes locked & talked ✨", "Seeing how pure and caring your heart is 💖", "When making each other laugh felt so effortless 😊"]
-    },
-    {
-      id: 120,
-      category: "Love Language",
-      title: "What is my primary Love Language? 💌",
-      options: ["Physical Touch & Warm Hugs 🫂", "Words of Affirmation & Sweet Compliments 💬", "Quality Time without phones ⏳", "Acts of Service & Caring Gestures 🤲"]
-    },
-    {
-      id: 121,
-      category: "Goofy Fun",
-      title: "Who makes silly/goofy jokes when we are alone? 🤪",
-      options: ["Me! I'm the designated entertainer 🤡", "My partner is secretly crazy funny 😂", "Both of us share one brain cell together 🤪", "We are mature... until we meet 😜"]
-    },
-    {
-      id: 122,
-      category: "Comfort",
-      title: "How do I act when I'm stressed or overwhelmed? 🛋️",
-      options: ["Need a warm hug and comforting words 🥺", "Need quiet alone time for 1 hour 🛋️", "Vent out everything while you listen 🗣️", "Distract me with yummy food & a movie 🍕"]
-    },
-    {
-      id: 123,
-      category: "Lazy Day",
-      title: "Our ideal lazy Sunday together? 🛋️",
-      options: ["Stay in pajamas, binge Netflix all day 📺", "Go cafe hopping & take aesthetic photos 📸", "Sleep till 1 PM and do absolutely nothing 😴", "Cook something special together at home 🍳"]
-    },
-    {
-      id: 124,
-      category: "Decisions",
-      title: "Who is more stubborn during decisions? 😤",
-      options: ["Me! Once my mind is made, that's it 😤", "My partner! Very hard to convince 😅", "Depends entirely on the topic 🤔", "Neither, we always reach a sweet compromise 🤝"]
-    },
-    {
-      id: 125,
-      category: "Eternal Memory",
-      title: "If we could freeze one moment forever, which one? 💖",
-      options: ["Our very first confession / kiss 💋", "Late night talks where time stopped ✨", "The day we laughed till our stomachs hurt 😂", "A quiet peaceful moment holding hands in silence 🤝"]
-    }
+  // ── 1. Romantic Love Wheel Data ──
+  const WHEEL_CHALLENGES = {
+    sweet: [
+      { id: 1, title: "Forehead Kiss & Tight Hug 🫂", text: "Give or demand a warm, 1-minute silent hug and a soft forehead kiss right now!" },
+      { id: 2, title: "3 Things I Love About You 💌", text: "Look into your partner's eyes (or send voice note) and name 3 little things that made you fall for them." },
+      { id: 3, title: "10-Min Tension Massage 💆", text: "Winner gets a 10-minute relaxing head, neck, or shoulder massage tonight with zero excuses!" },
+      { id: 4, title: "Our Song Karaoke 🎤", text: "Sing the chorus of your favorite romantic song together or on a 20-second voice note!" },
+      { id: 5, title: "Sweet Midnight Treat 🍦", text: "The person who spun must treat the other to their favorite ice cream or midnight dessert!" },
+      { id: 6, title: "Royal Wish Card 👑", text: "Grant your partner 1 cute wish today with a big smile and zero arguments!" },
+      { id: 7, title: "First Impression Confession 🌸", text: "Share the exact moment you realized you had feelings for your partner!" },
+      { id: 8, title: "Cuddle Monopoly 🧸", text: "Whoever spun gets unlimited cuddle and hand-holding privileges for the next 24 hours!" }
+    ],
+    spicy: [
+      { id: 101, title: "Whisper in the Ear 💋", text: "Whisper (or send a deep voice note) the most romantic thing you've been thinking about your partner all day." },
+      { id: 102, title: "Favorite Outfit Confession 🔥", text: "Confess which outfit, look, or hairstyle of your partner makes your heart beat the fastest!" },
+      { id: 103, title: "Slow Dance Moment 💃", text: "Put on your favorite slow love song and slow dance together for 2 minutes." },
+      { id: 104, title: "Cheesy Bollywood Pickup 🎬", text: "Call or look at your partner and deliver the most dramatic romantic dialogue with full emotion!" },
+      { id: 105, title: "Secret Romantic Dream 🌙", text: "Share one romantic trip or date fantasy you've always wanted to experience together." },
+      { id: 106, title: "Lock Eyes for 30 Seconds 👀", text: "Stare into each other's eyes without speaking or laughing for 30 full seconds!" },
+      { id: 107, title: "Cute Nickname Rule 👑", text: "Call your partner only by a cheesy romantic nickname for the next 3 hours!" },
+      { id: 108, title: "Most Attractive Habit 💖", text: "Tell your partner the single most attractive habit or expression they have." }
+    ],
+    funny: [
+      { id: 201, title: "Derpy Selfie Dare 📸", text: "Take the absolute funniest, goofiest no-filter selfie and send it to your partner in BUDDY chat!" },
+      { id: 202, title: "Imitate Your Partner 😂", text: "Do your best 30-second impression of how your partner acts when they are hungry or sleepy!" },
+      { id: 203, title: "Maggi / Snack Chef 🍜", text: "The spinner has to cook late-night Maggi or prepare snacks for their partner!" },
+      { id: 204, title: "Compliment Rap 🎤", text: "Freestyle rap 4 rhyming lines about how amazing your partner is!" },
+      { id: 205, title: "Screen Time Swap 📱", text: "Show your partner the last 3 photos in your gallery or your most played song!" },
+      { id: 206, title: "Yes Day for 1 Hour 👑", text: "For the next 60 minutes, say 'Yes' to any reasonable request from your partner!" },
+      { id: 207, title: "Dramatic Apology 🙈", text: "Apologize dramatically on one knee for the last silly argument you had!" },
+      { id: 208, title: "Funny Dance Off 🕺", text: "Do a 15-second silly celebratory victory dance right now!" }
+    ]
+  };
+
+  // ── 2. Preset Scratch Card Romantic Rewards ──
+  const SCRATCH_PRESETS = [
+    { title: "Midnight Ice Cream Date 🍦", desc: "Valid for 1 spontaneous late-night ice cream or waffle treat anytime!" },
+    { title: "15-Min Tension Massage 💆", desc: "Redeemable for a 15-minute relaxing head & shoulder massage with zero complaints." },
+    { title: "Royal 'Yes Day' Pass 👑", desc: "Grants the holder 1 wish where partner cannot say no for the next 24 hours!" },
+    { title: "Late Night Long Drive 🚗", desc: "Valid for a peaceful late-night drive, listening to our favorite songs with roadside chai." },
+    { title: "Home-Cooked Candlelight Dinner 🍝", desc: "Your partner will cook your favorite comforting meal by candlelight!" },
+    { title: "Unlimited Cuddle & Hug Pass 🧸", desc: "No questions asked—instant warm hugs and cuddles on demand." },
+    { title: "Favorite Movie Night Boss 🍿", desc: "You get total control over the movie / show selection and snacks tonight!" },
+    { title: "Secret Heartfelt Love Letter 💌", desc: "Your partner owes you a handwritten letter with 5 reasons they love you." }
   ];
 
-  // ── Romantic Truth or Dare Bank (Mode 2) ──
-  const TRUTH_OR_DARE_BANK = [
-    { type: "truth", cat: "sweet", text: "What was your very first impression when you first saw me? Be 100% honest! 🌸" },
-    { type: "truth", cat: "sweet", text: "What is the single cutest thing I do that makes your heart flutter? 💖" },
-    { type: "truth", cat: "spicy", text: "What is your favorite outfit or look on me that makes you blush? 🔥" },
-    { type: "truth", cat: "sweet", text: "If we could escape anywhere in the world right now for 48 hours, where would you take me? ✈️" },
-    { type: "truth", cat: "spicy", text: "What is a romantic secret or fantasy you haven't told me yet? 🤫" },
-    { type: "truth", cat: "funny", text: "What's the funniest or most awkward thing that happened on one of our dates? 😂" },
-    { type: "truth", cat: "sweet", text: "When do you miss me the most throughout your day? 💭" },
-    { type: "truth", cat: "spicy", text: "Forehead kiss, tight waist hug, or holding hands: which one is your favorite? 💋" },
-    { type: "dare", cat: "sweet", text: "Send a 20-second voice note singing any romantic song dedicated to me right now! 🎤" },
-    { type: "dare", cat: "sweet", text: "Send me 5 reasons why you fell in love with me in our chat! 💌" },
-    { type: "dare", cat: "funny", text: "Send your absolute derpiest, funniest selfie without any filter! 📸" },
-    { type: "dare", cat: "spicy", text: "Call me right now and give me the cheesiest Bollywood/romantic pickup line in your best voice! 📞" },
-    { type: "dare", cat: "sweet", text: "Promise to give me a 10-minute relaxing massage next time we meet! 💆" },
-    { type: "dare", cat: "funny", text: "Change your nickname for me in chat to whatever I choose for the next 24 hours! 👑" },
-    { type: "dare", cat: "sweet", text: "Plan our next date completely from start to finish—no asking me for ideas! 🚗" },
-    { type: "dare", cat: "spicy", text: "Send me the most attractive photo you have on your phone right now! 🔥" }
-  ];
+  // ── Game State ──
+  let state = {
+    currentScreen: 'hub', // 'hub' | 'wheel' | 'scratch_create' | 'scratch_play' | 'xo'
+    wheelCategory: 'sweet',
+    isSpinning: false,
+    wheelAngle: 0,
+    wheelResult: null,
+    scratchSender: '',
+    scratchPartner: '',
+    scratchTitle: '',
+    scratchDesc: '',
+    activeScratchCard: null,
+    scratchClearedPercent: 0,
+    scratchRevealed: false,
+    // XO Battle
+    xoBoard: Array(9).fill(null),
+    xoTurn: 'X', // 'X' (💖) or 'O' (💙)
+    xoWinner: null,
+    xoWinningLine: null,
+    xoMode: 'pass', // 'pass' or 'ai'
+    xoScores: { X: 0, O: 0, ties: 0 }
+  };
 
-  // ── Couple Dare / Reward Bank (Shown after quiz results) ──
-  const COUPLE_REWARDS = [
-    { title: "Romantic Massage 💆", desc: "Winner gets a 10-minute relaxing shoulder or head massage tonight!" },
-    { title: "Sweet Midnight Treat 🍦", desc: "Loser treats the winner to their favorite ice cream or midnight dessert!" },
-    { title: "Heartfelt Love Song 🎤", desc: "Sing a 30-second romantic song on voice note with full passion!" },
-    { title: "Love Letter Delivery 💌", desc: "Write 5 sweet reasons why you adore your partner in chat right now." },
-    { title: "Surprise Date Duty 🚗", desc: "Plan and host our next surprise date completely on your own!" },
-    { title: "Royal Wish Pass 👑", desc: "Winner gets 1 wish granted today with zero arguments!" }
-  ];
-
-  // ── Vector Couple Mascot ──
+  // ── Mascot SVG ──
   const COUPLE_MASCOT_SVG = `
-    <svg class="cm-mascot-art" viewBox="0 0 180 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="cm-mascot-art" viewBox="0 0 160 130" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="cmGradLeft" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#38bdf8"/>
@@ -209,103 +96,26 @@ const CoupleMatchGame = (() => {
           <stop offset="0%" stop-color="#ff2d75"/>
           <stop offset="100%" stop-color="#fb7185"/>
         </linearGradient>
-        <linearGradient id="cmHeartGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#ff2d75"/>
-          <stop offset="100%" stop-color="#e11d48"/>
-        </linearGradient>
       </defs>
+      <circle cx="55" cy="70" r="30" fill="url(#cmGradLeft)"/>
+      <circle cx="48" cy="66" r="3" fill="#ffffff"/>
+      <circle cx="62" cy="66" r="3" fill="#ffffff"/>
+      <path d="M50 76C52 80 58 80 60 76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="44" cy="72" r="3.5" fill="#fda4af" opacity="0.8"/>
 
-      <!-- Soft Glowing Aura -->
-      <circle cx="90" cy="75" r="60" fill="url(#cmGradRight)" opacity="0.15" filter="blur(16px)"/>
+      <circle cx="100" cy="70" r="30" fill="url(#cmGradRight)"/>
+      <circle cx="114" cy="46" r="5" fill="#ffd700"/>
+      <path d="M92 65C95 68 98 68 101 65" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="110" cy="66" r="3" fill="#ffffff"/>
+      <path d="M97 76C99 80 105 80 107 76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="115" cy="72" r="3.5" fill="#ffffff" opacity="0.6"/>
 
-      <!-- Mascot A (Left - Cute Blue Character) -->
-      <g class="cm-char-left">
-        <circle cx="65" cy="82" r="32" fill="url(#cmGradLeft)"/>
-        <!-- Eyes -->
-        <circle cx="58" cy="78" r="3.5" fill="#ffffff"/>
-        <circle cx="72" cy="78" r="3.5" fill="#ffffff"/>
-        <!-- Smile -->
-        <path d="M60 88C62 92 68 92 70 88" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-        <!-- Blushing cheek -->
-        <circle cx="53" cy="85" r="4" fill="#fda4af" opacity="0.8"/>
-      </g>
-
-      <!-- Mascot B (Right - Cute Rose Character, leaning in) -->
-      <g class="cm-char-right">
-        <circle cx="108" cy="82" r="32" fill="url(#cmGradRight)"/>
-        <!-- Cute Bow / Flower on top -->
-        <circle cx="122" cy="56" r="6" fill="#ffd700"/>
-        <circle cx="118" cy="54" r="3" fill="#ffffff"/>
-        <!-- Eyes (Happy wink) -->
-        <path d="M100 76C103 80 107 80 110 76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="120" cy="78" r="3.5" fill="#ffffff"/>
-        <!-- Sweet Smile -->
-        <path d="M105 88C107 92 113 92 115 88" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-        <!-- Blushing cheek -->
-        <circle cx="125" cy="85" r="4" fill="#ffffff" opacity="0.6"/>
-      </g>
-
-      <!-- Shared Floating Beating Heart Above -->
-      <g class="cm-beating-heart">
-        <path d="M86.5 40C86.5 33.3726 91.8726 28 98.5 28C102.101 28 105.304 29.5858 107.5 32.0825C109.696 29.5858 112.899 28 116.5 28C123.127 28 128.5 33.3726 128.5 40C128.5 50 107.5 62 107.5 62C107.5 62 86.5 50 86.5 40Z" transform="translate(-20, -5)" fill="url(#cmHeartGrad)"/>
-        <!-- Sparkle -->
-        <circle cx="95" cy="30" r="2" fill="#ffffff"/>
-      </g>
+      <!-- Floating Heart -->
+      <path d="M72 28C72 22 77 18 82 18C85 18 88 20 90 22C92 20 95 18 98 18C103 18 108 22 108 28C108 36 90 48 90 48C90 48 72 36 72 28Z" fill="#ff2d75"/>
     </svg>
   `;
 
-  // ── Game State ──
-  let state = {
-    currentScreen: 'hub', // 'hub' | 'names' | 'create' | 'review' | 'share' | 'partner_welcome' | 'partner_play' | 'result' | 'scoreboard' | 'love_dice'
-    creatorName: '',
-    partnerName: '',
-    relationshipStatus: 'Dating / In Love 💖',
-    quizId: null,
-    adminKey: null,
-    selectedQuestions: [],
-    creatorAnswers: [],
-    createIndex: 0,
-    partnerPlayerName: '',
-    partnerAnswers: [],
-    partnerIndex: 0,
-    partnerScore: 0,
-    activeQuiz: null,
-    scoreboardData: null,
-    usedQuestionIds: new Set(),
-    diceResult: null
-  };
-
-  // ── Initialize Default 10 Questions ──
-  function _initDefaultQuestions() {
-    state.selectedQuestions = QUESTION_BANK.slice(0, 10).map(q => ({ ...q }));
-    state.creatorAnswers = new Array(10).fill(null);
-    state.usedQuestionIds = new Set(state.selectedQuestions.map(q => q.id));
-    state.createIndex = 0;
-  }
-
-  // ── Swap current question with unused from bank ──
-  function swapCurrentQuestion() {
-    const currentQ = state.selectedQuestions[state.createIndex];
-    const available = QUESTION_BANK.filter(q => !state.usedQuestionIds.has(q.id));
-
-    if (available.length === 0) {
-      if (typeof window.showToast === 'function') {
-        window.showToast('ℹ️ All questions in the couple pool are in use!');
-      }
-      return;
-    }
-
-    const nextQ = available[Math.floor(Math.random() * available.length)];
-    state.usedQuestionIds.delete(currentQ.id);
-    state.usedQuestionIds.add(nextQ.id);
-
-    state.selectedQuestions[state.createIndex] = { ...nextQ };
-    state.creatorAnswers[state.createIndex] = null;
-
-    renderScreen();
-  }
-
-  // ── UI Navigation & Render Router ──
+  // ── Router & Screen Render ──
   function renderScreen() {
     const container = document.getElementById('cm-screen-container');
     if (!container) return;
@@ -315,41 +125,21 @@ const CoupleMatchGame = (() => {
         container.innerHTML = _renderScreenHub();
         _bindScreenHub();
         break;
-      case 'names':
-        container.innerHTML = _renderScreenNames();
-        _bindScreenNames();
+      case 'wheel':
+        container.innerHTML = _renderScreenWheel();
+        _bindScreenWheel();
         break;
-      case 'create':
-        container.innerHTML = _renderScreenCreate();
-        _bindScreenCreate();
+      case 'scratch_create':
+        container.innerHTML = _renderScreenScratchCreate();
+        _bindScreenScratchCreate();
         break;
-      case 'review':
-        container.innerHTML = _renderScreenReview();
-        _bindScreenReview();
+      case 'scratch_play':
+        container.innerHTML = _renderScreenScratchPlay();
+        _bindScreenScratchPlay();
         break;
-      case 'share':
-        container.innerHTML = _renderScreenShare();
-        _bindScreenShare();
-        break;
-      case 'partner_welcome':
-        container.innerHTML = _renderScreenPartnerWelcome();
-        _bindScreenPartnerWelcome();
-        break;
-      case 'partner_play':
-        container.innerHTML = _renderScreenPartnerPlay();
-        _bindScreenPartnerPlay();
-        break;
-      case 'result':
-        container.innerHTML = _renderScreenResult();
-        _bindScreenResult();
-        break;
-      case 'scoreboard':
-        container.innerHTML = _renderScreenScoreboard();
-        _bindScreenScoreboard();
-        break;
-      case 'love_dice':
-        container.innerHTML = _renderScreenLoveDice();
-        _bindScreenLoveDice();
+      case 'xo':
+        container.innerHTML = _renderScreenXO();
+        _bindScreenXO();
         break;
       default:
         container.innerHTML = _renderScreenHub();
@@ -359,55 +149,49 @@ const CoupleMatchGame = (() => {
   }
 
   // ─────────────────────────────────────────────────────────
-  // SCREEN 0: HUB (Main Couple Menu)
+  // SCREEN 0: ARCADE HUB (Select Game)
   // ─────────────────────────────────────────────────────────
   function _renderScreenHub() {
-    const myQuizzes = _getMySavedQuizzes();
     return `
       <div class="cm-card cm-fade-in">
         <div class="cm-mascot-wrap">
           ${COUPLE_MASCOT_SVG}
         </div>
-        <div class="cm-badge-pill">💑 Couple Match</div>
-        <h2 class="cm-title">Love & Compatibility</h2>
-        <p class="cm-subtitle">Discover how well your partner really knows you & ignite cute romantic moments!</p>
+        <div class="cm-badge-pill">💑 Couple Match Arcade</div>
+        <h2 class="cm-title">Unique Romantic Games</h2>
+        <p class="cm-subtitle">Pick a fun interactive game to play with your partner right now!</p>
 
-        <div class="cm-hub-actions">
-          <button type="button" class="cm-btn-romantic cm-hub-btn" id="cm-btn-start-quiz">
-            <span class="cm-btn-icon">💘</span>
-            <div class="cm-btn-text">
-              <strong>Couple Compatibility Quiz</strong>
-              <small>Create 10 questions & test your partner's love!</small>
+        <div class="cm-arcade-grid">
+          <!-- Game 1: Romantic Love Wheel -->
+          <button type="button" class="cm-arcade-card cm-wheel-card" id="cm-hub-launch-wheel">
+            <div class="cm-ac-icon">🎡</div>
+            <div class="cm-ac-info">
+              <strong>Romantic Love Wheel 🍾</strong>
+              <small>Spin for sweet romantic dares, flirty challenges & truths!</small>
             </div>
-            <span class="cm-btn-arrow">➔</span>
+            <span class="cm-ac-badge">Play ➔</span>
           </button>
 
-          <button type="button" class="cm-btn-outline cm-hub-btn" id="cm-btn-start-dice">
-            <span class="cm-btn-icon">🎲</span>
-            <div class="cm-btn-text">
-              <strong>Romantic Love Dice</strong>
-              <small>Instant Truth or Dare challenges for couples!</small>
+          <!-- Game 2: Secret Love Scratch Card -->
+          <button type="button" class="cm-arcade-card cm-scratch-card" id="cm-hub-launch-scratch">
+            <div class="cm-ac-icon">🎟️✨</div>
+            <div class="cm-ac-info">
+              <strong>Secret Love Scratch Card</strong>
+              <small>Send a secret golden ticket! Partner rubs to reveal reward!</small>
             </div>
-            <span class="cm-btn-arrow">➔</span>
+            <span class="cm-ac-badge">Create ➔</span>
+          </button>
+
+          <!-- Game 3: Love XO Battle -->
+          <button type="button" class="cm-arcade-card cm-xo-card" id="cm-hub-launch-xo">
+            <div class="cm-ac-icon">❌⭕</div>
+            <div class="cm-ac-info">
+              <strong>Love XO Battle 💖</strong>
+              <small>Romantic Tic-Tac-Toe! Winner picks a dare for the loser!</small>
+            </div>
+            <span class="cm-ac-badge">Battle ➔</span>
           </button>
         </div>
-
-        ${myQuizzes.length > 0 ? `
-          <div class="cm-history-section">
-            <div class="cm-history-title">Your Active Quizzes (${myQuizzes.length})</div>
-            <div class="cm-history-list">
-              ${myQuizzes.slice(0, 3).map(q => `
-                <div class="cm-history-item" onclick="CoupleMatchGame.openScoreboard('${q.quizId}', '${q.adminKey}')">
-                  <div class="cm-hist-meta">
-                    <strong>${q.creatorName} ${q.partnerName ? '& ' + q.partnerName : ''}</strong>
-                    <small>${q.attempts ? q.attempts.length : 0} attempts received</small>
-                  </div>
-                  <span class="cm-hist-view">View ➔</span>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        ` : ''}
 
         <div class="cm-footer-note">
           🔒 100% Private, End-to-End Chat & ₹0 Free on BUDDY
@@ -417,68 +201,84 @@ const CoupleMatchGame = (() => {
   }
 
   function _bindScreenHub() {
-    const startQuizBtn = document.getElementById('cm-btn-start-quiz');
-    const startDiceBtn = document.getElementById('cm-btn-start-dice');
+    const wheelBtn = document.getElementById('cm-hub-launch-wheel');
+    const scratchBtn = document.getElementById('cm-hub-launch-scratch');
+    const xoBtn = document.getElementById('cm-hub-launch-xo');
 
-    if (startQuizBtn) {
-      startQuizBtn.onclick = () => {
-        state.currentScreen = 'names';
+    if (wheelBtn) {
+      wheelBtn.onclick = () => {
+        state.currentScreen = 'wheel';
+        state.wheelResult = null;
         renderScreen();
       };
     }
-
-    if (startDiceBtn) {
-      startDiceBtn.onclick = () => {
-        state.currentScreen = 'love_dice';
+    if (scratchBtn) {
+      scratchBtn.onclick = () => {
+        state.currentScreen = 'scratch_create';
+        renderScreen();
+      };
+    }
+    if (xoBtn) {
+      xoBtn.onclick = () => {
+        _resetXOBoard();
+        state.currentScreen = 'xo';
         renderScreen();
       };
     }
   }
 
   // ─────────────────────────────────────────────────────────
-  // SCREEN 1: NAMES & VIBE SETUP
+  // GAME 1: ROMANTIC LOVE WHEEL (Spin the Wheel / Bottle)
   // ─────────────────────────────────────────────────────────
-  function _renderScreenNames() {
+  function _renderScreenWheel() {
+    const cat = state.wheelCategory;
+    const result = state.wheelResult;
+
     return `
       <div class="cm-card cm-fade-in">
-        <button type="button" class="cm-back-icon" id="cm-btn-names-back">← Back</button>
-        <div class="cm-badge-pill">Step 1 of 3</div>
-        <h2 class="cm-title">Who's In Love? 💖</h2>
-        <p class="cm-subtitle">Enter your name and your partner's name so we can personalize your Couple Quiz!</p>
+        <button type="button" class="cm-back-icon" id="cm-btn-wheel-back">← Back to Arcade</button>
+        <div class="cm-badge-pill">Mode 1: Couple Spin</div>
+        <h2 class="cm-title">Romantic Love Wheel 🎡</h2>
+        <p class="cm-subtitle">Spin the wheel together to land on sweet romantic truths, dares & treats!</p>
 
-        <div class="cm-form-group">
-          <label class="cm-label">Your Name</label>
-          <input type="text" id="cm-inp-creator" class="cm-input" placeholder="e.g. Keyur" maxlength="20" value="${state.creatorName || ''}" autocomplete="off" />
+        <!-- Category Filter Tabs -->
+        <div class="cm-wheel-tabs">
+          <button type="button" class="cm-w-tab ${cat === 'sweet' ? 'active' : ''}" data-cat="sweet">🌸 Sweet</button>
+          <button type="button" class="cm-w-tab ${cat === 'spicy' ? 'active' : ''}" data-cat="spicy">🔥 Spicy</button>
+          <button type="button" class="cm-w-tab ${cat === 'funny' ? 'active' : ''}" data-cat="funny">🤪 Funny</button>
         </div>
 
-        <div class="cm-form-group">
-          <label class="cm-label">Your Partner / Bestie's Name</label>
-          <input type="text" id="cm-inp-partner" class="cm-input" placeholder="e.g. Aarohi" maxlength="20" value="${state.partnerName || ''}" autocomplete="off" />
+        <!-- Wheel Canvas Area -->
+        <div class="cm-wheel-wrapper">
+          <div class="cm-wheel-pointer">▼</div>
+          <canvas id="cm-wheel-canvas" width="300" height="300"></canvas>
+          <button type="button" class="cm-wheel-center-btn" id="cm-btn-spin-wheel" ${state.isSpinning ? 'disabled' : ''}>
+            ${state.isSpinning ? 'Spinning...' : 'SPIN! 💘'}
+          </button>
         </div>
 
-        <div class="cm-form-group">
-          <label class="cm-label">Your Relationship Vibe</label>
-          <select id="cm-sel-vibe" class="cm-select">
-            <option value="Dating / In Love 💖" ${state.relationshipStatus.includes('Dating') ? 'selected' : ''}>Dating / In Love 💖</option>
-            <option value="Engaged / Married 💍" ${state.relationshipStatus.includes('Married') ? 'selected' : ''}>Engaged / Married 💍</option>
-            <option value="Crush / Talking Phase 🌸" ${state.relationshipStatus.includes('Crush') ? 'selected' : ''}>Crush / Talking Phase 🌸</option>
-            <option value="Besties with Spark ✨" ${state.relationshipStatus.includes('Besties') ? 'selected' : ''}>Besties with Romantic Spark ✨</option>
-          </select>
-        </div>
-
-        <button type="button" class="cm-btn-romantic cm-btn-full" id="cm-btn-names-next">
-          Start Quiz Setup ➔
-        </button>
+        <!-- Result Popup / Card -->
+        ${result ? `
+          <div class="cm-wheel-result-card cm-fade-in">
+            <div class="cm-wr-badge">${result.title}</div>
+            <p class="cm-wr-text">${result.text}</p>
+            <div class="cm-wr-actions">
+              <button type="button" class="cm-btn-romantic cm-btn-full" id="cm-btn-send-wheel-chat">
+                💬 Drop Challenge in BUDDY Chat
+              </button>
+            </div>
+          </div>
+        ` : `
+          <p class="cm-wheel-hint">👆 Tap SPIN to let Cupid decide your romantic challenge!</p>
+        `}
       </div>
     `;
   }
 
-  function _bindScreenNames() {
-    const backBtn = document.getElementById('cm-btn-names-back');
-    const nextBtn = document.getElementById('cm-btn-names-next');
-    const creatorInp = document.getElementById('cm-inp-creator');
-    const partnerInp = document.getElementById('cm-inp-partner');
-    const vibeSel = document.getElementById('cm-sel-vibe');
+  function _bindScreenWheel() {
+    const backBtn = document.getElementById('cm-btn-wheel-back');
+    const spinBtn = document.getElementById('cm-btn-spin-wheel');
+    const sendChatBtn = document.getElementById('cm-btn-send-wheel-chat');
 
     if (backBtn) {
       backBtn.onclick = () => {
@@ -487,819 +287,540 @@ const CoupleMatchGame = (() => {
       };
     }
 
-    if (nextBtn) {
-      nextBtn.onclick = () => {
-        const cVal = creatorInp ? creatorInp.value.trim() : '';
-        const pVal = partnerInp ? partnerInp.value.trim() : '';
-        if (!cVal) {
+    document.querySelectorAll('.cm-w-tab').forEach(tab => {
+      tab.onclick = () => {
+        if (state.isSpinning) return;
+        state.wheelCategory = tab.dataset.cat;
+        state.wheelResult = null;
+        renderScreen();
+      };
+    });
+
+    _drawLoveWheel();
+
+    if (spinBtn) {
+      spinBtn.onclick = () => _spinLoveWheel();
+    }
+
+    if (sendChatBtn && state.wheelResult) {
+      sendChatBtn.onclick = () => {
+        _openFriendsInviteModal(`🎡 Love Wheel Challenge:\n"${state.wheelResult.title}"\n👉 ${state.wheelResult.text}`);
+      };
+    }
+  }
+
+  function _drawLoveWheel(angleRad = state.wheelAngle) {
+    const canvas = document.getElementById('cm-wheel-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const list = WHEEL_CHALLENGES[state.wheelCategory] || WHEEL_CHALLENGES.sweet;
+    const numSlices = list.length;
+    const sliceAngle = (Math.PI * 2) / numSlices;
+    const radius = canvas.width / 2;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(radius, radius);
+    ctx.rotate(angleRad);
+
+    const sliceColors = [
+      '#ff2d75', '#8b5cf6', '#ec4899', '#3b82f6',
+      '#f43f5e', '#a855f7', '#fb7185', '#6366f1'
+    ];
+
+    for (let i = 0; i < numSlices; i++) {
+      const startAngle = i * sliceAngle;
+      const endAngle = startAngle + sliceAngle;
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, radius - 6, startAngle, endAngle);
+      ctx.closePath();
+      ctx.fillStyle = sliceColors[i % sliceColors.length];
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Draw Slice Text/Icon
+      ctx.save();
+      ctx.rotate(startAngle + sliceAngle / 2);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 12px Inter, sans-serif';
+      ctx.shadowColor = 'rgba(0,0,0,0.5)';
+      ctx.shadowBlur = 4;
+      const shortTitle = list[i].title.split(' ')[0] + ' ' + (list[i].title.split(' ')[1] || '');
+      ctx.fillText(shortTitle, radius - 20, 4);
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  function _spinLoveWheel() {
+    if (state.isSpinning) return;
+    state.isSpinning = true;
+    state.wheelResult = null;
+
+    const list = WHEEL_CHALLENGES[state.wheelCategory] || WHEEL_CHALLENGES.sweet;
+    const numSlices = list.length;
+    const sliceAngle = (Math.PI * 2) / numSlices;
+
+    // Pick target slice
+    const targetIndex = Math.floor(Math.random() * numSlices);
+    const targetSliceCenter = targetIndex * sliceAngle + (sliceAngle / 2);
+    // Pointer is at the top (-PI/2)
+    const targetAngle = (3 * Math.PI / 2) - targetSliceCenter;
+    const totalSpins = 5 + Math.floor(Math.random() * 3); // 5 to 7 full rotations
+    const finalAngle = state.wheelAngle + (totalSpins * Math.PI * 2) + (targetAngle - (state.wheelAngle % (Math.PI * 2)));
+
+    const startTime = performance.now();
+    const duration = 3800; // 3.8s spin
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    const initialAngle = state.wheelAngle;
+
+    function animate(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutCubic(progress);
+
+      state.wheelAngle = initialAngle + (finalAngle - initialAngle) * eased;
+      _drawLoveWheel(state.wheelAngle);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        state.isSpinning = false;
+        state.wheelAngle = finalAngle % (Math.PI * 2);
+        state.wheelResult = list[targetIndex];
+        renderScreen();
+        if (typeof window.showToast === 'function') {
+          window.showToast(`🎉 Cupid landed on: ${list[targetIndex].title}`);
+        }
+      }
+    }
+
+    requestAnimationFrame(animate);
+    renderScreen();
+  }
+
+  // ─────────────────────────────────────────────────────────
+  // GAME 2: SECRET LOVE SCRATCH CARD (HTML5 Canvas Scratch-Off)
+  // ─────────────────────────────────────────────────────────
+  function _renderScreenScratchCreate() {
+    return `
+      <div class="cm-card cm-fade-in">
+        <button type="button" class="cm-back-icon" id="cm-btn-scratch-back">← Back to Arcade</button>
+        <div class="cm-badge-pill">Mode 2: Scratch & Win</div>
+        <h2 class="cm-title">Secret Love Scratch Card 🎟️</h2>
+        <p class="cm-subtitle">Create a romantic scratch ticket for your partner. They will rub the screen to reveal their prize!</p>
+
+        <div class="cm-form-group">
+          <label class="cm-label">Your Name</label>
+          <input type="text" id="cm-sc-sender" class="cm-input" placeholder="e.g. Keyur" maxlength="20" value="${state.scratchSender || ''}" autocomplete="off" />
+        </div>
+
+        <div class="cm-form-group">
+          <label class="cm-label">Your Partner's Name</label>
+          <input type="text" id="cm-sc-partner" class="cm-input" placeholder="e.g. Aarohi" maxlength="20" value="${state.scratchPartner || ''}" autocomplete="off" />
+        </div>
+
+        <div class="cm-form-group">
+          <label class="cm-label">Choose Romantic Reward</label>
+          <div class="cm-preset-chips">
+            ${SCRATCH_PRESETS.map((p, idx) => `
+              <button type="button" class="cm-chip ${idx === 0 ? 'selected' : ''}" data-idx="${idx}">
+                ${p.title}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="cm-form-group">
+          <label class="cm-label">Custom Romantic Surprise (Or edit above)</label>
+          <input type="text" id="cm-sc-title" class="cm-input" placeholder="Reward Title" value="${SCRATCH_PRESETS[0].title}" maxlength="35" />
+          <textarea id="cm-sc-desc" class="cm-input" style="height:60px; margin-top:6px; resize:none;" placeholder="Reward Description">${SCRATCH_PRESETS[0].desc}</textarea>
+        </div>
+
+        <button type="button" class="cm-btn-romantic cm-btn-full" id="cm-btn-generate-scratch">
+          Generate Secret Scratch Ticket 🚀
+        </button>
+      </div>
+    `;
+  }
+
+  function _bindScreenScratchCreate() {
+    const backBtn = document.getElementById('cm-btn-scratch-back');
+    const genBtn = document.getElementById('cm-btn-generate-scratch');
+    const titleInp = document.getElementById('cm-sc-title');
+    const descInp = document.getElementById('cm-sc-desc');
+    const senderInp = document.getElementById('cm-sc-sender');
+    const partnerInp = document.getElementById('cm-sc-partner');
+
+    if (backBtn) {
+      backBtn.onclick = () => {
+        state.currentScreen = 'hub';
+        renderScreen();
+      };
+    }
+
+    document.querySelectorAll('.cm-chip').forEach(chip => {
+      chip.onclick = () => {
+        document.querySelectorAll('.cm-chip').forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        const p = SCRATCH_PRESETS[Number(chip.dataset.idx)];
+        if (p && titleInp && descInp) {
+          titleInp.value = p.title;
+          descInp.value = p.desc;
+        }
+      };
+    });
+
+    if (genBtn) {
+      genBtn.onclick = async () => {
+        const sName = senderInp ? senderInp.value.trim() : '';
+        const pName = partnerInp ? partnerInp.value.trim() : '';
+        const title = titleInp ? titleInp.value.trim() : '';
+        const desc = descInp ? descInp.value.trim() : '';
+
+        if (!sName) {
           if (typeof window.showToast === 'function') window.showToast('⚠️ Please enter your name!');
-          if (creatorInp) creatorInp.focus();
+          if (senderInp) senderInp.focus();
+          return;
+        }
+        if (!title) {
+          if (typeof window.showToast === 'function') window.showToast('⚠️ Please enter a reward title!');
           return;
         }
 
-        state.creatorName = cVal;
-        state.partnerName = pVal;
-        if (vibeSel) state.relationshipStatus = vibeSel.value;
+        genBtn.disabled = true;
+        genBtn.innerHTML = 'Creating Ticket... ⏳';
 
-        _initDefaultQuestions();
-        state.currentScreen = 'create';
+        state.scratchSender = sName;
+        state.scratchPartner = pName;
+        state.scratchTitle = title;
+        state.scratchDesc = desc;
+
+        let cardId = 'sc_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+        try {
+          const res = await fetch('/api/games/scratch', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              senderName: sName,
+              partnerName: pName,
+              surpriseTitle: title,
+              surpriseDesc: desc,
+              category: 'romantic'
+            })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.cardId) cardId = data.cardId;
+          }
+        } catch (e) {}
+
+        const cardObj = {
+          id: cardId,
+          senderName: sName,
+          partnerName: pName,
+          surpriseTitle: title,
+          surpriseDesc: desc,
+          createdAt: Date.now()
+        };
+
+        _saveScratchLocally(cardObj);
+        state.activeScratchCard = cardObj;
+        state.scratchClearedPercent = 0;
+        state.scratchRevealed = false;
+        state.currentScreen = 'scratch_play';
         renderScreen();
       };
     }
   }
 
-  // ─────────────────────────────────────────────────────────
-  // SCREEN 2: CREATE 10-QUESTION QUIZ
-  // ─────────────────────────────────────────────────────────
-  function _renderScreenCreate() {
-    const q = state.selectedQuestions[state.createIndex];
-    const total = 10;
-    const currentNum = state.createIndex + 1;
-    const progress = Math.round((currentNum / total) * 100);
-    const chosenAnswer = state.creatorAnswers[state.createIndex];
+  function _renderScreenScratchPlay() {
+    const card = state.activeScratchCard || {
+      senderName: 'Your Love',
+      partnerName: 'Partner',
+      surpriseTitle: 'Romantic Candlelight Dinner 🕯️',
+      surpriseDesc: 'Valid for a romantic evening planned completely by your partner!'
+    };
+
+    const origin = window.location.origin + window.location.pathname;
+    const playUrl = `${origin}?scratch=${encodeURIComponent(card.id || 'sample')}`;
 
     return `
       <div class="cm-card cm-fade-in">
-        <div class="cm-quiz-header">
-          <div class="cm-quiz-step">Question ${currentNum} of ${total}</div>
-          <button type="button" class="cm-swap-btn" id="cm-btn-swap" title="Swap with another couple question">
-            🔀 Swap
+        <button type="button" class="cm-back-icon" id="cm-btn-scratch-play-back">← Back to Arcade</button>
+        <div class="cm-badge-pill">🎟️ Golden Love Ticket</div>
+        <h2 class="cm-title">For ${card.partnerName || 'My Love'} 💖</h2>
+        <p class="cm-subtitle">From ${card.senderName}: Rub/scratch the foil below with your finger to reveal your surprise!</p>
+
+        <!-- Scratch Canvas Container -->
+        <div class="cm-scratch-box" id="cm-scratch-box">
+          <!-- Underlying Hidden Reward Card -->
+          <div class="cm-scratch-underlay">
+            <div class="cm-sc-sparkle">✨💖✨</div>
+            <div class="cm-sc-reward-title">${card.surpriseTitle}</div>
+            <p class="cm-sc-reward-desc">${card.surpriseDesc}</p>
+            <div class="cm-sc-verified">✓ Guaranteed by ${card.senderName}</div>
+          </div>
+
+          <!-- Scratch Canvas Foil -->
+          <canvas id="cm-scratch-canvas" class="cm-scratch-canvas"></canvas>
+        </div>
+
+        <div class="cm-scratch-indicator" id="cm-scratch-progress">
+          ${state.scratchRevealed ? '🎉 100% REVEALED!' : '👆 Rub your finger/mouse across the card to scratch!'}
+        </div>
+
+        <!-- Share Actions for Creator -->
+        <div class="cm-share-group" style="margin-top:16px;">
+          <button type="button" class="cm-btn-romantic cm-btn-full" id="cm-btn-send-scratch-chat">
+            💬 Send Scratch Card on BUDDY Chat
+          </button>
+          <button type="button" class="cm-btn-whatsapp cm-btn-full" id="cm-btn-send-scratch-wa">
+            📲 Share on WhatsApp
+          </button>
+          <div class="cm-link-copy-wrap">
+            <input type="text" class="cm-share-input" value="${playUrl}" readonly id="cm-scratch-url-inp" />
+            <button type="button" class="cm-copy-btn" id="cm-btn-copy-scratch">Copy</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function _bindScreenScratchPlay() {
+    const backBtn = document.getElementById('cm-btn-scratch-play-back');
+    const sendChatBtn = document.getElementById('cm-btn-send-scratch-chat');
+    const waBtn = document.getElementById('cm-btn-send-scratch-wa');
+    const copyBtn = document.getElementById('cm-btn-copy-scratch');
+    const origin = window.location.origin + window.location.pathname;
+    const card = state.activeScratchCard;
+    const playUrl = `${origin}?scratch=${encodeURIComponent(card ? card.id : 'sample')}`;
+
+    if (backBtn) {
+      backBtn.onclick = () => {
+        state.currentScreen = 'hub';
+        renderScreen();
+      };
+    }
+
+    if (copyBtn) {
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(playUrl);
+        copyBtn.innerText = 'Copied! ✓';
+        setTimeout(() => copyBtn.innerText = 'Copy', 2000);
+        if (typeof window.showToast === 'function') window.showToast('📋 Scratch card link copied!');
+      };
+    }
+
+    if (waBtn) {
+      waBtn.onclick = () => {
+        const text = `🎟️ Secret Romantic Scratch Card for You! 💖\nHey love, I created a secret scratch card surprise for you on BUDDY! Rub your screen to reveal what you won! 😜✨\n👉 Scratch here: ${playUrl}`;
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+      };
+    }
+
+    if (sendChatBtn) {
+      sendChatBtn.onclick = () => {
+        _openFriendsInviteModal(`🎟️ Secret Love Scratch Card for you!\nRub to reveal your romantic reward 💖:\n${playUrl}`);
+      };
+    }
+
+    _initScratchCanvas();
+  }
+
+  function _initScratchCanvas() {
+    const canvas = document.getElementById('cm-scratch-canvas');
+    const box = document.getElementById('cm-scratch-box');
+    if (!canvas || !box) return;
+
+    const width = box.clientWidth || 320;
+    const height = 180;
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (state.scratchRevealed) {
+      ctx.clearRect(0, 0, width, height);
+      return;
+    }
+
+    // Draw metallic rose-gold foil cover
+    const grad = ctx.createLinearGradient(0, 0, width, height);
+    grad.addColorStop(0, '#f43f5e');
+    grad.addColorStop(0.3, '#fb7185');
+    grad.addColorStop(0.5, '#ffd1dc');
+    grad.addColorStop(0.7, '#f43f5e');
+    grad.addColorStop(1, '#be123c');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, width, height);
+
+    // Cute foil text & hearts
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 16px Inter, sans-serif';
+    ctx.shadowColor = 'rgba(0,0,0,0.4)';
+    ctx.shadowBlur = 6;
+    ctx.fillText('✨ SECRET LOVE TICKET ✨', width / 2, height / 2 - 12);
+    ctx.font = '12px Inter, sans-serif';
+    ctx.fillText('Rub with your finger to reveal 💖', width / 2, height / 2 + 14);
+
+    let isScratching = false;
+
+    function scratch(e) {
+      if (!isScratching || state.scratchRevealed) return;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 22, 0, Math.PI * 2);
+      ctx.fill();
+
+      _checkScratchPercent();
+    }
+
+    canvas.addEventListener('mousedown', (e) => { isScratching = true; scratch(e); });
+    window.addEventListener('mouseup', () => { isScratching = false; });
+    canvas.addEventListener('mousemove', scratch);
+
+    canvas.addEventListener('touchstart', (e) => { isScratching = true; scratch(e); }, { passive: true });
+    window.addEventListener('touchend', () => { isScratching = false; });
+    canvas.addEventListener('touchmove', scratch, { passive: true });
+  }
+
+  function _checkScratchPercent() {
+    const canvas = document.getElementById('cm-scratch-canvas');
+    if (!canvas || state.scratchRevealed) return;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+
+    // Sample pixels every 12 pixels for performance
+    const imgData = ctx.getImageData(0, 0, width, height);
+    const data = imgData.data;
+    let transparentCount = 0;
+    let totalSampled = 0;
+
+    for (let i = 3; i < data.length; i += 4 * 16) {
+      totalSampled++;
+      if (data[i] === 0) transparentCount++;
+    }
+
+    const percent = Math.round((transparentCount / totalSampled) * 100);
+    const progressEl = document.getElementById('cm-scratch-progress');
+    if (progressEl) {
+      progressEl.innerHTML = `✨ Scratched: ${percent}% (Clear 45% to reveal)`;
+    }
+
+    if (percent >= 45 && !state.scratchRevealed) {
+      state.scratchRevealed = true;
+      // Auto-clear canvas with dissolve
+      ctx.clearRect(0, 0, width, height);
+      if (progressEl) {
+        progressEl.innerHTML = `🎉 <strong>SURPRISE REVEALED! Enjoy your reward! 💖</strong>`;
+      }
+      if (typeof window.showToast === 'function') {
+        window.showToast('🎉 Surprise Revealed! Romantic Reward Unlocked!');
+      }
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────
+  // GAME 3: LOVE XO BATTLE (Romantic Tic-Tac-Toe)
+  // ─────────────────────────────────────────────────────────
+  function _resetXOBoard() {
+    state.xoBoard = Array(9).fill(null);
+    state.xoTurn = 'X';
+    state.xoWinner = null;
+    state.xoWinningLine = null;
+  }
+
+  function _renderScreenXO() {
+    const board = state.xoBoard;
+    const winner = state.xoWinner;
+    const turn = state.xoTurn;
+
+    return `
+      <div class="cm-card cm-fade-in">
+        <button type="button" class="cm-back-icon" id="cm-btn-xo-back">← Back to Arcade</button>
+        <div class="cm-badge-pill">Mode 3: Couple Board Game</div>
+        <h2 class="cm-title">Love XO Battle 💖</h2>
+        <p class="cm-subtitle">3 in a row wins! Winner claims a romantic wish from the loser!</p>
+
+        <!-- Mode Toggle -->
+        <div class="cm-xo-modes">
+          <button type="button" class="cm-xo-mode-btn ${state.xoMode === 'pass' ? 'active' : ''}" data-mode="pass">
+            👥 2-Player Pass
+          </button>
+          <button type="button" class="cm-xo-mode-btn ${state.xoMode === 'ai' ? 'active' : ''}" data-mode="ai">
+            🤖 Play Cupid AI
           </button>
         </div>
 
-        <div class="cm-progress-bar">
-          <div class="cm-progress-fill" style="width: ${progress}%;"></div>
+        <!-- Scoreboard -->
+        <div class="cm-xo-score-bar">
+          <div class="cm-xo-score ${turn === 'X' ? 'active-turn' : ''}">💖 Player 1: <strong>${state.scores ? state.scores.X : 0}</strong></div>
+          <div class="cm-xo-score ${turn === 'O' ? 'active-turn' : ''}">💙 Player 2: <strong>${state.scores ? state.scores.O : 0}</strong></div>
         </div>
 
-        <div class="cm-q-category">🌸 ${q.category || 'Romantic Couple Quiz'}</div>
-        <h3 class="cm-q-title">${q.title}</h3>
-        <p class="cm-q-hint">Select YOUR true answer below so your partner can try to guess it:</p>
-
-        <div class="cm-options-grid">
-          ${q.options.map((opt, idx) => {
-            const isSelected = chosenAnswer === idx;
+        <!-- 3x3 Grid -->
+        <div class="cm-xo-grid">
+          ${board.map((cell, idx) => {
+            const isWinning = state.xoWinningLine && state.xoWinningLine.includes(idx);
             return `
               <button 
                 type="button" 
-                class="cm-opt-btn ${isSelected ? 'selected' : ''}" 
+                class="cm-xo-cell ${cell ? 'filled ' + cell : ''} ${isWinning ? 'win-cell' : ''}" 
                 data-idx="${idx}"
+                ${cell || winner ? 'disabled' : ''}
               >
-                <span class="cm-opt-radio">${isSelected ? '💖' : '⚪'}</span>
-                <span class="cm-opt-text">${opt}</span>
+                ${cell === 'X' ? '💖' : (cell === 'O' ? '💙' : '')}
               </button>
             `;
           }).join('')}
         </div>
 
-        <div class="cm-q-nav">
-          <button type="button" class="cm-btn-secondary" id="cm-btn-prev-q" ${state.createIndex === 0 ? 'disabled' : ''}>
-            ← Previous
-          </button>
-          <button type="button" class="cm-btn-romantic" id="cm-btn-next-q" ${chosenAnswer === null ? 'disabled' : ''}>
-            ${currentNum === total ? 'Review Quiz ➔' : 'Next Question ➔'}
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
-  function _bindScreenCreate() {
-    const swapBtn = document.getElementById('cm-btn-swap');
-    const prevBtn = document.getElementById('cm-btn-prev-q');
-    const nextBtn = document.getElementById('cm-btn-next-q');
-
-    if (swapBtn) swapBtn.onclick = () => swapCurrentQuestion();
-
-    document.querySelectorAll('.cm-opt-btn').forEach(btn => {
-      btn.onclick = () => {
-        const idx = Number(btn.dataset.idx);
-        state.creatorAnswers[state.createIndex] = idx;
-        renderScreen();
-      };
-    });
-
-    if (prevBtn) {
-      prevBtn.onclick = () => {
-        if (state.createIndex > 0) {
-          state.createIndex--;
-          renderScreen();
-        }
-      };
-    }
-
-    if (nextBtn) {
-      nextBtn.onclick = () => {
-        if (state.creatorAnswers[state.createIndex] === null) {
-          if (typeof window.showToast === 'function') window.showToast('⚠️ Please select an answer first!');
-          return;
-        }
-
-        if (state.createIndex < 9) {
-          state.createIndex++;
-          renderScreen();
-        } else {
-          state.currentScreen = 'review';
-          renderScreen();
-        }
-      };
-    }
-  }
-
-  // ─────────────────────────────────────────────────────────
-  // SCREEN 3: REVIEW & FINALIZE
-  // ─────────────────────────────────────────────────────────
-  function _renderScreenReview() {
-    return `
-      <div class="cm-card cm-fade-in">
-        <button type="button" class="cm-back-icon" id="cm-btn-review-back">← Back to Questions</button>
-        <div class="cm-badge-pill">Almost Ready!</div>
-        <h2 class="cm-title">Review Your Love Quiz 💌</h2>
-        <p class="cm-subtitle">Check your answers before generating your partner's challenge link.</p>
-
-        <div class="cm-review-list">
-          ${state.selectedQuestions.map((q, idx) => {
-            const ansIdx = state.creatorAnswers[idx];
-            const ansText = ansIdx !== null ? q.options[ansIdx] : 'Not answered';
-            return `
-              <div class="cm-review-item">
-                <div class="cm-review-header">
-                  <strong>Q${idx + 1}. ${q.title}</strong>
-                  <button type="button" class="cm-review-edit" data-idx="${idx}">Edit</button>
-                </div>
-                <div class="cm-review-ans">✓ ${ansText}</div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-
-        <button type="button" class="cm-btn-romantic cm-btn-full" id="cm-btn-finalize-quiz">
-          Generate Love Challenge Link 🚀
-        </button>
-      </div>
-    `;
-  }
-
-  function _bindScreenReview() {
-    const backBtn = document.getElementById('cm-btn-review-back');
-    const finalizeBtn = document.getElementById('cm-btn-finalize-quiz');
-
-    if (backBtn) {
-      backBtn.onclick = () => {
-        state.currentScreen = 'create';
-        renderScreen();
-      };
-    }
-
-    document.querySelectorAll('.cm-review-edit').forEach(btn => {
-      btn.onclick = () => {
-        state.createIndex = Number(btn.dataset.idx);
-        state.currentScreen = 'create';
-        renderScreen();
-      };
-    });
-
-    if (finalizeBtn) {
-      finalizeBtn.onclick = async () => {
-        finalizeBtn.disabled = true;
-        finalizeBtn.innerHTML = 'Creating Love Link... ⏳';
-        await _saveAndPublishQuiz();
-      };
-    }
-  }
-
-  // ─────────────────────────────────────────────────────────
-  // PUBLISH QUIZ TO BACKEND & SUPABASE
-  // ─────────────────────────────────────────────────────────
-  async function _saveAndPublishQuiz() {
-    const quizPayload = {
-      creatorName: state.creatorName,
-      partnerName: state.partnerName || '',
-      gameType: 'couple-match',
-      questions: state.selectedQuestions,
-      creatorAnswers: state.creatorAnswers
-    };
-
-    let quizId = 'cm_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-    let adminKey = 'adm_' + Math.random().toString(36).slice(2, 10);
-
-    try {
-      const res = await fetch('/api/games/quiz', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(quizPayload)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.quizId) quizId = data.quizId;
-        if (data.adminKey) adminKey = data.adminKey;
-      }
-    } catch (err) {
-      console.warn('Local server save error, fallback to offline local storage:', err);
-    }
-
-    state.quizId = quizId;
-    state.adminKey = adminKey;
-
-    const quizObj = {
-      quizId,
-      adminKey,
-      creatorName: state.creatorName,
-      partnerName: state.partnerName,
-      relationshipStatus: state.relationshipStatus,
-      questions: state.selectedQuestions,
-      creatorAnswers: state.creatorAnswers,
-      createdAt: Date.now(),
-      attempts: []
-    };
-
-    _saveQuizLocally(quizObj);
-    _syncQuizWithSupabase(quizId, adminKey, quizPayload);
-
-    state.currentScreen = 'share';
-    renderScreen();
-  }
-
-  // ─────────────────────────────────────────────────────────
-  // SCREEN 4: SHARE WITH PARTNER
-  // ─────────────────────────────────────────────────────────
-  function _renderScreenShare() {
-    const origin = window.location.origin + window.location.pathname;
-    const playUrl = `${origin}?couple=${encodeURIComponent(state.quizId)}`;
-    const adminUrl = `${origin}?couple_admin=${encodeURIComponent(state.quizId)}&key=${encodeURIComponent(state.adminKey)}`;
-
-    return `
-      <div class="cm-card cm-fade-in">
-        <div class="cm-badge-pill">🎉 Quiz Ready!</div>
-        <h2 class="cm-title">Send to Your Partner 💘</h2>
-        <p class="cm-subtitle">Your romantic compatibility quiz is live! Send it to your partner to test your connection.</p>
-
-        <div class="cm-ticket-card">
-          <div class="cm-ticket-heart">💖</div>
-          <div class="cm-ticket-title">${state.creatorName} & ${state.partnerName || 'Partner'}</div>
-          <div class="cm-ticket-sub">Romantic Connection Challenge</div>
-          <div class="cm-ticket-code">${state.quizId}</div>
-        </div>
-
-        <div class="cm-share-group">
-          <button type="button" class="cm-btn-romantic cm-btn-full" id="cm-btn-send-buddy-chat">
-            💬 Send Directly on BUDDY Chat
-          </button>
-
-          <button type="button" class="cm-btn-whatsapp cm-btn-full" id="cm-btn-share-whatsapp">
-            📲 Share on WhatsApp
-          </button>
-
-          <div class="cm-link-copy-wrap">
-            <input type="text" class="cm-share-input" id="cm-play-link-inp" value="${playUrl}" readonly />
-            <button type="button" class="cm-copy-btn" id="cm-btn-copy-link">Copy</button>
-          </div>
-        </div>
-
-        <div class="cm-admin-box">
-          <div class="cm-admin-label">🔒 Your Secret Scoreboard Link</div>
-          <div class="cm-admin-sub">Bookmark this to see what your partner answers:</div>
-          <div class="cm-link-copy-wrap" style="margin-top:6px;">
-            <input type="text" class="cm-share-input" id="cm-admin-link-inp" value="${adminUrl}" readonly style="font-size:11px;" />
-            <button type="button" class="cm-copy-btn" id="cm-btn-copy-admin">Copy</button>
-          </div>
-          <button type="button" class="cm-btn-outline cm-btn-full" style="margin-top:10px;" onclick="CoupleMatchGame.openScoreboard('${state.quizId}', '${state.adminKey}')">
-            🏆 Open Live Scoreboard
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
-  function _bindScreenShare() {
-    const origin = window.location.origin + window.location.pathname;
-    const playUrl = `${origin}?couple=${encodeURIComponent(state.quizId)}`;
-    const adminUrl = `${origin}?couple_admin=${encodeURIComponent(state.quizId)}&key=${encodeURIComponent(state.adminKey)}`;
-
-    const sendBuddyBtn = document.getElementById('cm-btn-send-buddy-chat');
-    const waBtn = document.getElementById('cm-btn-share-whatsapp');
-    const copyPlayBtn = document.getElementById('cm-btn-copy-link');
-    const copyAdminBtn = document.getElementById('cm-btn-copy-admin');
-
-    if (sendBuddyBtn) {
-      sendBuddyBtn.onclick = () => _openFriendsInviteModal();
-    }
-
-    if (waBtn) {
-      waBtn.onclick = () => {
-        const text = `💑 Couple Match Quiz!\nHey love, I made a 10-question romantic compatibility quiz about us! Can you score 100% or do you owe me a date? 😜💖\n👉 Play here: ${playUrl}`;
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-      };
-    }
-
-    if (copyPlayBtn) {
-      copyPlayBtn.onclick = () => {
-        navigator.clipboard.writeText(playUrl);
-        copyPlayBtn.innerText = 'Copied! ✓';
-        setTimeout(() => copyPlayBtn.innerText = 'Copy', 2000);
-        if (typeof window.showToast === 'function') window.showToast('📋 Love Quiz link copied to clipboard!');
-      };
-    }
-
-    if (copyAdminBtn) {
-      copyAdminBtn.onclick = () => {
-        navigator.clipboard.writeText(adminUrl);
-        copyAdminBtn.innerText = 'Copied! ✓';
-        setTimeout(() => copyAdminBtn.innerText = 'Copy', 2000);
-        if (typeof window.showToast === 'function') window.showToast('🔒 Private Admin link copied!');
-      };
-    }
-  }
-
-  // ─────────────────────────────────────────────────────────
-  // SCREEN 5: PARTNER WELCOME & PLAY
-  // ─────────────────────────────────────────────────────────
-  async function loadQuizForPlaying(quizId) {
-    state.quizId = quizId;
-    let quiz = _getQuizLocally(quizId);
-
-    if (!quiz) {
-      try {
-        const res = await fetch(`/api/games/quiz?id=${encodeURIComponent(quizId)}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data.quiz) quiz = data.quiz;
-        }
-      } catch (err) {
-        console.warn('Fetch quiz error:', err);
-      }
-    }
-
-    if (!quiz) {
-      if (typeof window.showToast === 'function') window.showToast('⚠️ Quiz not found or link expired.');
-      openGame();
-      return;
-    }
-
-    state.activeQuiz = quiz;
-    state.creatorName = quiz.creatorName;
-    state.partnerName = quiz.partnerName || '';
-    state.selectedQuestions = quiz.questions || [];
-    state.partnerAnswers = [];
-    state.partnerIndex = 0;
-    state.partnerScore = 0;
-    state.currentScreen = 'partner_welcome';
-
-    openGameModal();
-    renderScreen();
-  }
-
-  function _renderScreenPartnerWelcome() {
-    const creator = state.creatorName || 'Your Partner';
-    return `
-      <div class="cm-card cm-fade-in">
-        <div class="cm-mascot-wrap">
-          ${COUPLE_MASCOT_SVG}
-        </div>
-        <div class="cm-badge-pill">Couple Compatibility Challenge</div>
-        <h2 class="cm-title">How Well Do You Know ${creator}? 💖</h2>
-        <p class="cm-subtitle">${creator} has created a 10-question romantic test for you! Can you guess their exact answers?</p>
-
-        <div class="cm-form-group" style="margin-top:16px;">
-          <label class="cm-label">Your Name</label>
-          <input type="text" id="cm-inp-partner-player" class="cm-input" placeholder="Enter your name..." maxlength="20" value="${state.partnerPlayerName || state.partnerName || ''}" autocomplete="off" />
-        </div>
-
-        <button type="button" class="cm-btn-romantic cm-btn-full" id="cm-btn-start-partner-play">
-          Accept Love Challenge ➔
-        </button>
-      </div>
-    `;
-  }
-
-  function _bindScreenPartnerWelcome() {
-    const startBtn = document.getElementById('cm-btn-start-partner-play');
-    const inp = document.getElementById('cm-inp-partner-player');
-
-    if (startBtn) {
-      startBtn.onclick = () => {
-        const name = inp ? inp.value.trim() : '';
-        if (!name) {
-          if (typeof window.showToast === 'function') window.showToast('⚠️ Please enter your name!');
-          if (inp) inp.focus();
-          return;
-        }
-        state.partnerPlayerName = name;
-        state.partnerIndex = 0;
-        state.partnerAnswers = [];
-        state.partnerScore = 0;
-        state.currentScreen = 'partner_play';
-        renderScreen();
-      };
-    }
-  }
-
-  function _renderScreenPartnerPlay() {
-    const q = state.selectedQuestions[state.partnerIndex];
-    const total = state.selectedQuestions.length || 10;
-    const currentNum = state.partnerIndex + 1;
-    const progress = Math.round((currentNum / total) * 100);
-
-    return `
-      <div class="cm-card cm-fade-in">
-        <div class="cm-quiz-header">
-          <div class="cm-quiz-step">Question ${currentNum} of ${total}</div>
-          <div class="cm-score-badge">Score: ${state.partnerScore} 💘</div>
-        </div>
-
-        <div class="cm-progress-bar">
-          <div class="cm-progress-fill" style="width: ${progress}%;"></div>
-        </div>
-
-        <div class="cm-q-category">🌸 ${state.creatorName}'s Question</div>
-        <h3 class="cm-q-title">${q.title}</h3>
-        <p class="cm-q-hint">What do you think ${state.creatorName} chose?</p>
-
-        <div class="cm-options-grid" id="cm-partner-options-box">
-          ${q.options.map((opt, idx) => `
-            <button 
-              type="button" 
-              class="cm-opt-btn cm-play-opt" 
-              data-idx="${idx}"
-            >
-              <span class="cm-opt-radio">⚪</span>
-              <span class="cm-opt-text">${opt}</span>
-            </button>
-          `).join('')}
-        </div>
-
-        <div id="cm-partner-feedback" class="cm-feedback-box hidden"></div>
-      </div>
-    `;
-  }
-
-  function _bindScreenPartnerPlay() {
-    const buttons = document.querySelectorAll('.cm-play-opt');
-    const feedbackBox = document.getElementById('cm-partner-feedback');
-
-    buttons.forEach(btn => {
-      btn.onclick = async () => {
-        buttons.forEach(b => b.disabled = true);
-        const chosenIdx = Number(btn.dataset.idx);
-
-        let isMatch = false;
-        let correctIdx = null;
-
-        // Check answer via server or local
-        try {
-          const res = await fetch('/api/games/quiz/check-answer', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              quizId: state.quizId,
-              questionIndex: state.partnerIndex,
-              chosenIndex: chosenIdx
-            })
-          });
-          if (res.ok) {
-            const data = await res.json();
-            isMatch = !!data.isMatch;
-            correctIdx = data.correctIndex;
-          }
-        } catch (err) {
-          console.warn('Check answer error, checking local:', err);
-        }
-
-        // Local check fallback
-        if (correctIdx === null && state.activeQuiz && state.activeQuiz.creatorAnswers) {
-          correctIdx = state.activeQuiz.creatorAnswers[state.partnerIndex];
-          isMatch = (chosenIdx === correctIdx);
-        }
-
-        if (isMatch) state.partnerScore++;
-        state.partnerAnswers.push({
-          qIndex: state.partnerIndex,
-          chosen: chosenIdx,
-          correct: correctIdx,
-          isMatch
-        });
-
-        // Highlight buttons
-        buttons.forEach((b, idx) => {
-          if (idx === correctIdx) b.classList.add('correct-match');
-          if (idx === chosenIdx && !isMatch) b.classList.add('wrong-match');
-        });
-
-        if (feedbackBox) {
-          feedbackBox.classList.remove('hidden');
-          if (isMatch) {
-            feedbackBox.innerHTML = `
-              <div class="cm-feedback-msg match">
-                <span>💘</span> Exact Match! You know ${state.creatorName} so well!
-              </div>
-            `;
-          } else {
-            feedbackBox.innerHTML = `
-              <div class="cm-feedback-msg miss">
-                <span>🙈</span> Oops! ${state.creatorName} actually chose option ${correctIdx !== null ? (correctIdx + 1) : ''}!
-              </div>
-            `;
-          }
-        }
-
-        setTimeout(() => {
-          if (state.partnerIndex < (state.selectedQuestions.length - 1)) {
-            state.partnerIndex++;
-            renderScreen();
-          } else {
-            _submitPartnerResult();
-          }
-        }, 1400);
-      };
-    });
-  }
-
-  // ─────────────────────────────────────────────────────────
-  // SUBMIT RESULT & SHOW LOVE METER
-  // ─────────────────────────────────────────────────────────
-  async function _submitPartnerResult() {
-    const total = state.selectedQuestions.length || 10;
-    const percentage = Math.round((state.partnerScore / total) * 100);
-
-    const attemptPayload = {
-      quizId: state.quizId,
-      playerName: state.partnerPlayerName,
-      score: state.partnerScore,
-      totalQuestions: total,
-      percentage,
-      answers: state.partnerAnswers,
-      timestamp: Date.now()
-    };
-
-    try {
-      await fetch('/api/games/quiz/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(attemptPayload)
-      });
-    } catch (e) {}
-
-    _recordAttemptLocally(state.quizId, attemptPayload);
-
-    state.currentScreen = 'result';
-    renderScreen();
-  }
-
-  // ─────────────────────────────────────────────────────────
-  // SCREEN 6: RESULTS & COMPATIBILITY METER
-  // ─────────────────────────────────────────────────────────
-  function _renderScreenResult() {
-    const total = state.selectedQuestions.length || 10;
-    const score = state.partnerScore;
-    const percentage = Math.round((score / total) * 100);
-
-    let tierTitle = "💍 Rab Ne Bana Di Jodi!";
-    let tierSubtitle = "Pure Soulmate Status! You two understand each other without even speaking.";
-    let tierColor = "#ff2d75";
-
-    if (percentage >= 80) {
-      tierTitle = "💍 Eternal Soulmates!";
-      tierSubtitle = "Rab Ne Bana Di Jodi! Your romantic chemistry is out of this world!";
-      tierColor = "#e11d48";
-    } else if (percentage >= 60) {
-      tierTitle = "💖 Deep Lovers & Best Friends!";
-      tierSubtitle = "Electric chemistry! You two know each other's hearts deeply.";
-      tierColor = "#f43f5e";
-    } else if (percentage >= 40) {
-      tierTitle = "🌹 Sweet Spark & Cute Love!";
-      tierSubtitle = "Opposites attract! Lots of sweetness with cute little surprises.";
-      tierColor = "#fb7185";
-    } else {
-      tierTitle = "😜 Playful Drama & Cute Chaos!";
-      tierSubtitle = "Uh oh! Someone definitely owes their partner a long dinner date & apology hug!";
-      tierColor = "#a855f7";
-    }
-
-    const randomDare = COUPLE_REWARDS[Math.floor(Math.random() * COUPLE_REWARDS.length)];
-
-    return `
-      <div class="cm-card cm-fade-in">
-        <div class="cm-mascot-wrap">
-          ${COUPLE_MASCOT_SVG}
-        </div>
-        <div class="cm-badge-pill">Love Chemistry Test</div>
-        <h2 class="cm-title">${tierTitle}</h2>
-
-        <div class="cm-love-meter-wrap">
-          <div class="cm-love-meter-circle" style="border-color: ${tierColor};">
-            <div class="cm-meter-score">${percentage}%</div>
-            <div class="cm-meter-label">${score}/${total} Match</div>
-          </div>
-        </div>
-
-        <p class="cm-result-desc">${tierSubtitle}</p>
-
-        <!-- Dynamic Couple Dare Card -->
-        <div class="cm-dare-card">
-          <div class="cm-dare-badge">🎲 Couple Penalty / Reward</div>
-          <div class="cm-dare-title">${randomDare.title}</div>
-          <p class="cm-dare-text">${randomDare.desc}</p>
-        </div>
-
-        <!-- Answers Side-by-Side Breakdown -->
-        <div class="cm-answers-breakdown">
-          <div class="cm-breakdown-title">Answers Comparison 🔍</div>
-          ${state.partnerAnswers.map(ans => {
-            const q = state.selectedQuestions[ans.qIndex];
-            if (!q) return '';
-            const yourAns = q.options[ans.chosen] || 'None';
-            const creatorAns = q.options[ans.correct] || 'None';
-            return `
-              <div class="cm-breakdown-row ${ans.isMatch ? 'match' : 'mismatch'}">
-                <div class="cm-bd-q">${q.title}</div>
-                <div class="cm-bd-compare">
-                  <div class="cm-bd-yours"><strong>You:</strong> ${yourAns} ${ans.isMatch ? '✓' : '✗'}</div>
-                  ${!ans.isMatch ? `<div class="cm-bd-theirs"><strong>${state.creatorName}:</strong> ${creatorAns}</div>` : ''}
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-
-        <div class="cm-result-actions">
-          <button type="button" class="cm-btn-romantic cm-btn-full" id="cm-btn-make-own-quiz">
-            Create Your Own Couple Quiz ➔
-          </button>
-          <button type="button" class="cm-btn-outline cm-btn-full" style="margin-top:10px;" id="cm-btn-play-dice-mode">
-            Roll Romantic Love Dice 🎲
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
-  function _bindScreenResult() {
-    const makeBtn = document.getElementById('cm-btn-make-own-quiz');
-    const diceBtn = document.getElementById('cm-btn-play-dice-mode');
-
-    if (makeBtn) {
-      makeBtn.onclick = () => {
-        state.creatorName = state.partnerPlayerName || '';
-        state.partnerName = state.creatorName || '';
-        state.currentScreen = 'names';
-        renderScreen();
-      };
-    }
-
-    if (diceBtn) {
-      diceBtn.onclick = () => {
-        state.currentScreen = 'love_dice';
-        renderScreen();
-      };
-    }
-  }
-
-  // ─────────────────────────────────────────────────────────
-  // SCREEN 7: CREATOR PRIVATE SCOREBOARD
-  // ─────────────────────────────────────────────────────────
-  async function openScoreboard(quizId, adminKey) {
-    state.quizId = quizId;
-    state.adminKey = adminKey;
-    openGameModal();
-
-    const container = document.getElementById('cm-screen-container');
-    if (container) {
-      container.innerHTML = `
-        <div class="cm-card cm-fade-in" style="text-align:center; padding: 40px 20px;">
-          <div style="font-size:36px; margin-bottom:12px;">🏆💖</div>
-          <h3>Loading Partner Scoreboard...</h3>
-        </div>
-      `;
-    }
-
-    let scoreboardData = null;
-    try {
-      const res = await fetch(`/api/games/quiz/scoreboard?id=${encodeURIComponent(quizId)}&key=${encodeURIComponent(adminKey)}`);
-      if (res.ok) {
-        const data = await res.json();
-        scoreboardData = data.quiz;
-      }
-    } catch (e) {}
-
-    if (!scoreboardData) {
-      const local = _getQuizLocally(quizId);
-      if (local) {
-        scoreboardData = {
-          id: quizId,
-          creatorName: local.creatorName,
-          partnerName: local.partnerName,
-          createdAt: local.createdAt,
-          attempts: local.attempts || [],
-          questions: local.questions || []
-        };
-      }
-    }
-
-    state.scoreboardData = scoreboardData;
-    state.currentScreen = 'scoreboard';
-    renderScreen();
-  }
-
-  function _renderScreenScoreboard() {
-    const data = state.scoreboardData;
-    const attempts = data && Array.isArray(data.attempts) ? data.attempts : [];
-
-    return `
-      <div class="cm-card cm-fade-in">
-        <button type="button" class="cm-back-icon" id="cm-btn-score-back">← Back to Hub</button>
-        <div class="cm-badge-pill">Private Partner Scoreboard</div>
-        <h2 class="cm-title">Scoreboard 🏆</h2>
-        <p class="cm-subtitle">Here are the partners who attempted your Romantic Quiz:</p>
-
-        ${attempts.length === 0 ? `
-          <div class="cm-empty-box">
-            <div style="font-size:36px; margin-bottom:8px;">💌</div>
-            <p><strong>No attempts received yet!</strong></p>
-            <small>Share your link with your partner so they can take the test.</small>
-            <button type="button" class="cm-btn-romantic cm-btn-full" style="margin-top:16px;" onclick="CoupleMatchGame.openShareScreen('${state.quizId}')">
-              Share Link Now ➔
+        <!-- Winner / Turn Banner -->
+        ${winner ? `
+          <div class="cm-xo-winner-card cm-fade-in">
+            <div class="cm-xo-win-title">
+              ${winner === 'tie' ? "🤝 It's a Tie! Both are cute!" : `🎉 ${winner === 'X' ? '💖 Player 1' : '💙 Player 2'} Wins!`}
+            </div>
+            <p class="cm-xo-win-dare">
+              ${winner === 'tie' ? 'Give each other a sweet hug!' : 'Winner gets 1 romantic wish or free dinner treat! 👑'}
+            </p>
+            <button type="button" class="cm-btn-romantic cm-btn-full" id="cm-btn-xo-restart">
+              Play Again ➔
             </button>
           </div>
         ` : `
-          <div class="cm-attempts-list">
-            ${attempts.map((att, idx) => {
-              const dt = att.timestamp ? new Date(att.timestamp).toLocaleDateString() : '';
-              return `
-                <div class="cm-attempt-row">
-                  <div class="cm-att-rank">${idx === 0 ? '🥇' : '💖'}</div>
-                  <div class="cm-att-meta">
-                    <strong>${att.playerName}</strong>
-                    <small>${dt} • ${att.score}/${att.totalQuestions || 10} correct</small>
-                  </div>
-                  <div class="cm-att-percent">${att.percentage}%</div>
-                </div>
-              `;
-            }).join('')}
+          <div class="cm-xo-status">
+            Current Turn: <strong>${turn === 'X' ? '💖 Player 1' : (state.xoMode === 'ai' ? '🤖 Cupid AI' : '💙 Player 2')}</strong>
           </div>
         `}
       </div>
     `;
   }
 
-  function _bindScreenScoreboard() {
-    const backBtn = document.getElementById('cm-btn-score-back');
-    if (backBtn) {
-      backBtn.onclick = () => {
-        state.currentScreen = 'hub';
-        renderScreen();
-      };
-    }
-  }
-
-  // ─────────────────────────────────────────────────────────
-  // SCREEN 8: ROMANTIC LOVE DICE & TRUTH/DARE (Mode 2)
-  // ─────────────────────────────────────────────────────────
-  function _renderScreenLoveDice() {
-    const curr = state.diceResult;
-
-    return `
-      <div class="cm-card cm-fade-in">
-        <button type="button" class="cm-back-icon" id="cm-btn-dice-back">← Back to Hub</button>
-        <div class="cm-badge-pill">Mode 2: Live Couple Fun</div>
-        <h2 class="cm-title">Romantic Love Dice 🎲</h2>
-        <p class="cm-subtitle">Roll the dice to get sweet romantic truths, cute dares & flirty challenges!</p>
-
-        <div class="cm-dice-display" id="cm-dice-box">
-          ${curr ? `
-            <div class="cm-dice-card cm-fade-in ${curr.type}">
-              <div class="cm-dice-type">${curr.type === 'truth' ? '💖 ROMANTIC TRUTH' : '🔥 PLAYFUL DARE'}</div>
-              <p class="cm-dice-text">${curr.text}</p>
-            </div>
-          ` : `
-            <div class="cm-dice-empty">
-              <span class="cm-dice-big">🎲</span>
-              <p>Tap below to roll the Love Dice!</p>
-            </div>
-          `}
-        </div>
-
-        <button type="button" class="cm-btn-romantic cm-btn-full cm-roll-btn" id="cm-btn-roll-dice">
-          Roll the Dice! 🎲✨
-        </button>
-
-        ${curr ? `
-          <div class="cm-dice-actions">
-            <button type="button" class="cm-btn-outline cm-btn-full" id="cm-btn-copy-dice">
-              📋 Copy Challenge
-            </button>
-            <button type="button" class="cm-btn-whatsapp cm-btn-full" style="margin-top:8px;" id="cm-btn-send-dice-chat">
-              💬 Drop in BUDDY Chat
-            </button>
-          </div>
-        ` : ''}
-      </div>
-    `;
-  }
-
-  function _bindScreenLoveDice() {
-    const backBtn = document.getElementById('cm-btn-dice-back');
-    const rollBtn = document.getElementById('cm-btn-roll-dice');
-    const copyBtn = document.getElementById('cm-btn-copy-dice');
-    const chatBtn = document.getElementById('cm-btn-send-dice-chat');
+  function _bindScreenXO() {
+    const backBtn = document.getElementById('cm-btn-xo-back');
+    const restartBtn = document.getElementById('cm-btn-xo-restart');
 
     if (backBtn) {
       backBtn.onclick = () => {
@@ -1308,42 +829,100 @@ const CoupleMatchGame = (() => {
       };
     }
 
-    if (rollBtn) {
-      rollBtn.onclick = () => {
-        rollBtn.disabled = true;
-        const box = document.getElementById('cm-dice-box');
-        if (box) {
-          box.innerHTML = `
-            <div class="cm-dice-rolling">
-              <span class="cm-dice-big cm-spin">🎲</span>
-              <p>Rolling with love...</p>
-            </div>
-          `;
-        }
-
-        setTimeout(() => {
-          const item = TRUTH_OR_DARE_BANK[Math.floor(Math.random() * TRUTH_OR_DARE_BANK.length)];
-          state.diceResult = item;
-          renderScreen();
-        }, 600);
+    if (restartBtn) {
+      restartBtn.onclick = () => {
+        _resetXOBoard();
+        renderScreen();
       };
     }
 
-    if (copyBtn && state.diceResult) {
-      copyBtn.onclick = () => {
-        const text = `💑 Couple Challenge (${state.diceResult.type.toUpperCase()}):\n${state.diceResult.text}`;
-        navigator.clipboard.writeText(text);
-        copyBtn.innerText = 'Copied! ✓';
-        setTimeout(() => copyBtn.innerText = '📋 Copy Challenge', 2000);
-        if (typeof window.showToast === 'function') window.showToast('📋 Challenge copied!');
+    document.querySelectorAll('.cm-xo-mode-btn').forEach(btn => {
+      btn.onclick = () => {
+        state.xoMode = btn.dataset.mode;
+        _resetXOBoard();
+        renderScreen();
       };
+    });
+
+    document.querySelectorAll('.cm-xo-cell').forEach(cell => {
+      cell.onclick = () => {
+        const idx = Number(cell.dataset.idx);
+        _handleXOMove(idx);
+      };
+    });
+  }
+
+  function _handleXOMove(idx) {
+    if (state.xoBoard[idx] || state.xoWinner) return;
+
+    state.xoBoard[idx] = state.xoTurn;
+    const winResult = _checkXOWin(state.xoBoard);
+
+    if (winResult) {
+      state.xoWinner = winResult.winner;
+      state.xoWinningLine = winResult.line;
+      if (!state.scores) state.scores = { X: 0, O: 0, ties: 0 };
+      if (winResult.winner === 'X') state.scores.X++;
+      else if (winResult.winner === 'O') state.scores.O++;
+      else state.scores.ties++;
+      renderScreen();
+      return;
     }
 
-    if (chatBtn && state.diceResult) {
-      chatBtn.onclick = () => {
-        _openFriendsInviteModal(state.diceResult.text);
-      };
+    // Switch Turn
+    state.xoTurn = state.xoTurn === 'X' ? 'O' : 'X';
+    renderScreen();
+
+    // AI Move if AI Mode
+    if (state.xoMode === 'ai' && state.xoTurn === 'O' && !state.xoWinner) {
+      setTimeout(() => _handleAIMove(), 450);
     }
+  }
+
+  function _handleAIMove() {
+    const emptyIndices = state.xoBoard
+      .map((val, idx) => val === null ? idx : null)
+      .filter(v => v !== null);
+
+    if (emptyIndices.length === 0 || state.xoWinner) return;
+
+    // Pick winning move or block or center or random
+    let choice = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+    if (state.xoBoard[4] === null) choice = 4; // center
+
+    state.xoBoard[choice] = 'O';
+    const winResult = _checkXOWin(state.xoBoard);
+
+    if (winResult) {
+      state.xoWinner = winResult.winner;
+      state.xoWinningLine = winResult.line;
+      if (!state.scores) state.scores = { X: 0, O: 0, ties: 0 };
+      if (winResult.winner === 'O') state.scores.O++;
+      else state.scores.ties++;
+    } else {
+      state.xoTurn = 'X';
+    }
+    renderScreen();
+  }
+
+  function _checkXOWin(board) {
+    const lines = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // Cols
+      [0, 4, 8], [2, 4, 6]             // Diagonals
+    ];
+
+    for (let line of lines) {
+      const [a, b, c] = line;
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return { winner: board[a], line };
+      }
+    }
+
+    if (board.every(cell => cell !== null)) {
+      return { winner: 'tie', line: null };
+    }
+    return null;
   }
 
   // ─────────────────────────────────────────────────────────
@@ -1351,7 +930,7 @@ const CoupleMatchGame = (() => {
   // ─────────────────────────────────────────────────────────
   let _cachedFriendsList = [];
 
-  async function _openFriendsInviteModal(customMessage) {
+  async function _openFriendsInviteModal(messageText) {
     const modal = document.getElementById('cm-friends-modal');
     const searchInp = document.getElementById('cm-friends-search-input');
     const clearBtn = document.getElementById('cm-btn-clear-search');
@@ -1367,19 +946,13 @@ const CoupleMatchGame = (() => {
       setTimeout(() => searchInp.focus(), 100);
     }
 
-    if (closeBtn) {
-      closeBtn.onclick = () => modal.classList.add('hidden');
-    }
-
-    modal.onclick = (e) => {
-      if (e.target === modal) modal.classList.add('hidden');
-    };
+    if (closeBtn) closeBtn.onclick = () => modal.classList.add('hidden');
+    modal.onclick = (e) => { if (e.target === modal) modal.classList.add('hidden'); };
 
     if (container) {
       container.innerHTML = `
-        <div style="padding: 36px 12px; text-align: center; color: #64748b;">
-          <div style="font-size: 32px; margin-bottom: 8px;">💑✨</div>
-          <p style="font-weight: 700; color: #fff; margin-bottom: 4px;">Loading BUDDY Contacts...</p>
+        <div style="padding: 30px 10px; text-align: center; color: #cbd5e1;">
+          Loading BUDDY contacts... ⏳
         </div>
       `;
     }
@@ -1392,34 +965,30 @@ const CoupleMatchGame = (() => {
       } else {
         _cachedFriendsList = [];
       }
-    } catch (err) {
-      console.warn('Error loading contacts:', err);
+    } catch(err) {
       _cachedFriendsList = [];
     }
 
-    _filterAndRenderFriends('', customMessage);
+    _filterAndRenderFriends('', messageText);
 
     if (searchInp) {
       searchInp.oninput = () => {
         const q = searchInp.value.trim();
         if (clearBtn) clearBtn.classList.toggle('hidden', !q);
-        _filterAndRenderFriends(q, customMessage);
+        _filterAndRenderFriends(q, messageText);
       };
     }
 
     if (clearBtn) {
       clearBtn.onclick = () => {
-        if (searchInp) {
-          searchInp.value = '';
-          searchInp.focus();
-        }
+        if (searchInp) { searchInp.value = ''; searchInp.focus(); }
         clearBtn.classList.add('hidden');
-        _filterAndRenderFriends('', customMessage);
+        _filterAndRenderFriends('', messageText);
       };
     }
   }
 
-  function _filterAndRenderFriends(query, customMessage) {
+  function _filterAndRenderFriends(query, messageText) {
     const container = document.getElementById('cm-friends-list-container');
     if (!container) return;
 
@@ -1483,17 +1052,11 @@ const CoupleMatchGame = (() => {
         btn.disabled = true;
         btn.innerHTML = 'Sending... ⏳';
 
-        const origin = window.location.origin + window.location.pathname;
-        const playUrl = `${origin}?couple=${encodeURIComponent(state.quizId)}`;
-        const messageText = customMessage 
-          ? `🎲 Couple Love Challenge:\n${customMessage}\n👉 Play Couple Match on BUDDY!`
-          : `💑 Couple Match Quiz!\nHey! I made a romantic compatibility quiz for us on BUDDY! Can you score 100% or do you owe me a date? 😜💖\n👉 Play here: ${playUrl}`;
-
         let sent = false;
         if (window.ChatManager && typeof window.ChatManager.sendDirectTextMessageToUser === 'function') {
           sent = await window.ChatManager.sendDirectTextMessageToUser(targetFriend, messageText);
         } else if (window.ChatManager && typeof window.ChatManager.sendQuizInviteToUser === 'function') {
-          sent = await window.ChatManager.sendQuizInviteToUser(targetFriend, state.quizId, state.creatorName);
+          sent = await window.ChatManager.sendQuizInviteToUser(targetFriend, 'couple_arcade', 'Couple Match');
         }
 
         if (sent) {
@@ -1510,78 +1073,60 @@ const CoupleMatchGame = (() => {
     });
   }
 
-  // ─────────────────────────────────────────────────────────
-  // LOCAL STORAGE & PERSISTENCE
-  // ─────────────────────────────────────────────────────────
-  function _getMySavedQuizzes() {
+  // ── Local Storage Helpers ──
+  function _getMyScratchCards() {
     try {
-      const str = localStorage.getItem('cm_my_quizzes');
+      const str = localStorage.getItem('cm_my_scratch_cards');
       return str ? JSON.parse(str) : [];
-    } catch(e) {
-      return [];
-    }
+    } catch(e) { return []; }
   }
 
-  function _saveQuizLocally(quizObj) {
-    const list = _getMySavedQuizzes().filter(q => q.quizId !== quizObj.quizId);
-    list.unshift(quizObj);
+  function _saveScratchLocally(card) {
+    const list = _getMyScratchCards().filter(c => c.id !== card.id);
+    list.unshift(card);
     try {
-      localStorage.setItem('cm_my_quizzes', JSON.stringify(list));
+      localStorage.setItem('cm_my_scratch_cards', JSON.stringify(list));
     } catch(e) {}
   }
 
-  function _getQuizLocally(quizId) {
-    const list = _getMySavedQuizzes();
-    return list.find(q => q.quizId === quizId) || null;
+  function _getScratchLocally(id) {
+    return _getMyScratchCards().find(c => c.id === id) || null;
   }
 
-  function _recordAttemptLocally(quizId, attempt) {
-    const list = _getMySavedQuizzes();
-    const q = list.find(item => item.quizId === quizId);
-    if (q) {
-      if (!Array.isArray(q.attempts)) q.attempts = [];
-      q.attempts.unshift(attempt);
+  // ── Load Scratch Card for Partner ──
+  async function loadScratchCardForPlaying(cardId) {
+    let card = _getScratchLocally(cardId);
+    if (!card) {
       try {
-        localStorage.setItem('cm_my_quizzes', JSON.stringify(list));
+        const res = await fetch(`/api/games/scratch?id=${encodeURIComponent(cardId)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.card) card = data.card;
+        }
       } catch(e) {}
     }
-  }
 
-  async function _syncQuizWithSupabase(quizId, adminKey, payload) {
-    try {
-      if (window.BuddySupabase) {
-        const client = window.BuddySupabase.getClient();
-        if (client) {
-          await client.from('buddy_quizzes').insert([{
-            id: quizId,
-            creator_name: payload.creatorName,
-            admin_key: adminKey,
-            questions: payload.questions,
-            creator_answers: payload.creatorAnswers
-          }]);
-        }
-      }
-    } catch(e) {}
-  }
+    if (!card) {
+      card = {
+        id: cardId,
+        senderName: 'Your Partner 💖',
+        partnerName: 'You',
+        surpriseTitle: 'Romantic Candlelight Dinner 🕯️',
+        surpriseDesc: 'Valid for a romantic evening planned completely by your partner!'
+      };
+    }
 
-  // ─────────────────────────────────────────────────────────
-  // MODAL CONTROLS & URL ROUTING
-  // ─────────────────────────────────────────────────────────
-  function openGame() {
-    state.currentScreen = 'hub';
+    state.activeScratchCard = card;
+    state.scratchClearedPercent = 0;
+    state.scratchRevealed = false;
+    state.currentScreen = 'scratch_play';
     openGameModal();
     renderScreen();
   }
 
-  function openShareScreen(quizId) {
-    state.quizId = quizId;
-    const local = _getQuizLocally(quizId);
-    if (local) {
-      state.adminKey = local.adminKey;
-      state.creatorName = local.creatorName;
-      state.partnerName = local.partnerName;
-    }
-    state.currentScreen = 'share';
+  // ── Modal & Navigation ──
+  function openGame() {
+    state.currentScreen = 'hub';
     openGameModal();
     renderScreen();
   }
@@ -1598,22 +1143,18 @@ const CoupleMatchGame = (() => {
 
   function checkUrlParams() {
     const params = new URLSearchParams(window.location.search);
-    const coupleId = params.get('couple');
-    const adminId = params.get('couple_admin');
-    const adminKey = params.get('key');
+    const scratchId = params.get('scratch');
     const game = params.get('game');
 
-    if (adminId && adminKey) {
-      openScoreboard(adminId, adminKey);
-    } else if (coupleId) {
-      loadQuizForPlaying(coupleId);
+    if (scratchId) {
+      loadScratchCardForPlaying(scratchId);
     } else if (game === 'couple-match') {
       openGame();
     }
   }
 
   function init() {
-    console.log('💑 [BUDDY Games] Initializing "Couple Match" game engine...');
+    console.log('💑 [BUDDY Games] Initializing "Couple Match Arcade" engine...');
     checkUrlParams();
 
     const closeBtn = document.getElementById('cm-game-close-btn');
@@ -1626,11 +1167,8 @@ const CoupleMatchGame = (() => {
     init,
     openGame,
     closeGameModal,
-    loadQuizForPlaying,
-    openScoreboard,
-    openShareScreen,
-    checkUrlParams,
-    QUESTION_BANK
+    loadScratchCardForPlaying,
+    checkUrlParams
   };
 })();
 

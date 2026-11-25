@@ -8391,5 +8391,446 @@ html, body {
   color: #0f172a !important;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   COUPLE MATCH ARCADE CSS: WHEEL, SCRATCH FOIL & XO BATTLES
+   ══════════════════════════════════════════════════════════════ */
+.cm-arcade-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  margin-top: 8px !important;
+}
+
+.cm-arcade-card {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 16px 18px !important;
+  border-radius: 20px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  cursor: pointer !important;
+  text-align: left !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.cm-wheel-card {
+  background: linear-gradient(135deg, rgba(255, 45, 117, 0.22) 0%, rgba(139, 92, 246, 0.25) 100%) !important;
+  border-color: rgba(255, 45, 117, 0.45) !important;
+}
+
+.cm-scratch-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(225, 29, 72, 0.25) 100%) !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
+}
+
+.cm-xo-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(236, 72, 153, 0.25) 100%) !important;
+  border-color: rgba(59, 130, 246, 0.45) !important;
+}
+
+.cm-arcade-card:hover {
+  transform: translateY(-3px) scale(1.01) !important;
+  box-shadow: 0 10px 30px rgba(225, 29, 72, 0.35) !important;
+}
+
+.cm-ac-icon {
+  font-size: 32px !important;
+  flex-shrink: 0 !important;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)) !important;
+}
+
+.cm-ac-info {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.cm-ac-info strong {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+}
+
+.cm-ac-info small {
+  font-size: 12px !important;
+  color: #cbd5e1 !important;
+  line-height: 1.35 !important;
+}
+
+.cm-ac-badge {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  padding: 5px 12px !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 45, 117, 0.3) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 45, 117, 0.5) !important;
+}
+
+/* Love Wheel Styles */
+.cm-wheel-tabs {
+  display: flex !important;
+  gap: 8px !important;
+  justify-content: center !important;
+  margin-bottom: 16px !important;
+}
+
+.cm-w-tab {
+  padding: 8px 16px !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #cbd5e1 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+}
+
+.cm-w-tab.active {
+  background: #ff2d75 !important;
+  border-color: #ff2d75 !important;
+  color: #fff !important;
+  box-shadow: 0 0 16px rgba(255, 45, 117, 0.5) !important;
+}
+
+.cm-wheel-wrapper {
+  position: relative !important;
+  width: 290px !important;
+  height: 290px !important;
+  margin: 0 auto 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.cm-wheel-pointer {
+  position: absolute !important;
+  top: -8px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  color: #ffd700 !important;
+  font-size: 26px !important;
+  z-index: 5 !important;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6)) !important;
+}
+
+#cm-wheel-canvas {
+  width: 290px !important;
+  height: 290px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 30px rgba(255, 45, 117, 0.35), 0 0 10px rgba(255, 255, 255, 0.2) !important;
+}
+
+.cm-wheel-center-btn {
+  position: absolute !important;
+  width: 76px !important;
+  height: 76px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, #ff2d75 0%, #be123c 100%) !important;
+  border: 4px solid #ffffff !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.5px !important;
+  cursor: pointer !important;
+  z-index: 4 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5) !important;
+  transition: transform 0.15s ease !important;
+}
+
+.cm-wheel-center-btn:hover:not(:disabled) {
+  transform: scale(1.08) !important;
+}
+
+.cm-wheel-hint {
+  font-size: 12px !important;
+  color: #94a3b8 !important;
+  text-align: center !important;
+  margin-top: 8px !important;
+}
+
+.cm-wheel-result-card {
+  background: linear-gradient(135deg, rgba(255, 45, 117, 0.2), rgba(139, 92, 246, 0.2)) !important;
+  border: 1.5px solid rgba(255, 45, 117, 0.5) !important;
+  border-radius: 18px !important;
+  padding: 16px !important;
+  text-align: center !important;
+  margin-top: 8px !important;
+}
+
+.cm-wr-badge {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #ff75a0 !important;
+  margin-bottom: 6px !important;
+}
+
+.cm-wr-text {
+  font-size: 13.5px !important;
+  color: #ffffff !important;
+  line-height: 1.45 !important;
+  margin: 0 0 12px !important;
+}
+
+/* Secret Scratch Card Styles */
+.cm-preset-chips {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  margin-bottom: 12px !important;
+}
+
+.cm-chip {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #e2e8f0 !important;
+  padding: 6px 12px !important;
+  border-radius: 9999px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+}
+
+.cm-chip.selected {
+  background: rgba(255, 45, 117, 0.25) !important;
+  border-color: #ff2d75 !important;
+  color: #ff75a0 !important;
+}
+
+.cm-scratch-box {
+  width: 100% !important;
+  height: 190px !important;
+  border-radius: 20px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border: 2px dashed rgba(255, 45, 117, 0.45) !important;
+  box-shadow: 0 10px 30px rgba(225, 29, 72, 0.25) !important;
+  margin-bottom: 12px !important;
+}
+
+.cm-scratch-underlay {
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(135deg, #2b112c 0%, #170824 100%) !important;
+  padding: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.cm-sc-sparkle {
+  font-size: 20px !important;
+  margin-bottom: 4px !important;
+}
+
+.cm-sc-reward-title {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin-bottom: 6px !important;
+  text-shadow: 0 0 12px rgba(255, 45, 117, 0.6) !important;
+}
+
+.cm-sc-reward-desc {
+  font-size: 12px !important;
+  color: #cbd5e1 !important;
+  line-height: 1.4 !important;
+  margin: 0 0 8px !important;
+}
+
+.cm-sc-verified {
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  color: #34d399 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+  padding: 2px 8px !important;
+  border-radius: 6px !important;
+}
+
+.cm-scratch-canvas {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  cursor: grab !important;
+  touch-action: none !important;
+}
+
+.cm-scratch-indicator {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #ff75a0 !important;
+  text-align: center !important;
+  margin-bottom: 6px !important;
+}
+
+/* Love XO Battle Styles */
+.cm-xo-modes {
+  display: flex !important;
+  gap: 8px !important;
+  justify-content: center !important;
+  margin-bottom: 12px !important;
+}
+
+.cm-xo-mode-btn {
+  padding: 6px 14px !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #cbd5e1 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+}
+
+.cm-xo-mode-btn.active {
+  background: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: #fff !important;
+}
+
+.cm-xo-score-bar {
+  display: flex !important;
+  justify-content: space-between !important;
+  margin-bottom: 14px !important;
+  background: rgba(0, 0, 0, 0.25) !important;
+  padding: 8px 14px !important;
+  border-radius: 12px !important;
+}
+
+.cm-xo-score {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #94a3b8 !important;
+}
+
+.cm-xo-score.active-turn {
+  color: #ff75a0 !important;
+  text-decoration: underline !important;
+}
+
+.cm-xo-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 10px !important;
+  max-width: 280px !important;
+  margin: 0 auto 16px !important;
+}
+
+.cm-xo-cell {
+  width: 80px !important;
+  height: 80px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 2px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 18px !important;
+  cursor: pointer !important;
+  font-size: 34px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.cm-xo-cell:hover:not(:disabled) {
+  background: rgba(255, 45, 117, 0.18) !important;
+  border-color: #ff2d75 !important;
+  transform: scale(1.05) !important;
+}
+
+.cm-xo-cell.win-cell {
+  background: rgba(16, 185, 129, 0.25) !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5) !important;
+}
+
+.cm-xo-status {
+  text-align: center !important;
+  font-size: 13px !important;
+  color: #cbd5e1 !important;
+}
+
+.cm-xo-winner-card {
+  background: linear-gradient(135deg, rgba(255, 45, 117, 0.25), rgba(16, 185, 129, 0.25)) !important;
+  border: 1.5px solid #ff2d75 !important;
+  border-radius: 18px !important;
+  padding: 16px !important;
+  text-align: center !important;
+}
+
+.cm-xo-win-title {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin-bottom: 4px !important;
+}
+
+.cm-xo-win-dare {
+  font-size: 12px !important;
+  color: #cbd5e1 !important;
+  margin: 0 0 12px !important;
+}
+
+/* Light Theme Adaptations for Arcade */
+[data-theme="light"] .cm-arcade-card {
+  border-color: #fce7f3 !important;
+}
+
+[data-theme="light"] .cm-wheel-card {
+  background: linear-gradient(135deg, #fff1f5 0%, #f3e8ff 100%) !important;
+}
+
+[data-theme="light"] .cm-scratch-card {
+  background: linear-gradient(135deg, #fffbeb 0%, #ffe4e6 100%) !important;
+}
+
+[data-theme="light"] .cm-xo-card {
+  background: linear-gradient(135deg, #eff6ff 0%, #fdf2f8 100%) !important;
+}
+
+[data-theme="light"] .cm-ac-info strong {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .cm-ac-info small {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .cm-w-tab {
+  background: #ffffff !important;
+  border-color: #fbcfe8 !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .cm-scratch-underlay {
+  background: linear-gradient(135deg, #fff1f5 0%, #fce7f3 100%) !important;
+}
+
+[data-theme="light"] .cm-sc-reward-title {
+  color: #9f1239 !important;
+}
+
+[data-theme="light"] .cm-sc-reward-desc {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .cm-xo-cell {
+  background: #ffffff !important;
+  border-color: #fce7f3 !important;
+}
+
+[data-theme="light"] .cm-xo-cell:hover:not(:disabled) {
+  background: #fff1f5 !important;
+}
+
+
 
 

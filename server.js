@@ -171,6 +171,10 @@ const QUIZZES_FILE = isVercel
   ? path.join('/tmp', 'games_quizzes.json')
   : path.join(ROOT, 'data', 'games_quizzes.json');
 
+const SCRATCH_FILE = isVercel
+  ? path.join('/tmp', 'games_scratch.json')
+  : path.join(ROOT, 'data', 'games_scratch.json');
+
 function loadQuizzes() {
   try {
     if (fs.existsSync(QUIZZES_FILE)) {
@@ -203,6 +207,23 @@ function saveQuizzes(quizzes) {
   }
 }
 
+function loadScratchCards() {
+  try {
+    if (fs.existsSync(SCRATCH_FILE)) {
+      return JSON.parse(fs.readFileSync(SCRATCH_FILE, 'utf8'));
+    }
+  } catch (e) {}
+  return {};
+}
+
+function saveScratchCards(cards) {
+  try {
+    const dir = path.dirname(SCRATCH_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(SCRATCH_FILE, JSON.stringify(cards, null, 2), 'utf8');
+  } catch (e) {}
+}
+
 // Handler for /api/games/quiz
 function handleGamesApi(req, res, reqPath, parsedUrl) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -212,6 +233,54 @@ function handleGamesApi(req, res, reqPath, parsedUrl) {
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
     return res.end();
+  }
+
+  // 0a. Create a Secret Romantic Scratch Card
+  if (reqPath === '/api/games/scratch' && req.method === 'POST') {
+    getRequestBody(req, (err, payload) => {
+      try {
+        if (err || !payload) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Invalid payload' }));
+        }
+        const { senderName, partnerName, surpriseTitle, surpriseDesc, category } = payload;
+        const cardId = 'sc_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        const cards = loadScratchCards();
+        cards[cardId] = {
+          id: cardId,
+          senderName: (senderName || 'Your Love').slice(0, 25).trim(),
+          partnerName: (partnerName || 'Partner').slice(0, 25).trim(),
+          surpriseTitle: surpriseTitle || 'Romantic Surprise 💖',
+          surpriseDesc: surpriseDesc || '1 Free Romantic Date Night',
+          category: category || 'romantic',
+          createdAt: Date.now()
+        };
+        saveScratchCards(cards);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: true, cardId, card: cards[cardId] }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return true;
+  }
+
+  // 0b. Get Scratch Card by ID
+  if (reqPath === '/api/games/scratch' && req.method === 'GET') {
+    const cardId = parsedUrl.searchParams.get('id');
+    if (!cardId) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Missing card id' }));
+    }
+    const cards = loadScratchCards();
+    const card = cards[cardId];
+    if (!card) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Card not found' }));
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ success: true, card }));
   }
 
   // 1. Create a new Quiz
@@ -502,8 +571,8 @@ function handleRequest(req, res) {
   const proto = (req.headers['x-forwarded-proto'] || 'http').split(',')[0].trim();
   const parsedUrl = new URL(rawUrl, `${proto}://${hostHeader}`);
 
-  // Games API (Don't Block Me & Interactive Quizzes)
-  if (reqPath.startsWith('/api/games/quiz')) {
+  // Games API (Don't Block Me, Couple Match, Scratch Cards & Arcade)
+  if (reqPath.startsWith('/api/games/')) {
     if (handleGamesApi(req, res, reqPath, parsedUrl)) return;
   }
 
