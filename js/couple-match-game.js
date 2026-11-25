@@ -574,21 +574,34 @@ const CoupleMatchGame = (() => {
     const pad = document.getElementById('cm-solo-tap-pad');
     if (!pad) return;
 
-    const handleTap = (e) => {
-      e.preventDefault();
+    let isTouching = false;
+    pad.addEventListener('touchstart', (e) => {
+      isTouching = true;
+      if (e.cancelable) e.preventDefault();
+      if (!state.isPlaying || state.soloTimeLeft <= 0) return;
+      const touches = e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches : e.touches;
+      const count = touches ? touches.length : 1;
+      for (let i = 0; i < count; i++) {
+        state.soloTaps++;
+        _createTouchRipple({
+          clientX: touches ? touches[i].clientX : 0,
+          clientY: touches ? touches[i].clientY : 0
+        }, 'p1');
+      }
+      if (navigator.vibrate) navigator.vibrate(10);
+      const display = document.getElementById('cm-solo-score-display');
+      if (display) display.textContent = state.soloTaps;
+    }, { passive: false });
+
+    pad.addEventListener('mousedown', (e) => {
+      if (isTouching) return;
       if (!state.isPlaying || state.soloTimeLeft <= 0) return;
       state.soloTaps++;
       if (navigator.vibrate) navigator.vibrate(10);
-
       const display = document.getElementById('cm-solo-score-display');
       if (display) display.textContent = state.soloTaps;
-
-      // Ripple
       _createTouchRipple(e, 'p1');
-    };
-
-    pad.addEventListener('touchstart', handleTap, { passive: false });
-    pad.addEventListener('mousedown', handleTap);
+    });
   }
 
   // ─────────────────────────────────────────────────────────
@@ -837,12 +850,22 @@ const CoupleMatchGame = (() => {
 
   function openGameModal() {
     const modal = document.getElementById('cm-game-modal-overlay');
-    if (modal) modal.classList.remove('hidden');
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+      modal.style.visibility = 'visible';
+      modal.style.pointerEvents = 'auto';
+    }
   }
 
   function closeGameModal() {
     const modal = document.getElementById('cm-game-modal-overlay');
-    if (modal) modal.classList.add('hidden');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+      modal.style.visibility = 'hidden';
+      modal.style.pointerEvents = 'none';
+    }
     clearInterval(state.aiInterval);
     clearInterval(state.soloTimerInterval);
     clearTimeout(state.powerUpTimeout);
