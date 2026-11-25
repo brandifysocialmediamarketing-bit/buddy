@@ -99,18 +99,23 @@ function resolveImageUrl(rawUrl, callback, depth = 0) {
 }
 
 const isVercel = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const APP_VERSION = 'v202';
+const BUILD_TIMESTAMP = Date.now();
 
 // Live Reload Clients
 let sseClients = [];
 
-// Watch directory for automatic live reload (Local development only)
+// Watch directory for automatic live reload & cloud git sync (Local development only)
 let reloadTimer = null;
+let gitSyncTimer = null;
+let isSyncing = false;
+
 if (!isVercel) {
   try {
     fs.watch(ROOT, { recursive: true }, (eventType, filename) => {
       if (!filename) return;
       const norm = filename.replace(/\\/g, '/').toLowerCase();
-      // Do NOT reload for data storage, json files, logs, or node_modules
+      // Do NOT reload for data storage, json files, logs, node_modules, or .git
       if (
         norm.includes('node_modules') ||
         norm.includes('.git') ||
@@ -122,13 +127,32 @@ if (!isVercel) {
       ) {
         return;
       }
+
+      // 1. Instant local live-reload
       clearTimeout(reloadTimer);
       reloadTimer = setTimeout(() => {
         console.log(`[BUDDY Live-Reload] Change detected in ${filename}, updating connected apps...`);
         sseClients.forEach(client => {
           try { client.write('data: reload\n\n'); } catch (e) { }
         });
-      }, 250);
+      }, 200);
+
+      // 2. Debounced auto git commit & push to GitHub & Vercel live production (3s debounce)
+      clearTimeout(gitSyncTimer);
+      gitSyncTimer = setTimeout(() => {
+        if (isSyncing) return;
+        isSyncing = true;
+        console.log(`[BUDDY Auto-Sync] File saved (${filename}). Auto-pushing to live app...`);
+        const { exec } = require('child_process');
+        exec(`git -C "${ROOT}" add -A && git -C "${ROOT}" commit -m "Auto-sync update: ${filename}" && git -C "${ROOT}" push origin main`, (err, stdout, stderr) => {
+          isSyncing = false;
+          if (err) {
+            console.warn('[BUDDY Auto-Sync] Notice:', err.message);
+          } else {
+            console.log('[BUDDY Auto-Sync] ✅ Successfully pushed to GitHub & Vercel live production!');
+          }
+        });
+      }, 3500);
     });
   } catch (e) {
     console.warn('[BUDDY] fs.watch notice:', e.message);
@@ -574,6 +598,20 @@ function handleRequest(req, res) {
   // Games API (Don't Block Me, Couple Match, Scratch Cards & Arcade)
   if (reqPath.startsWith('/api/games/')) {
     if (handleGamesApi(req, res, reqPath, parsedUrl)) return;
+  }
+
+  // Version endpoint for automatic real-time live app updates
+  if (reqPath === '/api/version') {
+    res.writeHead(200, {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Cache-Control': 'no-cache, no-store, must-revalidate'
+    });
+    return res.end(JSON.stringify({
+      success: true,
+      version: APP_VERSION,
+      timestamp: BUILD_TIMESTAMP
+    }));
   }
 
   // 1. Resolve Image API endpoint (Resolves pin.it, Pinterest, Unsplash, Google URLs)

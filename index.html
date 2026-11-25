@@ -1083,32 +1083,61 @@
   <script src="js/app.js?v=202"></script>
   <script src="js/dont-block-me-game.js?v=202"></script>
   <script src="js/couple-match-game.js?v=202"></script>
-  <!-- Live Auto-Reload -->
+  <!-- Live Auto-Reload & Cloud Auto-Updater -->
   <script>
     (function () {
-      if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') return;
-      let es, t;
-      function connect() {
-        try {
-          if (es) es.close();
-          es = new EventSource('/live-reload');
-          es.onmessage = function (e) {
-            if (e.data === 'reload') {
-              const toast = document.getElementById('toast');
-              if (toast) { toast.textContent = '✨ Auto-Updated!'; toast.classList.remove('hidden'); }
-              setTimeout(() => location.reload(), 150);
-            }
-          };
-          es.onerror = function () {
+      // 1. Local live-reload via SSE (for localhost / local network)
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        let es, t;
+        function connect() {
+          try {
             if (es) es.close();
-            clearTimeout(t);
-            t = setTimeout(connect, 2000);
-          };
-        } catch (e) {
-          t = setTimeout(connect, 3000);
+            es = new EventSource('/live-reload');
+            es.onmessage = function (e) {
+              if (e.data === 'reload') {
+                const toast = document.getElementById('toast');
+                if (toast) { toast.textContent = '✨ Auto-Updated!'; toast.classList.remove('hidden'); }
+                setTimeout(() => location.reload(), 150);
+              }
+            };
+            es.onerror = function () {
+              if (es) es.close();
+              clearTimeout(t);
+              t = setTimeout(connect, 2000);
+            };
+          } catch (e) {
+            t = setTimeout(connect, 3000);
+          }
         }
+        connect();
       }
-      connect();
+
+      // 2. Production Live Cloud Auto-Updater (Detects new git deployments on mobile & web)
+      var currentVersion = 'v202';
+      function checkLiveDeploy() {
+        try {
+          fetch('/api/version?t=' + Date.now(), { cache: 'no-store' })
+            .then(function (res) { return res.ok ? res.json() : null; })
+            .then(function (data) {
+              if (data && data.version && data.version !== currentVersion) {
+                var toast = document.getElementById('toast');
+                if (toast) {
+                  toast.textContent = '✨ App updated! Refreshing...';
+                  toast.classList.remove('hidden');
+                }
+                setTimeout(function () {
+                  location.reload(true);
+                }, 1000);
+              }
+            })
+            .catch(function () {});
+        } catch (e) {}
+      }
+
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) checkLiveDeploy();
+      });
+      setInterval(checkLiveDeploy, 15000);
     })();
   
     // Games Navigation & Don't Block Me Game Launcher
@@ -1213,10 +1242,16 @@
       };
     }
 
-    // Register Service Worker for PWA (if supported)
+    // Register Service Worker for PWA (with instant auto-update)
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          reg.update().catch(() => {});
+          setInterval(() => { reg.update().catch(() => {}); }, 20000);
+        }).catch(() => {});
+      });
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
       });
     }
 
