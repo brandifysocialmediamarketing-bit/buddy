@@ -8392,444 +8392,488 @@ html, body {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   COUPLE MATCH ARCADE CSS: WHEEL, SCRATCH FOIL & XO BATTLES
+   LOVE CLASH 💖⚡ THE ULTIMATE COUPLE HEART BATTLE CSS
    ══════════════════════════════════════════════════════════════ */
-.cm-arcade-grid {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 12px !important;
-  margin-top: 8px !important;
+.cm-lobby-card {
+  text-align: center !important;
 }
 
-.cm-arcade-card {
+.cm-challenge-banner {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 45, 117, 0.2)) !important;
+  border: 1.5px solid #ffd700 !important;
+  border-radius: 16px !important;
+  padding: 12px 16px !important;
+  text-align: left !important;
+  margin-bottom: 14px !important;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3) !important;
+}
+
+.cm-cb-icon {
+  font-size: 26px !important;
+}
+
+.cm-battle-modes {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  margin-bottom: 16px !important;
+}
+
+.cm-mode-card {
   display: flex !important;
   align-items: center !important;
   gap: 14px !important;
-  padding: 16px 18px !important;
-  border-radius: 20px !important;
+  padding: 14px 16px !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
   border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
   cursor: pointer !important;
   text-align: left !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative !important;
 }
 
-.cm-wheel-card {
-  background: linear-gradient(135deg, rgba(255, 45, 117, 0.22) 0%, rgba(139, 92, 246, 0.25) 100%) !important;
-  border-color: rgba(255, 45, 117, 0.45) !important;
+.cm-mode-card:hover {
+  background: rgba(255, 45, 117, 0.12) !important;
+  border-color: rgba(255, 45, 117, 0.4) !important;
+  transform: translateY(-2px) !important;
 }
 
-.cm-scratch-card {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(225, 29, 72, 0.25) 100%) !important;
-  border-color: rgba(245, 158, 11, 0.45) !important;
+.cm-mode-card.active {
+  background: linear-gradient(135deg, rgba(255, 45, 117, 0.25), rgba(139, 92, 246, 0.25)) !important;
+  border-color: #ff2d75 !important;
+  box-shadow: 0 0 20px rgba(255, 45, 117, 0.35) !important;
 }
 
-.cm-xo-card {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(236, 72, 153, 0.25) 100%) !important;
-  border-color: rgba(59, 130, 246, 0.45) !important;
-}
-
-.cm-arcade-card:hover {
-  transform: translateY(-3px) scale(1.01) !important;
-  box-shadow: 0 10px 30px rgba(225, 29, 72, 0.35) !important;
-}
-
-.cm-ac-icon {
-  font-size: 32px !important;
+.cm-mc-icon {
+  font-size: 28px !important;
   flex-shrink: 0 !important;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)) !important;
 }
 
-.cm-ac-info {
+.cm-mc-info {
   flex: 1 !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 2px !important;
 }
 
-.cm-ac-info strong {
-  font-size: 15px !important;
+.cm-mc-info strong {
+  font-size: 14.5px !important;
   font-weight: 800 !important;
   color: #ffffff !important;
 }
 
-.cm-ac-info small {
-  font-size: 12px !important;
+.cm-mc-info small {
+  font-size: 11.5px !important;
   color: #cbd5e1 !important;
-  line-height: 1.35 !important;
+  line-height: 1.3 !important;
 }
 
-.cm-ac-badge {
-  font-size: 11px !important;
+.cm-mc-badge {
+  font-size: 10.5px !important;
   font-weight: 800 !important;
-  padding: 5px 12px !important;
-  border-radius: 9999px !important;
-  background: rgba(255, 45, 117, 0.3) !important;
-  color: #fff !important;
-  border: 1px solid rgba(255, 45, 117, 0.5) !important;
-}
-
-/* Love Wheel Styles */
-.cm-wheel-tabs {
-  display: flex !important;
-  gap: 8px !important;
-  justify-content: center !important;
-  margin-bottom: 16px !important;
-}
-
-.cm-w-tab {
-  padding: 8px 16px !important;
-  border-radius: 9999px !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  color: #cbd5e1 !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  cursor: pointer !important;
-  transition: all 0.2s !important;
-}
-
-.cm-w-tab.active {
-  background: #ff2d75 !important;
-  border-color: #ff2d75 !important;
-  color: #fff !important;
-  box-shadow: 0 0 16px rgba(255, 45, 117, 0.5) !important;
-}
-
-.cm-wheel-wrapper {
-  position: relative !important;
-  width: 290px !important;
-  height: 290px !important;
-  margin: 0 auto 16px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.cm-wheel-pointer {
-  position: absolute !important;
-  top: -8px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  color: #ffd700 !important;
-  font-size: 26px !important;
-  z-index: 5 !important;
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6)) !important;
-}
-
-#cm-wheel-canvas {
-  width: 290px !important;
-  height: 290px !important;
-  border-radius: 50% !important;
-  box-shadow: 0 0 30px rgba(255, 45, 117, 0.35), 0 0 10px rgba(255, 255, 255, 0.2) !important;
-}
-
-.cm-wheel-center-btn {
-  position: absolute !important;
-  width: 76px !important;
-  height: 76px !important;
-  border-radius: 50% !important;
-  background: radial-gradient(circle, #ff2d75 0%, #be123c 100%) !important;
-  border: 4px solid #ffffff !important;
-  color: #ffffff !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  letter-spacing: 0.5px !important;
-  cursor: pointer !important;
-  z-index: 4 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5) !important;
-  transition: transform 0.15s ease !important;
-}
-
-.cm-wheel-center-btn:hover:not(:disabled) {
-  transform: scale(1.08) !important;
-}
-
-.cm-wheel-hint {
-  font-size: 12px !important;
-  color: #94a3b8 !important;
-  text-align: center !important;
-  margin-top: 8px !important;
-}
-
-.cm-wheel-result-card {
-  background: linear-gradient(135deg, rgba(255, 45, 117, 0.2), rgba(139, 92, 246, 0.2)) !important;
-  border: 1.5px solid rgba(255, 45, 117, 0.5) !important;
-  border-radius: 18px !important;
-  padding: 16px !important;
-  text-align: center !important;
-  margin-top: 8px !important;
-}
-
-.cm-wr-badge {
-  font-size: 14px !important;
-  font-weight: 800 !important;
-  color: #ff75a0 !important;
-  margin-bottom: 6px !important;
-}
-
-.cm-wr-text {
-  font-size: 13.5px !important;
-  color: #ffffff !important;
-  line-height: 1.45 !important;
-  margin: 0 0 12px !important;
-}
-
-/* Secret Scratch Card Styles */
-.cm-preset-chips {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 6px !important;
-  margin-bottom: 12px !important;
-}
-
-.cm-chip {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  color: #e2e8f0 !important;
-  padding: 6px 12px !important;
-  border-radius: 9999px !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  cursor: pointer !important;
-  transition: all 0.2s !important;
-}
-
-.cm-chip.selected {
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
   background: rgba(255, 45, 117, 0.25) !important;
-  border-color: #ff2d75 !important;
   color: #ff75a0 !important;
+  border: 1px solid rgba(255, 45, 117, 0.4) !important;
 }
 
-.cm-scratch-box {
+.cm-start-battle-btn {
+  font-size: 16px !important;
+  letter-spacing: 0.5px !important;
+  padding: 16px !important;
+  margin-top: 4px !important;
+}
+
+/* Countdown Screen */
+.cm-countdown-card {
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 400px !important;
+  text-align: center !important;
+}
+
+.cm-cd-number {
+  font-size: 96px !important;
+  font-weight: 900 !important;
+  color: #ff2d75 !important;
+  text-shadow: 0 0 35px rgba(255, 45, 117, 0.8), 0 0 70px rgba(255, 45, 117, 0.4) !important;
+  animation: cmCdBounce 0.65s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.cm-cd-number.go {
+  font-size: 72px !important;
+  color: #ffd700 !important;
+  text-shadow: 0 0 35px #ffd700 !important;
+}
+
+@keyframes cmCdBounce {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.cm-cd-hint {
+  font-size: 14px !important;
+  color: #cbd5e1 !important;
+  margin-top: 12px !important;
+  font-weight: 700 !important;
+}
+
+/* 2-Player Split Screen Battle Arena */
+.cm-split-arena {
   width: 100% !important;
-  height: 190px !important;
-  border-radius: 20px !important;
+  height: 100% !important;
+  min-height: 520px !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
   position: relative !important;
   overflow: hidden !important;
-  border: 2px dashed rgba(255, 45, 117, 0.45) !important;
-  box-shadow: 0 10px 30px rgba(225, 29, 72, 0.25) !important;
-  margin-bottom: 12px !important;
+  border-radius: 20px !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  touch-action: manipulation !important;
 }
 
-.cm-scratch-underlay {
+.cm-player-half {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  padding: 16px !important;
+  position: relative !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease !important;
+}
+
+.p2-half {
+  background: linear-gradient(180deg, #031b38 0%, #082d5c 100%) !important;
+  border-bottom: 2px dashed rgba(0, 240, 255, 0.45) !important;
+}
+
+.p1-half {
+  background: linear-gradient(180deg, #38081c 0%, #1e050f 100%) !important;
+  border-top: 2px dashed rgba(255, 45, 117, 0.45) !important;
+}
+
+.cm-player-half.frozen {
+  filter: blur(2px) grayscale(50%) !important;
+  opacity: 0.6 !important;
+  pointer-events: none !important;
+}
+
+.mirrored {
+  transform: rotate(180deg) !important;
+}
+
+.cm-half-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  z-index: 2 !important;
+}
+
+.cm-half-tag {
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.8px !important;
+}
+
+.p2-half .cm-half-tag { color: #00f0ff !important; text-shadow: 0 0 10px #00f0ff !important; }
+.p1-half .cm-half-tag { color: #ff2d75 !important; text-shadow: 0 0 10px #ff2d75 !important; }
+
+.cm-half-counter {
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+}
+
+.cm-tap-hint {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  text-align: center !important;
+  letter-spacing: 0.5px !important;
+  pointer-events: none !important;
+  animation: cmPulse 1.2s infinite alternate !important;
+}
+
+.cm-half-goal-line {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+  text-align: center !important;
+  opacity: 0.5 !important;
+}
+
+/* Dividing Center & The Tug-of-War Heart */
+.cm-battle-center-divider {
   position: absolute !important;
   inset: 0 !important;
-  background: linear-gradient(135deg, #2b112c 0%, #170824 100%) !important;
-  padding: 16px !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+.cm-clash-heart {
+  position: absolute !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  text-align: center !important;
+  transition: top 0.08s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  pointer-events: none !important;
 }
 
-.cm-sc-sparkle {
-  font-size: 20px !important;
-  margin-bottom: 4px !important;
+.cm-ch-body {
+  font-size: 58px !important;
+  filter: drop-shadow(0 0 25px rgba(255, 45, 117, 0.9)) drop-shadow(0 0 10px #00f0ff) !important;
+  animation: cmHeartBeat 1.2s infinite !important;
 }
 
-.cm-sc-reward-title {
-  font-size: 18px !important;
-  font-weight: 800 !important;
+.cm-ch-pos-label {
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  background: rgba(0, 0, 0, 0.6) !important;
   color: #ffffff !important;
-  margin-bottom: 6px !important;
-  text-shadow: 0 0 12px rgba(255, 45, 117, 0.6) !important;
-}
-
-.cm-sc-reward-desc {
-  font-size: 12px !important;
-  color: #cbd5e1 !important;
-  line-height: 1.4 !important;
-  margin: 0 0 8px !important;
-}
-
-.cm-sc-verified {
-  font-size: 10.5px !important;
-  font-weight: 700 !important;
-  color: #34d399 !important;
-  background: rgba(16, 185, 129, 0.15) !important;
-  padding: 2px 8px !important;
+  padding: 2px 6px !important;
   border-radius: 6px !important;
+  margin-top: -6px !important;
 }
 
-.cm-scratch-canvas {
+/* Tap Ripple Rings */
+.cm-tap-ripple {
   position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  cursor: grab !important;
-  touch-action: none !important;
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  transform: translate(-50%, -50%) scale(0.2) !important;
+  pointer-events: none !important;
+  animation: cmRippleExp 0.4s ease-out forwards !important;
+  z-index: 5 !important;
 }
 
-.cm-scratch-indicator {
+.cm-tap-ripple.p1 {
+  border: 3px solid #ff2d75 !important;
+  background: radial-gradient(circle, rgba(255, 45, 117, 0.4) 0%, transparent 70%) !important;
+}
+
+.cm-tap-ripple.p2 {
+  border: 3px solid #00f0ff !important;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.4) 0%, transparent 70%) !important;
+}
+
+@keyframes cmRippleExp {
+  0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+/* Floating Power-Up Bubble */
+.cm-powerup-bubble {
+  position: absolute !important;
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 50% !important;
+  border: 3px solid #ffffff !important;
   font-size: 12px !important;
-  font-weight: 700 !important;
-  color: #ff75a0 !important;
-  text-align: center !important;
-  margin-bottom: 6px !important;
-}
-
-/* Love XO Battle Styles */
-.cm-xo-modes {
-  display: flex !important;
-  gap: 8px !important;
-  justify-content: center !important;
-  margin-bottom: 12px !important;
-}
-
-.cm-xo-mode-btn {
-  padding: 6px 14px !important;
-  border-radius: 9999px !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  color: #cbd5e1 !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
   cursor: pointer !important;
-}
-
-.cm-xo-mode-btn.active {
-  background: #3b82f6 !important;
-  border-color: #3b82f6 !important;
-  color: #fff !important;
-}
-
-.cm-xo-score-bar {
-  display: flex !important;
-  justify-content: space-between !important;
-  margin-bottom: 14px !important;
-  background: rgba(0, 0, 0, 0.25) !important;
-  padding: 8px 14px !important;
-  border-radius: 12px !important;
-}
-
-.cm-xo-score {
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  color: #94a3b8 !important;
-}
-
-.cm-xo-score.active-turn {
-  color: #ff75a0 !important;
-  text-decoration: underline !important;
-}
-
-.cm-xo-grid {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 10px !important;
-  max-width: 280px !important;
-  margin: 0 auto 16px !important;
-}
-
-.cm-xo-cell {
-  width: 80px !important;
-  height: 80px !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 2px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius: 18px !important;
-  cursor: pointer !important;
-  font-size: 34px !important;
+  z-index: 20 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transform: translate(-50%, -50%) !important;
+  animation: cmPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1), cmFloat 2s ease-in-out infinite alternate !important;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.5) !important;
 }
 
-.cm-xo-cell:hover:not(:disabled) {
-  background: rgba(255, 45, 117, 0.18) !important;
-  border-color: #ff2d75 !important;
-  transform: scale(1.05) !important;
+.cm-powerup-bubble.boost {
+  background: radial-gradient(circle, #ffd700 0%, #f59e0b 100%) !important;
+  border-color: #fff !important;
 }
 
-.cm-xo-cell.win-cell {
-  background: rgba(16, 185, 129, 0.25) !important;
-  border-color: #10b981 !important;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5) !important;
+.cm-powerup-bubble.freeze {
+  background: radial-gradient(circle, #38bdf8 0%, #0284c7 100%) !important;
+  border-color: #fff !important;
 }
 
-.cm-xo-status {
+.cm-powerup-bubble.bomb {
+  background: radial-gradient(circle, #ef4444 0%, #991b1b 100%) !important;
+  border-color: #fff !important;
+}
+
+@keyframes cmPopIn {
+  from { transform: translate(-50%, -50%) scale(0); }
+  to { transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes cmFloat {
+  0% { transform: translate(-50%, -50%) translateY(0); }
+  100% { transform: translate(-50%, -50%) translateY(-8px); }
+}
+
+/* Solo 10s Rush Arena */
+.cm-solo-arena {
   text-align: center !important;
+  min-height: 480px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+.cm-solo-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 8px 12px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 14px !important;
+}
+
+.cm-solo-timer {
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  color: #ffd700 !important;
+}
+
+.cm-solo-target {
   font-size: 13px !important;
   color: #cbd5e1 !important;
 }
 
-.cm-xo-winner-card {
-  background: linear-gradient(135deg, rgba(255, 45, 117, 0.25), rgba(16, 185, 129, 0.25)) !important;
-  border: 1.5px solid #ff2d75 !important;
-  border-radius: 18px !important;
-  padding: 16px !important;
+.cm-solo-tap-surface {
+  flex: 1 !important;
+  background: linear-gradient(180deg, rgba(255, 45, 117, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%) !important;
+  border: 2px dashed #ff2d75 !important;
+  border-radius: 24px !important;
+  margin: 16px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.cm-solo-big-score {
+  font-size: 80px !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 30px #ff2d75 !important;
+  line-height: 1 !important;
+}
+
+.cm-solo-heart-glow {
+  font-size: 42px !important;
+  margin: 10px 0 !important;
+  animation: cmHeartBeat 1s infinite !important;
+}
+
+.cm-solo-smash-hint {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: #ff75a0 !important;
+  letter-spacing: 0.8px !important;
+}
+
+/* Victory Screen & Forfeit Card */
+.cm-victory-card {
   text-align: center !important;
 }
 
-.cm-xo-win-title {
-  font-size: 16px !important;
+.cm-win-neon {
+  color: #ffd700 !important;
+  text-shadow: 0 0 25px rgba(255, 215, 0, 0.7) !important;
+  font-size: 24px !important;
+}
+
+.cm-victory-dare-box {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 45, 117, 0.25) 100%) !important;
+  border: 2px solid #ffd700 !important;
+  border-radius: 20px !important;
+  padding: 18px !important;
+  margin: 16px 0 !important;
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.25) !important;
+}
+
+.cm-v-dare-tag {
+  font-size: 10.5px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.8px !important;
+  color: #ffd700 !important;
+  margin-bottom: 6px !important;
+}
+
+.cm-v-dare-title {
+  font-size: 18px !important;
   font-weight: 800 !important;
   color: #ffffff !important;
-  margin-bottom: 4px !important;
+  margin-bottom: 6px !important;
 }
 
-.cm-xo-win-dare {
-  font-size: 12px !important;
+.cm-v-dare-desc {
+  font-size: 13px !important;
   color: #cbd5e1 !important;
-  margin: 0 0 12px !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
 }
 
-/* Light Theme Adaptations for Arcade */
-[data-theme="light"] .cm-arcade-card {
+/* Light Theme Adaptations for Love Clash */
+[data-theme="light"] .cm-mode-card {
+  background: #ffffff !important;
   border-color: #fce7f3 !important;
 }
 
-[data-theme="light"] .cm-wheel-card {
-  background: linear-gradient(135deg, #fff1f5 0%, #f3e8ff 100%) !important;
+[data-theme="light"] .cm-mode-card.active {
+  background: #fff1f5 !important;
 }
 
-[data-theme="light"] .cm-scratch-card {
-  background: linear-gradient(135deg, #fffbeb 0%, #ffe4e6 100%) !important;
-}
-
-[data-theme="light"] .cm-xo-card {
-  background: linear-gradient(135deg, #eff6ff 0%, #fdf2f8 100%) !important;
-}
-
-[data-theme="light"] .cm-ac-info strong {
+[data-theme="light"] .cm-mc-info strong {
   color: #0f172a !important;
 }
 
-[data-theme="light"] .cm-ac-info small {
+[data-theme="light"] .cm-mc-info small {
   color: #475569 !important;
 }
 
-[data-theme="light"] .cm-w-tab {
-  background: #ffffff !important;
-  border-color: #fbcfe8 !important;
+[data-theme="light"] .p2-half {
+  background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%) !important;
+}
+
+[data-theme="light"] .p1-half {
+  background: linear-gradient(180deg, #ffe4e6 0%, #fecdd3 100%) !important;
+}
+
+[data-theme="light"] .cm-half-counter {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .cm-tap-hint {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .cm-victory-dare-box {
+  background: linear-gradient(135deg, #fef3c7 0%, #ffe4e6 100%) !important;
+  border-color: #f59e0b !important;
+}
+
+[data-theme="light"] .cm-v-dare-title {
+  color: #92400e !important;
+}
+
+[data-theme="light"] .cm-v-dare-desc {
   color: #475569 !important;
 }
 
-[data-theme="light"] .cm-scratch-underlay {
-  background: linear-gradient(135deg, #fff1f5 0%, #fce7f3 100%) !important;
-}
-
-[data-theme="light"] .cm-sc-reward-title {
-  color: #9f1239 !important;
-}
-
-[data-theme="light"] .cm-sc-reward-desc {
-  color: #475569 !important;
-}
-
-[data-theme="light"] .cm-xo-cell {
-  background: #ffffff !important;
-  border-color: #fce7f3 !important;
-}
-
-[data-theme="light"] .cm-xo-cell:hover:not(:disabled) {
-  background: #fff1f5 !important;
-}
 
 
 
