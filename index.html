@@ -342,7 +342,7 @@
           </div>
 
           <!-- Game 2: Love Clash 💖⚡ (Couple Heart Battle) -->
-          <div class="game-hub-card active-game-card" id="card-game-couple-match">
+          <div class="game-hub-card active-game-card" id="card-game-couple-match" onclick="window.CoupleMatchGame && window.CoupleMatchGame.openGame()" style="cursor: pointer;">
             <div class="game-hub-card-art" style="background: linear-gradient(135deg, #ff2d75 0%, #a855f7 50%, #00f0ff 100%) !important;">
               <span class="game-hub-mascot">💖⚡💙</span>
               <span class="game-hub-tag" style="background: #e11d48 !important; color: #fff !important;">🔥 Super Fun • 2P</span>
@@ -354,7 +354,7 @@
                 <span>👥 2-Player Split</span> • <span>💥 Power-Ups</span> • <span>👑 Winner Dares</span>
               </div>
             </div>
-            <button type="button" class="game-hub-play-btn" id="btn-launch-couple-match" style="background: linear-gradient(135deg, #ff2d75, #8b5cf6) !important; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4) !important;">
+            <button type="button" class="game-hub-play-btn" id="btn-launch-couple-match" onclick="event.stopPropagation(); window.CoupleMatchGame && window.CoupleMatchGame.openGame();" style="background: linear-gradient(135deg, #ff2d75, #8b5cf6) !important; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4) !important;">
               Play Battle ➔
             </button>
           </div>
@@ -1347,7 +1347,7 @@
           <span class="cm-brand-emoji">⚡</span>
           <span>Love Clash 💖</span>
         </div>
-        <button type="button" class="cm-close-btn" id="cm-game-close-btn" title="Close Game">✕</button>
+        <button type="button" class="cm-close-btn" id="cm-game-close-btn" title="Close Game" onclick="window.CoupleMatchGame && window.CoupleMatchGame.closeGameModal();">✕</button>
       </div>
 
       <!-- Active Screen Container (Screens rendered dynamically by CoupleMatchGame) -->
