@@ -313,21 +313,45 @@ const CoupleMatchGame = (() => {
     const powerBtn = document.getElementById('cm-powerup-btn');
 
     if (p1Zone) {
-      const handleP1 = (e) => {
-        e.preventDefault();
+      let isTouchingP1 = false;
+      p1Zone.addEventListener('touchstart', (e) => {
+        isTouchingP1 = true;
+        if (e.cancelable) e.preventDefault();
+        const touches = e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches : e.touches;
+        const count = touches ? touches.length : 1;
+        for (let i = 0; i < count; i++) {
+          _onPlayerTap('p1', {
+            clientX: touches ? touches[i].clientX : 0,
+            clientY: touches ? touches[i].clientY : 0
+          });
+        }
+      }, { passive: false });
+
+      p1Zone.addEventListener('mousedown', (e) => {
+        if (isTouchingP1) return;
         _onPlayerTap('p1', e);
-      };
-      p1Zone.addEventListener('touchstart', handleP1, { passive: false });
-      p1Zone.addEventListener('mousedown', handleP1);
+      });
     }
 
     if (p2Zone && state.mode !== 'ai') {
-      const handleP2 = (e) => {
-        e.preventDefault();
+      let isTouchingP2 = false;
+      p2Zone.addEventListener('touchstart', (e) => {
+        isTouchingP2 = true;
+        if (e.cancelable) e.preventDefault();
+        const touches = e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches : e.touches;
+        const count = touches ? touches.length : 1;
+        for (let i = 0; i < count; i++) {
+          _onPlayerTap('p2', {
+            clientX: touches ? touches[i].clientX : 0,
+            clientY: touches ? touches[i].clientY : 0
+          });
+        }
+      }, { passive: false });
+
+      p2Zone.addEventListener('mousedown', (e) => {
+        if (isTouchingP2) return;
         _onPlayerTap('p2', e);
-      };
-      p2Zone.addEventListener('touchstart', handleP2, { passive: false });
-      p2Zone.addEventListener('mousedown', handleP2);
+      });
     }
 
     if (powerBtn && state.activePowerUp) {
@@ -349,7 +373,7 @@ const CoupleMatchGame = (() => {
 
     // Calculate move delta
     const multiplier = player === 'p1' ? state.p1Multiplier : state.p2Multiplier;
-    const step = 2.2 * multiplier;
+    const step = 2.4 * multiplier;
 
     if (player === 'p1') {
       state.p1Taps++;
@@ -391,8 +415,12 @@ const CoupleMatchGame = (() => {
     if (!arena) return;
 
     const rect = arena.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    let clientX = e ? e.clientX : 0;
+    let clientY = e ? e.clientY : 0;
+    if (!clientX && !clientY && e && e.touches && e.touches[0]) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    }
     if (!clientX || !clientY) return;
 
     const ripple = document.createElement('div');
