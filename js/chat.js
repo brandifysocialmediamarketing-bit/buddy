@@ -2517,6 +2517,31 @@ const ChatManager = (() => {
       }
       return false;
     },
+    sendDirectTextMessageToUser: async (target, text) => {
+      let conv = (conversations || []).find(c => c.id === target.id || (target.userId && c.userId === target.userId));
+
+      if (!conv && target.rawUser) {
+        try {
+          await _startRealChatWithUser(target.rawUser);
+          conv = (conversations || []).find(c => c.userId === target.rawUser.id || c.id === 'c_' + target.rawUser.id);
+        } catch(e) {
+          console.warn('Error starting chat for text:', e);
+        }
+      }
+
+      if (!conv) {
+        conv = (conversations || []).find(c => c.id === target.id);
+      }
+
+      if (conv) {
+        const prevActive = activeConvId;
+        activeConvId = conv.id;
+        _sendDirectMessage(text, 'text');
+        activeConvId = prevActive;
+        return true;
+      }
+      return false;
+    },
     sendQuizInvite: (convId, quizId, creatorName) => {
       const conv = (conversations || []).find(c => c.id === convId);
       if (!conv) return false;

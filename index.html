@@ -12,17 +12,17 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="BUDDY" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="icon" type="image/svg+xml" href="assets/icon-adaptive.svg?v=199" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png?v=199" />
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png?v=199" />
-  <link rel="apple-touch-icon" href="assets/icon-512.png?v=199" />
+  <link rel="icon" type="image/svg+xml" href="assets/icon-adaptive.svg?v=200" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png?v=200" />
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png?v=200" />
+  <link rel="apple-touch-icon" href="assets/icon-512.png?v=200" />
   <meta name="description" content="BUDDY – Your private space for real, meaningful conversations." />
   <title>BUDDY – Private Chat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=199" />
+  <link rel="stylesheet" href="css/style.css?v=200" />
   <script>
     (function () {
       try {
@@ -341,16 +341,22 @@
             </button>
           </div>
 
-          <!-- Game 2: Couple Match 💑 (Coming Soon) -->
-          <div class="game-hub-card disabled-game-card">
-            <div class="game-hub-card-art" style="background: linear-gradient(135deg, #f472b6, #fb7185);">
-              <span class="game-hub-mascot">💑✨</span>
-              <span class="game-hub-tag">🔒 Coming Soon</span>
+          <!-- Game 2: Couple Match 💑 -->
+          <div class="game-hub-card active-game-card" id="card-game-couple-match">
+            <div class="game-hub-card-art" style="background: linear-gradient(135deg, #ff2d75 0%, #e11d48 50%, #8b5cf6 100%) !important;">
+              <span class="game-hub-mascot">💑💖</span>
+              <span class="game-hub-tag" style="background: #e11d48 !important; color: #fff !important;">💕 Romantic • New</span>
             </div>
             <div class="game-hub-card-info">
               <h3 class="game-hub-name">Couple Match 💑</h3>
-              <p class="game-hub-desc">Test romantic & bestie compatibility with cute trivia!</p>
+              <p class="game-hub-desc">Test romantic & bestie compatibility, couple truths & playful love dice!</p>
+              <div class="game-hub-meta">
+                <span>💑 2 Partners</span> • <span>💘 Love Meter</span> • <span>🎲 Couple Dares</span>
+              </div>
             </div>
+            <button type="button" class="game-hub-play-btn" id="btn-launch-couple-match" style="background: linear-gradient(135deg, #ff2d75, #e11d48) !important; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4) !important;">
+              Play Game ➔
+            </button>
           </div>
         </div>
       </div>
@@ -1067,15 +1073,16 @@
 
   <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/theme.js?v=199"></script>
-  <script src="js/wallpaper.js?v=199"></script>
+  <script src="js/theme.js?v=200"></script>
+  <script src="js/wallpaper.js?v=200"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=199"></script>
-  <script src="js/webrtc-call.js?v=199"></script>
-  <script src="js/chat.js?v=199"></script>
-  <script src="js/auth.js?v=199"></script>
-  <script src="js/app.js?v=199"></script>
-  <script src="js/dont-block-me-game.js?v=199"></script>
+  <script src="js/supabase-config.js?v=200"></script>
+  <script src="js/webrtc-call.js?v=200"></script>
+  <script src="js/chat.js?v=200"></script>
+  <script src="js/auth.js?v=200"></script>
+  <script src="js/app.js?v=200"></script>
+  <script src="js/dont-block-me-game.js?v=200"></script>
+  <script src="js/couple-match-game.js?v=200"></script>
   <!-- Live Auto-Reload -->
   <script>
     (function () {
@@ -1141,6 +1148,21 @@
       };
     }
 
+    const btnLaunchCouple = document.getElementById('btn-launch-couple-match');
+    const cardCouple = document.getElementById('card-game-couple-match');
+
+    if (btnLaunchCouple) {
+      btnLaunchCouple.onclick = (e) => {
+        e.stopPropagation();
+        if (window.CoupleMatchGame) window.CoupleMatchGame.openGame();
+      };
+    }
+    if (cardCouple) {
+      cardCouple.onclick = () => {
+        if (window.CoupleMatchGame) window.CoupleMatchGame.openGame();
+      };
+    }
+
     
     // Mobile Connect Modal Controller
     const mobileConnectBtn = document.getElementById('mobile-connect-btn');
@@ -1198,9 +1220,12 @@
       });
     }
 
-    // Initialize Don't Block Me game
+    // Initialize Games
     if (window.DontBlockMeGame) {
       window.DontBlockMeGame.init();
+    }
+    if (window.CoupleMatchGame) {
+      window.CoupleMatchGame.init();
     }
 
   </script>
@@ -1261,6 +1286,67 @@
           <div class="dbm-friends-list-scroll" id="dbm-friends-list-container">
             <div style="padding: 30px 10px; text-align: center; color: #64748b;">
               Loading BUDDY friends... ⏳
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COUPLE MATCH 💑 GAME MODAL (FULL INTERACTIVE GAMEPLAY) -->
+  <div class="modal-overlay hidden" id="cm-game-modal-overlay">
+    <div class="cm-game-viewport">
+      <!-- Romantic Rose & Hearts Ambient Background -->
+      <div class="cm-ambient-bg">
+        <div class="cm-glow-orb o1"></div>
+        <div class="cm-glow-orb o2"></div>
+        <span class="cm-float-heart fh1">💖</span>
+        <span class="cm-float-heart fh2">💕</span>
+        <span class="cm-float-heart fh3">🌹</span>
+        <span class="cm-float-heart fh4">✨</span>
+      </div>
+
+      <!-- Top Bar -->
+      <div class="cm-top-bar">
+        <div class="cm-brand-pill">
+          <span class="cm-brand-emoji">💑</span>
+          <span>Couple Match</span>
+        </div>
+        <button type="button" class="cm-close-btn" id="cm-game-close-btn" title="Close Game">✕</button>
+      </div>
+
+      <!-- Active Screen Container (Screens rendered dynamically by CoupleMatchGame) -->
+      <div class="cm-screen-container" id="cm-screen-container">
+        <!-- Rendered by CoupleMatchGame -->
+      </div>
+
+      <!-- DEDICATED BUDDY CONTACTS INVITE MODAL OVERLAY -->
+      <div class="cm-invite-modal-overlay hidden" id="cm-friends-modal">
+        <div class="cm-invite-sheet">
+          <div class="cm-invite-sheet-header">
+            <div class="cm-invite-sheet-title">
+              <span>💖</span> Send to Partner on BUDDY
+            </div>
+            <button type="button" class="cm-invite-sheet-close" id="cm-btn-close-friends-modal" title="Close">✕</button>
+          </div>
+
+          <p class="cm-invite-sheet-sub">Select your partner from your BUDDY contacts to send them your Love Quiz challenge directly!</p>
+
+          <div class="cm-invite-search-box">
+            <span class="cm-invite-search-icon">🔍</span>
+            <input 
+              type="text" 
+              id="cm-friends-search-input" 
+              class="cm-invite-search-input" 
+              placeholder="Search partner by name or @username..." 
+              autocomplete="off" 
+            />
+            <button type="button" class="cm-invite-clear-search hidden" id="cm-btn-clear-search" title="Clear search">✕</button>
+          </div>
+
+          <div class="cm-friends-list-scroll" id="cm-friends-list-container">
+            <div style="padding: 30px 10px; text-align: center; color: #94a3b8;">
+              Loading contacts... ⏳
             </div>
           </div>
         </div>

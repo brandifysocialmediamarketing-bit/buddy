@@ -222,20 +222,23 @@ function handleGamesApi(req, res, reqPath, parsedUrl) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Invalid JSON payload' }));
         }
-        const { creatorName, questions, creatorAnswers } = payload;
+        const { creatorName, questions, creatorAnswers, gameType, partnerName } = payload;
         if (!creatorName || !Array.isArray(questions) || questions.length === 0) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Invalid quiz payload' }));
         }
 
-        const quizId = 'q_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        const prefix = (gameType === 'couple-match') ? 'cm_' : 'q_';
+        const quizId = prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
         const adminKey = 'adm_' + Math.random().toString(36).slice(2, 10);
 
         const quizzes = loadQuizzes();
         quizzes[quizId] = {
           id: quizId,
           adminKey,
-          creatorName: creatorName.slice(0, 15).trim(),
+          creatorName: creatorName.slice(0, 20).trim(),
+          partnerName: partnerName ? partnerName.slice(0, 20).trim() : '',
+          gameType: gameType || 'dont-block-me',
           questions,
           creatorAnswers: creatorAnswers || [],
           createdAt: Date.now(),
@@ -285,6 +288,8 @@ function handleGamesApi(req, res, reqPath, parsedUrl) {
       quiz: {
         id: quiz.id,
         creatorName: quiz.creatorName,
+        partnerName: quiz.partnerName || '',
+        gameType: quiz.gameType || 'dont-block-me',
         questions: sanitizedQuestions,
         createdAt: quiz.createdAt
       }
@@ -406,6 +411,8 @@ function handleGamesApi(req, res, reqPath, parsedUrl) {
       quiz: {
         id: quiz.id,
         creatorName: quiz.creatorName,
+        partnerName: quiz.partnerName || '',
+        gameType: quiz.gameType || 'dont-block-me',
         createdAt: quiz.createdAt,
         questions: quiz.questions,
         creatorAnswers: quiz.creatorAnswers,
