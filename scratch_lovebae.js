@@ -1,9 +1,4 @@
 const fs = require('fs');
 const content = fs.readFileSync('d:/BUDDY/lovebae_4055.js', 'utf8');
-
-// Print sections
-const parts = content.split(';a.d(');
-parts.forEach((p, i) => {
-  console.log(`--- PART ${i} ---`);
-  console.log(p.slice(0, 1500));
-});
+const p3Idx = content.indexOf('default:()=>M');
+console.log(content.slice(p3Idx, p3Idx + 4500));
