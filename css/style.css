@@ -9335,6 +9335,7 @@ html, body {
   left: 50% !important;
   transform: translateX(-50%) !important;
   z-index: 25 !important;
+  pointer-events: none !important;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6)) !important;
 }
 
@@ -9348,6 +9349,8 @@ html, body {
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65), inset 0 2px 8px rgba(0, 0, 0, 0.25) !important;
   cursor: pointer !important;
   will-change: transform !important;
+  display: flex !important;
+  flex-direction: column !important;
   z-index: 10 !important;
 }
 
