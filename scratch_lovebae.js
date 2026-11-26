@@ -1,4 +1,13 @@
 const fs = require('fs');
-const content = fs.readFileSync('d:/BUDDY/lovebae_4055.js', 'utf8');
-const p3Idx = content.indexOf('default:()=>M');
-console.log(content.slice(p3Idx, p3Idx + 4500));
+
+async function extractQuestions() {
+  const content = fs.readFileSync('d:/BUDDY/lovebae_dump.html', 'utf8');
+  // Check if questions are in the dump or in a json/chunk
+  const matches = content.match(/"text":"([^"]+)"/g) || [];
+  console.log('Text matches in dump:', matches.length);
+  if (matches.length > 0) {
+    console.log('Sample:', matches.slice(0, 10));
+  }
+}
+
+extractQuestions();
