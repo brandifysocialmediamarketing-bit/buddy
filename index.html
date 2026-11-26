@@ -12,17 +12,17 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="BUDDY" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="icon" type="image/svg+xml" href="assets/icon-adaptive.svg?v=204" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png?v=204" />
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png?v=204" />
-  <link rel="apple-touch-icon" href="assets/icon-512.png?v=204" />
+  <link rel="icon" type="image/svg+xml" href="assets/icon-adaptive.svg?v=205" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png?v=205" />
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png?v=205" />
+  <link rel="apple-touch-icon" href="assets/icon-512.png?v=205" />
   <meta name="description" content="BUDDY – Your private space for real, meaningful conversations." />
   <title>BUDDY – Private Chat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=204" />
+  <link rel="stylesheet" href="css/style.css?v=205" />
   <script>
     (function () {
       try {
@@ -341,16 +341,22 @@
             </button>
           </div>
 
-          <!-- Game 2: Couple Special (Coming Soon) -->
-          <div class="game-hub-card disabled-game-card">
-            <div class="game-hub-card-art" style="background: linear-gradient(135deg, #f472b6, #fb7185);">
-              <span class="game-hub-mascot">💑✨</span>
-              <span class="game-hub-tag">🔒 Coming Soon</span>
+          <!-- Game 2: Truth or Dare 🎯 (Couples Edition) -->
+          <div class="game-hub-card active-game-card" id="card-game-truth-or-dare" onclick="window.TruthOrDareGame && window.TruthOrDareGame.openGame()" style="cursor: pointer;">
+            <div class="game-hub-card-art" style="background: linear-gradient(135deg, #18171f 0%, #292834 50%, #0d0c11 100%) !important; border-bottom: 2px solid rgba(244, 63, 94, 0.45);">
+              <span class="game-hub-mascot">🎯✨</span>
+              <span class="game-hub-tag" style="background: #f43f5e !important; color: #fff !important;">🔥 Couples Vibe • 600+</span>
             </div>
             <div class="game-hub-card-info">
-              <h3 class="game-hub-name">Couple Special 💑</h3>
-              <p class="game-hub-desc">Exciting new couple game coming right up!</p>
+              <h3 class="game-hub-name">Truth or Dare 🎯</h3>
+              <p class="game-hub-desc">Pick your vibe — Sweet, Flirty, Spicy or Extreme! Spin the dual wheel & reveal romantic truths or spicy couple dares!</p>
+              <div class="game-hub-meta">
+                <span>💕 4 Heat Vibes</span> • <span>🎲 Spin Wheel</span> • <span>🔥 600+ Cards</span>
+              </div>
             </div>
+            <button type="button" class="game-hub-play-btn" id="btn-launch-truth-or-dare" onclick="event.stopPropagation(); window.TruthOrDareGame && window.TruthOrDareGame.openGame();" style="background: linear-gradient(135deg, #f43f5e, #8b5cf6) !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.4) !important;">
+              Play Game ➔
+            </button>
           </div>
         </div>
       </div>
@@ -1075,7 +1081,9 @@
   <script src="js/chat.js?v=204"></script>
   <script src="js/auth.js?v=204"></script>
   <script src="js/app.js?v=204"></script>
-  <script src="js/dont-block-me-game.js?v=204"></script>
+  <script src="js/dont-block-me-game.js?v=205"></script>
+  <script src="js/truth-or-dare-data.js?v=205"></script>
+  <script src="js/truth-or-dare-game.js?v=205"></script>
   <!-- Live Auto-Reload & Cloud Auto-Updater -->
   <script>
     (function () {
@@ -1106,7 +1114,7 @@
       }
 
       // 2. Production Live Cloud Auto-Updater (Detects new git deployments on mobile & web)
-      var currentVersion = 'v204';
+      var currentVersion = 'v205';
       function checkLiveDeploy() {
         try {
           fetch('/api/version?t=' + Date.now(), { cache: 'no-store' })
@@ -1236,6 +1244,9 @@
     // Initialize Games
     if (window.DontBlockMeGame) {
       window.DontBlockMeGame.init();
+    }
+    if (window.TruthOrDareGame) {
+      window.TruthOrDareGame.init();
     }
 
   </script>
