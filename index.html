@@ -1170,21 +1170,6 @@
       };
     }
 
-    const btnLaunchCouple = document.getElementById('btn-launch-couple-match');
-    const cardCouple = document.getElementById('card-game-couple-match');
-
-    if (btnLaunchCouple) {
-      btnLaunchCouple.onclick = (e) => {
-        e.stopPropagation();
-        if (window.CoupleMatchGame) window.CoupleMatchGame.openGame();
-      };
-    }
-    if (cardCouple) {
-      cardCouple.onclick = () => {
-        if (window.CoupleMatchGame) window.CoupleMatchGame.openGame();
-      };
-    }
-
     
     // Mobile Connect Modal Controller
     const mobileConnectBtn = document.getElementById('mobile-connect-btn');
@@ -1252,9 +1237,6 @@
     if (window.DontBlockMeGame) {
       window.DontBlockMeGame.init();
     }
-    if (window.CoupleMatchGame) {
-      window.CoupleMatchGame.init();
-    }
 
   </script>
 
@@ -1320,68 +1302,6 @@
       </div>
     </div>
   </div>
-
-  <!-- COUPLE MATCH 💑 GAME MODAL (FULL INTERACTIVE GAMEPLAY) -->
-  <div class="modal-overlay hidden" id="cm-game-modal-overlay">
-    <div class="cm-game-viewport">
-      <!-- Romantic Rose & Hearts Ambient Background -->
-      <div class="cm-ambient-bg">
-        <div class="cm-glow-orb o1"></div>
-        <div class="cm-glow-orb o2"></div>
-        <span class="cm-float-heart fh1">💖</span>
-        <span class="cm-float-heart fh2">💕</span>
-        <span class="cm-float-heart fh3">🌹</span>
-        <span class="cm-float-heart fh4">✨</span>
-      </div>
-
-      <!-- Top Bar -->
-      <div class="cm-top-bar">
-        <div class="cm-brand-pill">
-          <span class="cm-brand-emoji">⚡</span>
-          <span>Love Clash 💖</span>
-        </div>
-        <button type="button" class="cm-close-btn" id="cm-game-close-btn" title="Close Game" onclick="window.CoupleMatchGame && window.CoupleMatchGame.closeGameModal();">✕</button>
-      </div>
-
-      <!-- Active Screen Container (Screens rendered dynamically by CoupleMatchGame) -->
-      <div class="cm-screen-container" id="cm-screen-container">
-        <!-- Rendered by CoupleMatchGame -->
-      </div>
-
-      <!-- DEDICATED BUDDY CONTACTS INVITE MODAL OVERLAY -->
-      <div class="cm-invite-modal-overlay hidden" id="cm-friends-modal">
-        <div class="cm-invite-sheet">
-          <div class="cm-invite-sheet-header">
-            <div class="cm-invite-sheet-title">
-              <span>💖</span> Send to Partner on BUDDY
-            </div>
-            <button type="button" class="cm-invite-sheet-close" id="cm-btn-close-friends-modal" title="Close">✕</button>
-          </div>
-
-          <p class="cm-invite-sheet-sub">Select your partner from your BUDDY contacts to send them your Love Quiz challenge directly!</p>
-
-          <div class="cm-invite-search-box">
-            <span class="cm-invite-search-icon">🔍</span>
-            <input 
-              type="text" 
-              id="cm-friends-search-input" 
-              class="cm-invite-search-input" 
-              placeholder="Search partner by name or @username..." 
-              autocomplete="off" 
-            />
-            <button type="button" class="cm-invite-clear-search hidden" id="cm-btn-clear-search" title="Clear search">✕</button>
-          </div>
-
-          <div class="cm-friends-list-scroll" id="cm-friends-list-container">
-            <div style="padding: 30px 10px; text-align: center; color: #94a3b8;">
-              Loading contacts... ⏳
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 
   <!-- MOBILE CONNECT MODAL (ANDROID & IPHONE WEB ACCESS) -->
   <div class="modal-overlay hidden" id="mobile-connect-overlay">
