@@ -1,29 +1,23 @@
 const fs = require('fs');
-const content = fs.readFileSync('d:/BUDDY/lovebae_dump.html', 'utf8');
+const questions = JSON.parse(fs.readFileSync('d:/BUDDY/extracted_lovebae_tod.json', 'utf8'));
 
-const target = '"numberOfItems":606,"itemListElement":[';
-const idx = content.indexOf(target);
-if (idx !== -1) {
-  const jsonSub = content.slice(idx + target.length - 1);
-  // Find closing of array
-  let depth = 0;
-  let endPos = -1;
-  for (let i = 0; i < jsonSub.length; i++) {
-    if (jsonSub[i] === '[') depth++;
-    else if (jsonSub[i] === ']') {
-      depth--;
-      if (depth === 0) {
-        endPos = i;
-        break;
-      }
-    }
-  }
+console.log('Total items:', questions.length);
 
-  if (endPos !== -1) {
-    const arr = JSON.parse(jsonSub.slice(0, endPos + 1));
-    console.log('Parsed successfully! Item count:', arr.length);
-    const questions = arr.map(x => x.name);
-    fs.writeFileSync('d:/BUDDY/extracted_lovebae_tod.json', JSON.stringify(questions, null, 2));
-    console.log('Sample questions:', questions.slice(0, 5));
+// Check if some start with action verbs (Dares) vs question words (Truths)
+const truths = [];
+const dares = [];
+
+questions.forEach(q => {
+  // Typical dare indicators: imperative verbs e.g. Kiss, Whisper, Send, Give, Massage, Do, Let, Hold, Dance, Feed, Blindfold, Take off, Lick, Nibble, etc.
+  const isQuestion = q.endsWith('?') || /^(what|when|where|who|why|how|if|have|has|do|did|would|could|is|are|name|describe|tell)\b/i.test(q);
+  if (isQuestion) {
+    truths.push(q);
+  } else {
+    dares.push(q);
   }
-}
+});
+
+console.log('Truths count:', truths.length);
+console.log('Dares count:', dares.length);
+console.log('Sample Truths:', truths.slice(0, 3));
+console.log('Sample Dares:', dares.slice(0, 3));
