@@ -69,21 +69,25 @@ const TruthOrDareGame = (() => {
   // ── Helper: Get Random Question from Pool without repeating ──
   function getRandomCard(vibeId, type) {
     const data = window.TruthOrDareData || {};
-    const pool = (data[vibeId] && data[vibeId][type === 'truth' ? 'truths' : 'dares']) || [];
+    const key = type === 'truth' ? 'truths' : 'dares';
+    const pool = (data[vibeId] && data[vibeId][key]) || [];
     if (pool.length === 0) {
       return type === 'truth' 
         ? "What is the single sweetest thing your partner did for you recently?" 
         : "Give your partner a slow, loving 30-second hug and whisper why you love them.";
     }
 
-    const seenSet = state.seenIndices[vibeId][type === 'truth' ? 'truths' : 'dares'];
+    if (!state.seenIndices[vibeId]) {
+      state.seenIndices[vibeId] = { truths: new Set(), dares: new Set() };
+    }
+    const seenSet = state.seenIndices[vibeId][key];
     if (seenSet.size >= pool.length) {
       seenSet.clear(); // Reset if all cards have been seen
     }
 
     let attempts = 0;
     let idx = Math.floor(Math.random() * pool.length);
-    while (seenSet.has(idx) && attempts < 20) {
+    while (seenSet.has(idx) && attempts < 30) {
       idx = Math.floor(Math.random() * pool.length);
       attempts++;
     }
@@ -187,7 +191,8 @@ const TruthOrDareGame = (() => {
   function _bindLobby() {
     // Vibe Pill Selection
     document.querySelectorAll('.tod-vibe-pill').forEach(btn => {
-      btn.onclick = () => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
         const v = btn.dataset.vibe;
         if (v && VIBES[v]) {
           state.vibe = v;
@@ -200,7 +205,19 @@ const TruthOrDareGame = (() => {
     // Continue Button -> Go to Wheel
     const contBtn = document.getElementById('tod-btn-continue');
     if (contBtn) {
-      contBtn.onclick = () => {
+      contBtn.onclick = (e) => {
+        e.stopPropagation();
+        state.screen = 'wheel';
+        state.isSpinning = false;
+        renderScreen();
+      };
+    }
+
+    // Card Stack Tap -> Also advances to Wheel
+    const stack = document.querySelector('.tod-stack-wrapper');
+    if (stack) {
+      stack.style.cursor = 'pointer';
+      stack.onclick = () => {
         state.screen = 'wheel';
         state.isSpinning = false;
         renderScreen();
@@ -210,7 +227,8 @@ const TruthOrDareGame = (() => {
     // Share Challenge Button
     const shareBtn = document.getElementById('tod-btn-share-lobby');
     if (shareBtn) {
-      shareBtn.onclick = () => {
+      shareBtn.onclick = (e) => {
+        e.stopPropagation();
         const v = VIBES[state.vibe] || VIBES.sweet;
         const text = `🎯 Hey! Let's play Truth or Dare (${v.emoji} ${v.label} Mode) together on BUDDY! 💖\n👉 Play now: ${window.location.origin}${window.location.pathname}?game=truth-or-dare&vibe=${v.id}`;
         _copyAndToast(text, `📋 Copied Truth or Dare ${v.label} challenge! Share it in your chat.`);
@@ -332,37 +350,46 @@ const TruthOrDareGame = (() => {
   }
 
   function _spinWheel() {
+    if (state.isSpinning) return;
     state.isSpinning = true;
-    renderScreen();
+
+    const spinBtn = document.getElementById('tod-btn-spin');
+    const disc = document.getElementById('tod-wheel-disc');
+    if (!disc) {
+      state.isSpinning = false;
+      return;
+    }
+
+    // Update button directly without rebuilding wheel DOM
+    if (spinBtn) {
+      spinBtn.disabled = true;
+      spinBtn.classList.add('spinning');
+      spinBtn.textContent = 'SPINNING... 🎲';
+    }
 
     // Random choice: Truth or Dare (50/50)
     const resultType = Math.random() < 0.5 ? 'truth' : 'dare';
 
     // Top half is Truth (pointer at 0 deg). Bottom half is Dare (pointer at 180 deg).
-    // Disc rotation needed:
-    // To land pointer on TRUTH: angle % 360 should be near 0 (or 360 - jitter)
-    // To land pointer on DARE: angle % 360 should be near 180
     const baseTargetAngle = resultType === 'truth' ? 0 : 180;
     // Jitter: random angle between -35 and +35 deg so it feels organic
-    const jitter = (Math.random() * 70) - 35;
+    const jitter = Math.floor(Math.random() * 70) - 35;
     
-    // Add 4 full spins (1440 deg)
+    // Add 5 full spins (1800 deg) + angle delta
     const currentRot = state.wheelAngle;
-    const nextRot = currentRot + 1440 + ((baseTargetAngle + jitter - (currentRot % 360) + 360) % 360);
+    const delta = ((baseTargetAngle + jitter - (currentRot % 360) + 360) % 360);
+    const nextRot = currentRot + 1800 + delta;
     state.wheelAngle = nextRot;
 
-    // Apply rotation animation directly to DOM for silky smooth 60fps CSS transition
-    const disc = document.getElementById('tod-wheel-disc');
-    if (disc) {
-      disc.style.transition = 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)';
-      disc.style.transform = `rotate(${nextRot}deg)`;
-    }
+    // Apply rotation animation directly to existing disc
+    disc.style.transition = 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)';
+    disc.style.transform = `rotate(${nextRot}deg)`;
 
     // Haptic vibration ticks during spin
     if (navigator.vibrate) {
       let tick = 0;
       const tickInterval = setInterval(() => {
-        navigator.vibrate(8);
+        try { navigator.vibrate(10); } catch(e) {}
         tick++;
         if (tick > 7) clearInterval(tickInterval);
       }, 250);
@@ -374,7 +401,9 @@ const TruthOrDareGame = (() => {
       state.currentType = resultType;
       state.currentText = getRandomCard(state.vibe, resultType);
       state.screen = 'card';
-      if (navigator.vibrate) navigator.vibrate([40, 60, 100]);
+      if (navigator.vibrate) {
+        try { navigator.vibrate([40, 60, 100]); } catch(e) {}
+      }
       renderScreen();
     }, 2250);
   }
