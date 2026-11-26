@@ -1314,6 +1314,31 @@
     </div>
   </div>
 
+  <!-- TRUTH OR DARE 🎯 GAME MODAL (COUPLES EDITION - INSPIRED BY LOVEBAE) -->
+  <div class="modal-overlay hidden" id="tod-game-modal-overlay">
+    <div class="tod-game-viewport">
+      <!-- Ambient Glow Orbs -->
+      <div class="tod-ambient-bg">
+        <div class="tod-ambient-orb o1"></div>
+        <div class="tod-ambient-orb o2"></div>
+      </div>
+
+      <!-- Top Bar -->
+      <div class="tod-top-bar">
+        <div class="tod-brand-pill">
+          <span>🎯</span>
+          <span>Truth or Dare</span>
+        </div>
+        <button type="button" class="tod-close-btn" id="tod-game-close-btn" title="Close Game" onclick="window.TruthOrDareGame && window.TruthOrDareGame.closeGameModal();">✕</button>
+      </div>
+
+      <!-- Active Screen Container (Lobby, Wheel, Card) -->
+      <div class="tod-screen-container" id="tod-screen-container">
+        <!-- Rendered dynamically by TruthOrDareGame -->
+      </div>
+    </div>
+  </div>
+
   <!-- MOBILE CONNECT MODAL (ANDROID & IPHONE WEB ACCESS) -->
   <div class="modal-overlay hidden" id="mobile-connect-overlay">
     <div class="modal-sheet mobile-connect-sheet">
