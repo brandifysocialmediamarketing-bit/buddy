@@ -1158,6 +1158,8 @@
     function switchToChatsTab() {
       if (tabChatsBtn) tabChatsBtn.classList.add('active');
       if (tabGamesBtn) tabGamesBtn.classList.remove('active');
+      const storiesRailWrap = document.getElementById('stories-rail-wrap');
+      if (storiesRailWrap) storiesRailWrap.classList.remove('hidden');
       if (chatList) chatList.classList.remove('hidden');
       if (gamesHub) gamesHub.classList.add('hidden');
     }
@@ -1165,6 +1167,8 @@
     function switchToGamesTab() {
       if (tabGamesBtn) tabGamesBtn.classList.add('active');
       if (tabChatsBtn) tabChatsBtn.classList.remove('active');
+      const storiesRailWrap = document.getElementById('stories-rail-wrap');
+      if (storiesRailWrap) storiesRailWrap.classList.add('hidden');
       if (chatList) chatList.classList.add('hidden');
       if (gamesHub) gamesHub.classList.remove('hidden');
     }
@@ -1495,6 +1499,16 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ADD STORY MODAL OVERLAY (WAF Style 24h Moments) -->
+  <div class="modal-overlay hidden" id="add-story-modal-overlay">
+    <div id="add-story-content-wrap"></div>
+  </div>
+
+  <!-- STORY VIEWER FULLSCREEN MODAL OVERLAY -->
+  <div class="modal-overlay hidden" id="story-viewer-modal-overlay">
+    <div id="story-viewer-content"></div>
   </div>
 </body>
 
