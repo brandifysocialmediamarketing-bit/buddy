@@ -10041,9 +10041,9 @@ html, body {
 
 .sv-top-header {
   position: absolute !important;
-  top: 22px !important;
-  left: 14px !important;
-  right: 14px !important;
+  top: calc(max(12px, env(safe-area-inset-top, 12px)) + 14px) !important;
+  left: max(14px, env(safe-area-inset-left, 14px)) !important;
+  right: max(14px, env(safe-area-inset-right, 14px)) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
