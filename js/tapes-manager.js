@@ -1082,6 +1082,8 @@ const TapesManager = (() => {
     openShareModal,
     closeShareModal,
     sendTapeToChat,
+    copyTapeLink,
+    shareExternally,
     openCreateTapeModal,
     closeCreateTapeModal,
     submitNewTape,
