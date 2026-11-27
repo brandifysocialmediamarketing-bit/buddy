@@ -798,11 +798,35 @@ const StoriesManager = (() => {
     }, 60000);
   }
 
+  function addStoryWithMedia(mediaData) {
+    if (!mediaData) return null;
+    const currentUser = _getCurrentUser();
+    const storyObj = {
+      id: 'story_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+      user_id: currentUser.id,
+      user_name: currentUser.name || 'User',
+      user_username: currentUser.username || '',
+      user_avatar: currentUser.avatar || '',
+      user_color: currentUser.color || '#6366F1',
+      type: mediaData.type || 'video',
+      media_url: mediaData.media_url,
+      caption: mediaData.caption || '',
+      linked_tape_id: mediaData.linked_tape_id || null,
+      created_at: new Date().toISOString()
+    };
+    state.stories = _loadLocalStories();
+    state.stories.push(storyObj);
+    _saveLocalStories(state.stories);
+    renderRail();
+    return storyObj;
+  }
+
   return {
     init,
     renderRail,
     openAddStoryModal,
     closeAddStoryModal,
+    addStoryWithMedia,
     openStoryViewer,
     closeStoryViewer
   };
