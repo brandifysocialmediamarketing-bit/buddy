@@ -34,8 +34,8 @@ const ChatManager = (() => {
   let _isInitialized = false;
 
   
-  // In-App Notification Toast
-  function _showInAppNotification(conv, text) {
+  // In-App Notification Toast (supports Instagram-style message & friend requests)
+  function _showInAppNotification(conv, text, isRequest) {
     let banner = document.getElementById('buddy-inapp-notif');
     if (!banner) {
       banner = document.createElement('div');
@@ -47,17 +47,33 @@ const ChatManager = (() => {
     const name = conv.nickname || conv.name || 'Friend';
     const initials = _initials(name);
     const bg = conv.color || '#6366F1';
+    const isReq = isRequest || !!(conv.isRequest && conv.requestStatus !== 'accepted');
+
+    if (isReq) {
+      banner.classList.add('request-notif-theme');
+    } else {
+      banner.classList.remove('request-notif-theme');
+    }
 
     banner.innerHTML = `
-      <div class="inapp-notif-avatar" style="background:${bg}">${conv.isAI ? '✨' : initials}</div>
+      <div class="inapp-notif-avatar" style="background:${bg}">
+        ${conv.isAI ? '✨' : (isReq ? '💌' : initials)}
+      </div>
       <div class="inapp-notif-body">
         <div class="inapp-notif-header">
-          <span class="inapp-notif-name">${_esc(name)}</span>
+          <span class="inapp-notif-name">${isReq ? '<span class="notif-tag-pill">REQUEST</span> ' : ''}${_esc(name)}</span>
           <span class="inapp-notif-time">Just now</span>
         </div>
         <div class="inapp-notif-text">${_esc(text)}</div>
       </div>
-      <button type="button" class="inapp-notif-btn">Reply</button>
+      <div class="inapp-notif-actions">
+        ${isReq ? `
+          <button type="button" class="inapp-notif-btn notif-accept-btn" onclick="event.stopPropagation(); ChatManager.acceptRequest('${conv.id}'); document.getElementById('buddy-inapp-notif')?.classList.remove('show');">Accept</button>
+          <button type="button" class="inapp-notif-btn notif-review-btn">Review</button>
+        ` : `
+          <button type="button" class="inapp-notif-btn">Reply</button>
+        `}
+      </div>
     `;
 
     banner.onclick = () => {
@@ -73,24 +89,36 @@ const ChatManager = (() => {
     banner._hideTimer = setTimeout(() => {
       banner.classList.remove('show');
       setTimeout(() => banner.classList.add('hidden'), 300);
-    }, 4500);
+    }, 5500);
   }
 
-  // Soft notification audio chime
-  function _playNotificationSound() {
+  // Soft notification audio chime (different harmonious tone for requests)
+  function _playNotificationSound(isRequest) {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
-      osc.frequency.setValueAtTime(880.00, ctx.currentTime + 0.08);
-      gain.gain.setValueAtTime(0.12, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.36);
+      if (isRequest) {
+        osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+        osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+        osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2); // G5
+        gain.gain.setValueAtTime(0.16, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.51);
+      } else {
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.setValueAtTime(880.00, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.36);
+      }
     } catch(e) {}
   }
 
