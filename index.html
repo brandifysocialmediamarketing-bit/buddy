@@ -719,6 +719,45 @@
     </div>
   </div>
 
+  <!-- INSTAGRAM STYLE ACTIVITY & FRIEND REQUESTS HUB -->
+  <div class="modal-overlay hidden" id="activity-hub-overlay">
+    <div class="modal-sheet activity-modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:18px;">❤️</span>
+          <h2>Activity & Requests</h2>
+        </div>
+        <button class="modal-x-btn" id="close-activity-hub-btn" aria-label="Close" onclick="ActivityManager.closeActivityHub()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Quick Test & Simulation Bar -->
+      <div class="activity-quick-test-bar">
+        <span class="test-bar-label">⚡ Live Demos:</span>
+        <button type="button" class="act-test-btn" onclick="ActivityManager.simulateReelLinkedToStory()" title="Simulate someone linking your reel into their story">
+          <span>🎬 Test Reel Linked</span>
+        </button>
+        <button type="button" class="act-test-btn" onclick="ActivityManager.simulateFriendRequest()" title="Simulate incoming Instagram friend request">
+          <span>🤝 Test Request</span>
+        </button>
+      </div>
+
+      <!-- Filter Chips (All | Friend Requests | Reels & Stories) -->
+      <div class="activity-filter-bar">
+        <button type="button" class="activity-filter-pill active" data-filter="all" onclick="ActivityManager.setFilter('all')">All Activity</button>
+        <button type="button" class="activity-filter-pill" data-filter="requests" onclick="ActivityManager.setFilter('requests')">Friend Requests</button>
+        <button type="button" class="activity-filter-pill" data-filter="reels_stories" onclick="ActivityManager.setFilter('reels_stories')">Reels & Stories 🎬</button>
+      </div>
+
+      <div class="modal-list activity-list-wrap" id="activity-feed-list"></div>
+    </div>
+  </div>
+
   <!-- NEW CHAT MODAL -->
   <div class="modal-overlay hidden" id="new-chat-overlay">
     <div class="modal-sheet">
@@ -1222,10 +1261,11 @@
   <script src="js/dont-block-me-game.js?v=215"></script>
   <script src="js/truth-or-dare-data.js?v=215"></script>
   <script src="js/truth-or-dare-game.js?v=215"></script>
-  <script src="js/stories-manager.js?v=215"></script>
-  <script src="js/tapes-manager.js?v=215"></script>
-  <script src="js/verified-badge-manager.js?v=215"></script>
-  <script src="js/radar-manager.js?v=215"></script>
+  <script src="js/stories-manager.js?v=216"></script>
+  <script src="js/tapes-manager.js?v=216"></script>
+  <script src="js/verified-badge-manager.js?v=216"></script>
+  <script src="js/radar-manager.js?v=216"></script>
+  <script src="js/activity-manager.js?v=216"></script>
   <!-- Live Auto-Reload & Cloud Auto-Updater -->
   <script>
     (function () {
