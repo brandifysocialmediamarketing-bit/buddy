@@ -836,6 +836,18 @@ const TapesManager = (() => {
           </div>
         </div>
 
+        <!-- Instagram "Add to your Story" Row -->
+        <div class="tape-share-story-btn-row" onclick="TapesManager.addReelToStory('${tape.id}')">
+          <div class="tape-story-icon-ring">
+            <span>✨</span>
+          </div>
+          <div class="tape-story-btn-label">
+            <strong>Add Reel to your Story</strong>
+            <span>Friends can watch this reel directly from your 24h story</span>
+          </div>
+          <button type="button" class="tape-story-pill-action">Add +</button>
+        </div>
+
         <!-- Instagram-style Horizontal Top Tray -->
         ${quickContacts.length > 0 ? `
           <div class="tape-share-quick-tray">
@@ -989,6 +1001,51 @@ const TapesManager = (() => {
       text: tape.caption || 'Watch this fun tape on BUDDY!',
       url: `${window.location.origin}/?tape=${tapeId}`
     }).catch(() => { });
+  }
+
+  // ── Instagram Action: Add Reel to 24h Story ──
+  function addReelToStory(tapeId) {
+    const tape = state.tapes.find(t => t.id === tapeId);
+    if (!tape) return;
+
+    const me = _getCurrentUser();
+
+    // 1. Add to StoriesManager if available
+    if (window.StoriesManager && typeof window.StoriesManager.addStoryWithMedia === 'function') {
+      window.StoriesManager.addStoryWithMedia({
+        type: 'video',
+        media_url: tape.video_url,
+        caption: `🎬 ${tape.caption || 'Awesome Reel!'} (via @${tape.user_username || 'creator'})`,
+        linked_tape_id: tape.id
+      });
+    }
+
+    // 2. Log in ActivityManager (triggers notification to the reel owner!)
+    if (window.ActivityManager && typeof window.ActivityManager.logReelLinkedToStory === 'function') {
+      window.ActivityManager.logReelLinkedToStory(me, tape);
+    }
+
+    closeShareModal();
+
+    if (window.showToast) {
+      window.showToast(`✨ Reel linked and added to your 24h Story!`);
+    } else {
+      alert(`✨ Reel added to your story!`);
+    }
+  }
+
+  // ── Smooth Focus & Play Tape in Feed ──
+  function focusTape(tapeId) {
+    const card = document.querySelector(`.tape-card[data-tape-id="${tapeId}"]`);
+    const container = document.getElementById('tapes-feed-container');
+    if (card && container) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const video = card.querySelector('.tape-video-element');
+      if (video) {
+        video.muted = false;
+        video.play().catch(() => {});
+      }
+    }
   }
 
   // ── Create & Upload Tape Modal (+) ──
