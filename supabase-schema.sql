@@ -306,4 +306,33 @@ create policy "Users can delete their own tapes"
   on public.tapes for delete
   using (auth.uid() = user_id);
 
+-- ========================================================
+-- 11. COMMUNITY RADAR & WAVES (WAF World As Family)
+-- ========================================================
+create table if not exists public.radar_buddies (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  user_name text not null,
+  user_username text default '',
+  user_avatar text default '',
+  user_color text default '#6366F1',
+  is_verified boolean default false,
+  bio text default '',
+  vibe_tag text default 'Chilling ☕',
+  city text default 'Nearby',
+  is_online boolean default true,
+  last_active timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.radar_buddies enable row level security;
+
+create policy "Anyone can read radar buddies"
+  on public.radar_buddies for select
+  using (true);
+
+create policy "Users can update their radar status"
+  on public.radar_buddies for insert
+  with check (auth.uid() = user_id);
+
+
 
