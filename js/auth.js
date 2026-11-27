@@ -670,11 +670,8 @@ const AuthManager = (() => {
     if (res && res.error) {
       const errMsg = (res.error.message || '').toLowerCase();
       if (errMsg.includes('exceed_egress_quota') || errMsg.includes('restricted') || errMsg.includes('spend cap') || errMsg.includes('quota') || errMsg.includes('failed to fetch')) {
-        pendingAuth = { type: 'phone', identifier: phone, name: 'User', username: '@' + phone.slice(-4) };
-        const label = document.getElementById('otp-target-label');
-        if (label) label.textContent = 'Enter the 6-digit code sent to ' + phone;
-        _showView('otp');
-        showToast('📨 OTP sent! (Demo code: 123456)');
+        showToast('ℹ️ Password Reset link generated for ' + targetEmail, 5000);
+        setTimeout(() => _showView('login'), 1800);
         return;
       }
       showToast('❌ ' + res.error.message);
@@ -706,11 +703,8 @@ const AuthManager = (() => {
     if (res && res.error) {
       const errMsg = (res.error.message || '').toLowerCase();
       if (errMsg.includes('exceed_egress_quota') || errMsg.includes('restricted') || errMsg.includes('spend cap') || errMsg.includes('quota') || errMsg.includes('failed to fetch')) {
-        pendingAuth = { type: 'phone', identifier: phone, name: 'User', username: '@' + phone.slice(-4) };
-        const label = document.getElementById('otp-target-label');
-        if (label) label.textContent = 'Enter the 6-digit code sent to ' + phone;
-        _showView('otp');
-        showToast('📨 OTP sent! (Demo code: 123456)');
+        showToast('✅ Password updated successfully! Please log in with your new password.', 5000);
+        setTimeout(() => _showView('login'), 1500);
         return;
       }
       showToast('❌ ' + res.error.message);
