@@ -2803,6 +2803,227 @@ const ChatManager = (() => {
       document.body.classList.add('chat-open');
       document.getElementById('app-screen')?.classList.add('chat-open');
       return true;
+    },
+    acceptRequest: (convId) => {
+      const conv = (conversations || []).find(c => c.id === convId);
+      if (!conv) return;
+
+      conv.isRequest = false;
+      conv.requestStatus = 'accepted';
+      _saveCachedConversations();
+
+      // If active chat is this conversation, unlock composer and hide request bar
+      if (activeConvId === conv.id) {
+        const composerEl = document.querySelector('.composer');
+        if (composerEl) composerEl.classList.remove('hidden');
+        const reqBarEl = document.getElementById('chat-request-bar');
+        if (reqBarEl) reqBarEl.classList.add('hidden');
+
+        // Mark as seen in database
+        if (window.BuddySupabase && currentUser && currentUser.id) {
+          BuddySupabase.markConversationMessagesAsSeen(conv.id, currentUser.id);
+        }
+      }
+
+      // Add system confirmation into thread
+      if (!conv.messages) conv.messages = [];
+      conv.messages.push({
+        id: 'm_accepted_' + Date.now(),
+        from: 'system',
+        type: 'system',
+        body: `✨ You accepted ${conv.nickname || conv.name}'s request. You can now chat!`,
+        time: _now(),
+        seen: true
+      });
+
+      _renderChatList();
+      if (activeConvId === conv.id) {
+        _renderMessages(conv);
+      }
+
+      ChatManager.renderRequestsModal();
+
+      if (window.showToast) {
+        window.showToast(`✨ You accepted ${conv.nickname || conv.name}'s message request!`);
+      }
+    },
+    declineRequest: (convId) => {
+      const conv = (conversations || []).find(c => c.id === convId);
+      const name = conv ? (conv.nickname || conv.name) : 'User';
+
+      if (currentUser && currentUser.id) {
+        localStorage.setItem('buddy_declined_req_' + convId + '_' + currentUser.id, 'true');
+      }
+
+      conversations = (conversations || []).filter(c => c.id !== convId);
+      _saveCachedConversations();
+      _renderChatList();
+
+      if (activeConvId === convId) {
+        activeConvId = null;
+        document.getElementById('active-chat')?.classList.add('hidden');
+        document.getElementById('empty-state')?.classList.remove('hidden');
+        document.body.classList.remove('chat-open');
+        document.getElementById('app-screen')?.classList.remove('chat-open');
+      }
+
+      ChatManager.renderRequestsModal();
+
+      if (window.showToast) {
+        window.showToast(`🗑️ Request from ${name} deleted.`);
+      }
+    },
+    blockRequest: (convId) => {
+      const conv = (conversations || []).find(c => c.id === convId);
+      const name = conv ? (conv.nickname || conv.name) : 'User';
+      const targetUserId = conv ? (conv.userId || conv.id) : convId;
+
+      if (targetUserId) {
+        localStorage.setItem('buddy_blocked_' + targetUserId, 'true');
+      }
+
+      conversations = (conversations || []).filter(c => c.id !== convId);
+      _saveCachedConversations();
+      _renderChatList();
+
+      if (activeConvId === convId) {
+        activeConvId = null;
+        document.getElementById('active-chat')?.classList.add('hidden');
+        document.getElementById('empty-state')?.classList.remove('hidden');
+        document.body.classList.remove('chat-open');
+        document.getElementById('app-screen')?.classList.remove('chat-open');
+      }
+
+      ChatManager.renderRequestsModal();
+
+      if (window.showToast) {
+        window.showToast(`🚫 ${name} has been blocked.`);
+      }
+    },
+    showRequestsModal: () => {
+      ChatManager.renderRequestsModal();
+      document.getElementById('chat-requests-overlay')?.classList.remove('hidden');
+    },
+    closeRequestsModal: () => {
+      document.getElementById('chat-requests-overlay')?.classList.add('hidden');
+    },
+    renderRequestsModal: () => {
+      const container = document.getElementById('requests-list-container');
+      if (!container) return;
+
+      const pendingRequests = (conversations || []).filter(c => c.isRequest && c.requestStatus !== 'accepted');
+      if (pendingRequests.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:45px 20px; color:var(--text-3);">
+            <div style="font-size:42px; margin-bottom:12px;">📭</div>
+            <div style="font-size:16px; font-weight:700; color:var(--text-1); margin-bottom:6px;">No Message Requests</div>
+            <div style="font-size:13px; max-width:280px; margin:0 auto; line-height:1.5;">When people who aren't in your contacts send you a message or wave, they will appear here.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = pendingRequests.map(conv => {
+        const displayName = conv.nickname || conv.name || 'Friend';
+        const last = conv.messages && conv.messages.length > 0 ? conv.messages[conv.messages.length - 1] : null;
+        let preview = conv.lastMsgPreview || (last ? last.body : 'Sent you a wave 👋');
+        const time = conv.lastMsgTime || (last ? last.time : 'Just now');
+
+        return `
+          <div class="request-item-card" data-id="${conv.id}">
+            <div class="request-card-main" onclick="ChatManager.openChatFromRequest('${conv.id}')">
+              <div class="request-avatar" style="background:${conv.color || '#6366f1'};">
+                ${_initials(displayName)}
+              </div>
+              <div class="request-details">
+                <div class="request-name-row">
+                  <span class="request-name">${_esc(displayName)}</span>
+                  <span class="request-username">${conv.username ? _esc(conv.username) : ''}</span>
+                  <span class="request-time">${time}</span>
+                </div>
+                <div class="request-preview-text">${_esc(preview)}</div>
+              </div>
+            </div>
+            <div class="request-item-actions">
+              <button type="button" class="request-item-btn-delete" onclick="ChatManager.declineRequest('${conv.id}')" title="Delete Request">Delete</button>
+              <button type="button" class="request-item-btn-accept" onclick="ChatManager.acceptRequest('${conv.id}')" title="Accept Request">Accept</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    },
+    openChatFromRequest: async (convId) => {
+      ChatManager.closeRequestsModal();
+      await openChat(convId);
+      document.body.classList.add('chat-open');
+      document.getElementById('app-screen')?.classList.add('chat-open');
+    },
+    receiveFriendRequest: (buddy, initialMsg) => {
+      if (!buddy) return;
+      const buddyId = buddy.id;
+      let conv = (conversations || []).find(c => c.id === buddyId || c.userId === buddyId || (buddy.userId && c.userId === buddy.userId));
+
+      const text = initialMsg || `Hey! 👋 Sent you a wave from Community Radar! Would love to connect ✨`;
+      const timeStr = _now();
+
+      if (!conv) {
+        conv = {
+          id: buddyId,
+          userId: buddy.userId || buddyId,
+          name: buddy.name || 'Buddy Friend',
+          nickname: '',
+          username: buddy.username ? (buddy.username.startsWith('@') ? buddy.username : '@' + buddy.username) : '',
+          avatar: buddy.avatar || null,
+          color: buddy.color || '#EC4899',
+          status: buddy.status || buddy.vibe || 'Active on Radar 🌐',
+          isAI: false,
+          pinned: false,
+          isRequest: true,
+          requestStatus: 'pending',
+          unread: 1,
+          accent: 'rose',
+          lastMsgPreview: text,
+          lastMsgTime: timeStr,
+          messages: [
+            {
+              id: 'm_req_' + Date.now(),
+              from: 'them',
+              type: 'text',
+              body: text,
+              time: timeStr,
+              seen: false,
+              reactions: ['👋']
+            }
+          ]
+        };
+        // Put at top of conversations
+        conversations.unshift(conv);
+      } else {
+        conv.isRequest = true;
+        conv.requestStatus = 'pending';
+        conv.unread = (conv.unread || 0) + 1;
+        conv.lastMsgPreview = text;
+        conv.lastMsgTime = timeStr;
+        if (!conv.messages) conv.messages = [];
+        conv.messages.push({
+          id: 'm_req_' + Date.now(),
+          from: 'them',
+          type: 'text',
+          body: text,
+          time: timeStr,
+          seen: false
+        });
+      }
+
+      _saveCachedConversations();
+      _renderChatList();
+
+      // Show dedicated request in-app notification & chime!
+      _showInAppNotification(conv, text, true);
+      _playNotificationSound(true);
+    },
+    getRequestsCount: () => {
+      return (conversations || []).filter(c => c.isRequest && c.requestStatus !== 'accepted').length;
     }
   };
 })();
