@@ -484,17 +484,11 @@ const AuthManager = (() => {
     if (res && res.error) {
       const errMsg = (res.error.message || '').toLowerCase();
       if (errMsg.includes('exceed_egress_quota') || errMsg.includes('restricted') || errMsg.includes('spend cap') || errMsg.includes('quota') || errMsg.includes('failed to fetch')) {
-        console.warn('[BUDDY Auth] Supabase quota restricted. Creating verified local account.');
-        const u = {
-          id: 'usr_' + Date.now().toString(36),
-          name: name,
-          username: username,
-          email: email,
-          color: _randColor()
-        };
-        _saveLocalRegisteredUser(u, password);
-        _enterApp(u, true);
-        showToast('🎉 Account created! Welcome to BUDDY, ' + name + '! ✨', 5000);
+        pendingAuth = { type: 'phone', identifier: phone, name: 'User', username: '@' + phone.slice(-4) };
+        const label = document.getElementById('otp-target-label');
+        if (label) label.textContent = 'Enter the 6-digit code sent to ' + phone;
+        _showView('otp');
+        showToast('📨 OTP sent! (Demo code: 123456)');
         return;
       }
       showToast('❌ ' + res.error.message);
@@ -540,17 +534,11 @@ const AuthManager = (() => {
     if (res && res.error) {
       const errMsg = (res.error.message || '').toLowerCase();
       if (errMsg.includes('exceed_egress_quota') || errMsg.includes('restricted') || errMsg.includes('spend cap') || errMsg.includes('quota') || errMsg.includes('failed to fetch')) {
-        console.warn('[BUDDY Auth] Supabase quota restricted. Creating verified local account.');
-        const u = {
-          id: 'usr_' + Date.now().toString(36),
-          name: name,
-          username: username,
-          email: email,
-          color: _randColor()
-        };
-        _saveLocalRegisteredUser(u, password);
-        _enterApp(u, true);
-        showToast('🎉 Account created! Welcome to BUDDY, ' + name + '! ✨', 5000);
+        pendingAuth = { type: 'phone', identifier: phone, name: 'User', username: '@' + phone.slice(-4) };
+        const label = document.getElementById('otp-target-label');
+        if (label) label.textContent = 'Enter the 6-digit code sent to ' + phone;
+        _showView('otp');
+        showToast('📨 OTP sent! (Demo code: 123456)');
         return;
       }
       showToast('❌ ' + res.error.message);
@@ -676,17 +664,11 @@ const AuthManager = (() => {
     if (res && res.error) {
       const errMsg = (res.error.message || '').toLowerCase();
       if (errMsg.includes('exceed_egress_quota') || errMsg.includes('restricted') || errMsg.includes('spend cap') || errMsg.includes('quota') || errMsg.includes('failed to fetch')) {
-        console.warn('[BUDDY Auth] Supabase quota restricted. Creating verified local account.');
-        const u = {
-          id: 'usr_' + Date.now().toString(36),
-          name: name,
-          username: username,
-          email: email,
-          color: _randColor()
-        };
-        _saveLocalRegisteredUser(u, password);
-        _enterApp(u, true);
-        showToast('🎉 Account created! Welcome to BUDDY, ' + name + '! ✨', 5000);
+        pendingAuth = { type: 'phone', identifier: phone, name: 'User', username: '@' + phone.slice(-4) };
+        const label = document.getElementById('otp-target-label');
+        if (label) label.textContent = 'Enter the 6-digit code sent to ' + phone;
+        _showView('otp');
+        showToast('📨 OTP sent! (Demo code: 123456)');
         return;
       }
       showToast('❌ ' + res.error.message);
@@ -718,17 +700,11 @@ const AuthManager = (() => {
     if (res && res.error) {
       const errMsg = (res.error.message || '').toLowerCase();
       if (errMsg.includes('exceed_egress_quota') || errMsg.includes('restricted') || errMsg.includes('spend cap') || errMsg.includes('quota') || errMsg.includes('failed to fetch')) {
-        console.warn('[BUDDY Auth] Supabase quota restricted. Creating verified local account.');
-        const u = {
-          id: 'usr_' + Date.now().toString(36),
-          name: name,
-          username: username,
-          email: email,
-          color: _randColor()
-        };
-        _saveLocalRegisteredUser(u, password);
-        _enterApp(u, true);
-        showToast('🎉 Account created! Welcome to BUDDY, ' + name + '! ✨', 5000);
+        pendingAuth = { type: 'phone', identifier: phone, name: 'User', username: '@' + phone.slice(-4) };
+        const label = document.getElementById('otp-target-label');
+        if (label) label.textContent = 'Enter the 6-digit code sent to ' + phone;
+        _showView('otp');
+        showToast('📨 OTP sent! (Demo code: 123456)');
         return;
       }
       showToast('❌ ' + res.error.message);
