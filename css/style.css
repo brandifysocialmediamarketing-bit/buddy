@@ -9613,10 +9613,17 @@ html, body {
    ══════════════════════════════════════════════════════════════ */
 /* 1. Horizontal Stories Rail at Top of Chats */
 .stories-rail-wrap {
-  padding: 10px 14px 8px !important;
-  border-bottom: 1px solid var(--border) !important;
-  background: var(--bg) !important;
+  padding: 8px 12px 10px !important;
+  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.08)) !important;
+  background: transparent !important;
   overflow: hidden !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.stories-rail-wrap.hidden,
+#stories-rail-wrap.hidden {
+  display: none !important;
 }
 
 .stories-rail {
