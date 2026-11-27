@@ -2644,6 +2644,74 @@ const ChatManager = (() => {
       _sendDirectMessage(text, 'text');
       activeConvId = prevActive;
       return true;
+    },
+    ensureAndOpenBuddyChat: async (buddy, initialText) => {
+      if (!buddy) return false;
+      const buddyId = buddy.id;
+      let conv = (conversations || []).find(c => c.id === buddyId || c.userId === buddyId || (buddy.userId && c.userId === buddy.userId));
+
+      if (!conv) {
+        conv = {
+          id: buddyId,
+          userId: buddy.userId || buddyId,
+          name: buddy.name || 'Buddy Friend',
+          nickname: '',
+          username: buddy.username ? (buddy.username.startsWith('@') ? buddy.username : '@' + buddy.username) : '',
+          avatar: buddy.avatar || null,
+          color: buddy.color || '#6366F1',
+          status: buddy.status || buddy.vibe || 'Active on Radar 🌐',
+          isAI: false,
+          pinned: false,
+          unread: 0,
+          accent: 'indigo',
+          messages: [
+            {
+              id: 'm_welcome_' + Date.now(),
+              from: 'them',
+              type: 'text',
+              body: `Hey! 👋 I'm ${(buddy.name || 'Buddy').split(' ')[0]}. Saw you on Community Radar! ${buddy.bio || 'Happy to connect! ✨'}`,
+              time: _now(),
+              seen: true,
+              reactions: ['👋']
+            }
+          ]
+        };
+
+        if (initialText) {
+          conv.messages.push({
+            id: 'm_wave_' + Date.now(),
+            from: 'me',
+            type: 'text',
+            body: initialText,
+            time: _now(),
+            seen: true,
+            reactions: ['✨']
+          });
+        }
+
+        // Add to active conversations right after BUDDY AI
+        conversations.splice(1, 0, conv);
+        _saveCachedConversations();
+        _renderChatList();
+      } else if (initialText) {
+        // Send the initial wave text if not already sent
+        const prevActive = activeConvId;
+        activeConvId = conv.id;
+        _sendDirectMessage(initialText, 'text');
+        activeConvId = prevActive;
+      }
+
+      // 1. Switch to Chats tab
+      const tabChatsBtn = document.getElementById('tab-chats-btn');
+      if (tabChatsBtn) tabChatsBtn.click();
+
+      // 2. Open chat
+      await openChat(conv.id);
+
+      // 3. On mobile, ensure chat area displays
+      document.body.classList.add('chat-open');
+      document.getElementById('app-screen')?.classList.add('chat-open');
+      return true;
     }
   };
 })();
