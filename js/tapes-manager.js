@@ -577,7 +577,7 @@ const TapesManager = (() => {
   }
 
   // ── Share Modal (Send Tape into 1-on-1 BUDDY Chat) ──
-  function openShareModal(tapeId) {
+  async function openShareModal(tapeId) {
     state.activeShareTapeId = tapeId;
     const tape = state.tapes.find(t => t.id === tapeId);
     if (!tape) return;
@@ -586,23 +586,97 @@ const TapesManager = (() => {
     const container = document.getElementById('tapes-share-content');
     if (!overlay || !container) return;
 
-    // Get active friends / chats from ChatManager or local storage
+    // Get active friends / chats from ChatManager
     let contacts = [];
     if (window.ChatManager && typeof window.ChatManager.getConversations === 'function') {
       contacts = window.ChatManager.getConversations();
+    } else if (window.ChatManager && typeof window.ChatManager.getFriendConversations === 'function') {
+      contacts = window.ChatManager.getFriendConversations();
     }
 
-    if (!contacts || contacts.length === 0) {
-      contacts = [
-        { id: 'chat_sample_1', name: 'My Partner 💗', username: '@sweetheart' },
-        { id: 'chat_sample_2', name: 'Best Friend 🌟', username: '@bestie' }
-      ];
+    // Filter out current user from contacts
+    const currentUser = _getCurrentUser();
+    contacts = (contacts || []).filter(c => c.id !== currentUser.id && c.userId !== currentUser.id);
+
+    // If contacts list is small or only BUDDY AI, load real registered buddies from Supabase
+    if (contacts.length <= 1 && window.BuddySupabase) {
+      try {
+        const client = window.BuddySupabase.getClient();
+        if (client) {
+          const { data: profiles } = await client.from('profiles').select('*').neq('id', currentUser.id).limit(10);
+          if (Array.isArray(profiles)) {
+            profiles.forEach(p => {
+              if (!contacts.some(c => (c.userId && c.userId === p.id) || c.id === p.id)) {
+                contacts.push({
+                  id: p.id,
+                  userId: p.id,
+                  name: p.full_name || p.username,
+                  username: p.username ? (p.username.startsWith('@') ? p.username : '@' + p.username) : '',
+                  avatar: p.avatar_url || null,
+                  color: p.avatar_color || '#6366F1',
+                  status: p.bio || 'Verified Member',
+                  isAI: false,
+                  isVerified: !!p.is_verified || (window.VerifiedBadgeManager && typeof window.VerifiedBadgeManager.isVerifiedUser === 'function' && window.VerifiedBadgeManager.isVerifiedUser(p.id))
+                });
+              }
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('Share modal profiles fetch error:', err);
+      }
     }
+
+    state.shareContacts = contacts;
+    _renderShareModalContent(tape, contacts);
+    overlay.classList.remove('hidden');
+
+    // Bind real-time search input
+    const searchInput = document.getElementById('tape-share-search-input');
+    if (searchInput) {
+      let searchTimer = null;
+      searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(async () => {
+          const query = searchInput.value.trim();
+          let filtered = state.shareContacts || [];
+          if (query) {
+            const q = query.toLowerCase();
+            filtered = state.shareContacts.filter(c => 
+              (c.name && c.name.toLowerCase().includes(q)) || 
+              (c.username && c.username.toLowerCase().includes(q))
+            );
+
+            // If query is 2+ chars, also search registered profiles via ChatManager
+            if (q.length >= 2 && window.ChatManager && typeof window.ChatManager.searchAllFriends === 'function') {
+              try {
+                const searchResults = await window.ChatManager.searchAllFriends(query);
+                if (Array.isArray(searchResults)) {
+                  searchResults.forEach(res => {
+                    if (!filtered.some(f => (f.userId && f.userId === res.userId) || f.id === res.id)) {
+                      filtered.push(res);
+                    }
+                  });
+                }
+              } catch(e) {}
+            }
+          }
+          _renderShareFriendsList(tape, filtered);
+        }, 180);
+      });
+    }
+  }
+
+  function _renderShareModalContent(tape, contacts) {
+    const container = document.getElementById('tapes-share-content');
+    if (!container) return;
+
+    const quickContacts = (contacts || []).slice(0, 6);
 
     container.innerHTML = `
       <div class="tape-share-sheet">
         <div class="tape-sheet-head">
-          <div class="tape-sheet-title">Share Tape to Chat 💌</div>
+          <div class="tape-sheet-title">Share Tape to Friends 💌</div>
           <button type="button" class="modal-x-btn" onclick="TapesManager.closeShareModal()" aria-label="Close">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
@@ -616,23 +690,103 @@ const TapesManager = (() => {
           </div>
         </div>
 
-        <div class="tape-share-contacts-label">Send to BUDDY Friend:</div>
-        <div class="tape-share-contacts-list">
-          ${contacts.map(c => `
-            <div class="tape-share-contact-row" onclick="TapesManager.sendTapeToChat('${c.id}', '${_escapeHtml(c.name)}')">
-              <div class="tape-share-contact-avatar">${(c.name || 'F').charAt(0).toUpperCase()}</div>
-              <div class="tape-share-contact-info">
-                <div class="tape-share-contact-name">${_escapeHtml(c.name)}</div>
-                <div class="tape-share-contact-user">${_escapeHtml(c.username || '')}</div>
-              </div>
-              <button type="button" class="btn-primary tape-btn-send-pill">Send</button>
-            </div>
-          `).join('')}
+        <!-- Instagram-style Search Bar -->
+        <div class="tape-share-search-wrap">
+          <div class="tape-share-search-box">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="tape-share-search-input" placeholder="Search friends & buddies by name or @username..." autocomplete="off" />
+          </div>
+        </div>
+
+        <!-- Instagram-style Horizontal Top Tray -->
+        ${quickContacts.length > 0 ? `
+          <div class="tape-share-quick-tray">
+            ${quickContacts.map(c => {
+              const initial = (c.name || 'F').charAt(0).toUpperCase();
+              return `
+                <div class="tape-share-quick-item" title="Send to ${c.name}" onclick="TapesManager.sendTapeToChat('${c.id}', '${_escapeHtml(c.name)}', this.querySelector('.tape-btn-send-pill') || this)">
+                  <div class="tape-share-quick-avatar" style="background:${c.color || '#6366F1'};">
+                    ${c.avatar ? `<img src="${c.avatar}" alt="${c.name}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" />` : (c.isAI ? '✨' : initial)}
+                    <span class="tape-share-online-dot"></span>
+                  </div>
+                  <span class="tape-share-quick-name">${_escapeHtml((c.name || 'Friend').split(' ')[0])}</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : ''}
+
+        <div class="tape-share-contacts-label">Direct BUDDY Friends:</div>
+        <div class="tape-share-contacts-list" id="tape-share-friends-list">
+          ${_generateShareFriendsHtml(tape, contacts)}
+        </div>
+
+        <!-- Bottom Actions (Copy Link & Done) -->
+        <div class="tape-share-bottom-actions">
+          <button type="button" class="tape-share-copy-btn" id="btn-copy-tape-link" onclick="TapesManager.copyTapeLink('${tape.id}')">
+            <span>🔗</span>
+            <span id="copy-tape-link-text">Copy Link</span>
+          </button>
+          ${typeof navigator !== 'undefined' && navigator.share ? `
+            <button type="button" class="tape-share-copy-btn" onclick="TapesManager.shareExternally('${tape.id}')">
+              <span>📲</span>
+              <span>More Options</span>
+            </button>
+          ` : ''}
+          <button type="button" class="btn-primary" style="padding:7px 18px; border-radius:14px; font-size:12px;" onclick="TapesManager.closeShareModal()">Done</button>
         </div>
       </div>
     `;
+  }
 
-    overlay.classList.remove('hidden');
+  function _generateShareFriendsHtml(tape, contacts) {
+    if (!contacts || contacts.length === 0) {
+      return `
+        <div style="padding:28px 16px; text-align:center; color:var(--text-muted); font-size:13px; line-height:1.6;">
+          <div style="font-size:28px; margin-bottom:6px;">👥</div>
+          <b>No BUDDY friends found</b><br/>
+          <span style="font-size:11.5px;">Type a friend's @username above to find them, or copy the link below to share anywhere!</span>
+        </div>
+      `;
+    }
+
+    return contacts.map(c => {
+      const initial = (c.name || 'F').charAt(0).toUpperCase();
+      const verifiedBadge = c.isVerified ? `
+        <span class="verified-badge-pill" title="Verified Creator" style="display:inline-flex;margin-left:3px;vertical-align:middle;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 2.4 3.4-.4 1.4 3.1 3.2 1.4-.4 3.4 2.4 2.4-2.4 2.4.4 3.4-3.2 1.4-1.4 3.1-3.4-.4L12 22l-2.4-2.4-3.4.4-1.4-3.1-3.2-1.4.4-3.4L-.4 12l2.4-2.4-.4-3.4 3.2-1.4 1.4-3.1 3.4.4L12 2z" fill="#38bdf8"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      ` : '';
+
+      return `
+        <div class="tape-share-contact-row" id="share-row-${c.id}">
+          <div class="tape-share-contact-avatar" style="background:${c.color || '#6366F1'};">
+            ${c.avatar ? `<img src="${c.avatar}" alt="${c.name}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" />` : (c.isAI ? '✨' : initial)}
+            <span class="tape-share-online-dot"></span>
+          </div>
+          <div class="tape-share-contact-info">
+            <div class="tape-share-contact-name">
+              ${_escapeHtml(c.name)}
+              ${verifiedBadge}
+            </div>
+            <div class="tape-share-contact-user">${_escapeHtml(c.username || c.status || '')}</div>
+          </div>
+          <button type="button" class="btn-primary tape-btn-send-pill" id="btn-send-tape-${c.id}" onclick="event.stopPropagation(); TapesManager.sendTapeToChat('${c.id}', '${_escapeHtml(c.name)}', this)">
+            Send
+          </button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function _renderShareFriendsList(tape, contacts) {
+    const listEl = document.getElementById('tape-share-friends-list');
+    if (listEl) {
+      listEl.innerHTML = _generateShareFriendsHtml(tape, contacts);
+    }
   }
 
   function closeShareModal() {
@@ -641,26 +795,65 @@ const TapesManager = (() => {
     if (overlay) overlay.classList.add('hidden');
   }
 
-  function sendTapeToChat(chatId, contactName) {
+  async function sendTapeToChat(chatId, contactName, btnEl) {
     const tapeId = state.activeShareTapeId;
     const tape = state.tapes.find(t => t.id === tapeId);
     if (!tape) return;
 
-    const shareMsg = `🎬 [Shared Tape by ${tape.user_name}]: "${tape.caption || 'Watch this!'}" - Open Tapes to view 🍿`;
+    const shareUrl = `${window.location.origin}/?tape=${tape.id}`;
+    const shareMsg = `🎬 [Shared Tape by ${tape.user_name}]: "${tape.caption || 'Watch this fun tape!'}"\n👉 Watch here: ${shareUrl}`;
+
+    if (btnEl) {
+      btnEl.disabled = true;
+      btnEl.textContent = 'Sending...';
+    }
 
     if (window.ChatManager && typeof window.ChatManager.sendMessageToChat === 'function') {
-      window.ChatManager.sendMessageToChat(chatId, shareMsg);
+      await window.ChatManager.sendMessageToChat(chatId, shareMsg);
     } else {
       console.log('Sending tape share to chat:', chatId, shareMsg);
     }
 
-    closeShareModal();
+    if (btnEl) {
+      btnEl.textContent = 'Sent ✓';
+      btnEl.classList.add('sent');
+      btnEl.disabled = true;
+    }
 
     if (window.showToast) {
-      window.showToast(`✨ Shared tape with ${contactName}!`);
-    } else {
-      alert(`✨ Shared tape with ${contactName}!`);
+      window.showToast(`✨ Sent tape to ${contactName}! 🚀`);
     }
+  }
+
+  function copyTapeLink(tapeId) {
+    const tape = state.tapes.find(t => t.id === tapeId);
+    const url = `${window.location.origin}/?tape=${tapeId}`;
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        const copyText = document.getElementById('copy-tape-link-text');
+        if (copyText) copyText.textContent = 'Copied! ✓';
+        if (window.showToast) window.showToast('📋 Tape link copied to clipboard!');
+        setTimeout(() => {
+          if (copyText) copyText.textContent = 'Copy Link';
+        }, 2500);
+      }).catch(() => {
+        if (window.showToast) window.showToast('📋 Link: ' + url);
+      });
+    } else {
+      if (window.showToast) window.showToast('📋 Link: ' + url);
+    }
+  }
+
+  function shareExternally(tapeId) {
+    const tape = state.tapes.find(t => t.id === tapeId);
+    if (!tape || !navigator.share) return;
+
+    navigator.share({
+      title: `${tape.user_name}'s Tape on BUDDY`,
+      text: tape.caption || 'Watch this fun tape on BUDDY!',
+      url: `${window.location.origin}/?tape=${tapeId}`
+    }).catch(() => {});
   }
 
   // ── Create & Upload Tape Modal (+) ──
