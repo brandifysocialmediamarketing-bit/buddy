@@ -10234,6 +10234,641 @@ html, body {
   }
 }
 
+/* ========================================================
+   FEATURE 2: TAPES 🎥 (Short Video Feed - WAF Style)
+   ======================================================== */
+
+.tapes-view-container {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: calc(100vh - 120px) !important;
+  height: calc(100dvh - 120px) !important;
+  position: relative !important;
+  background: #09090b !important;
+  overflow: hidden !important;
+  border-radius: 16px !important;
+}
+
+.tapes-top-controls {
+  position: absolute !important;
+  top: 12px !important;
+  left: 14px !important;
+  right: 14px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  z-index: 30 !important;
+  pointer-events: auto !important;
+}
+
+.tapes-feed-badge {
+  background: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  color: #fff !important;
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.tapes-ctrl-btn {
+  background: rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 50% !important;
+  width: 38px !important;
+  height: 38px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: transform 0.15s, background 0.15s !important;
+}
+
+.tapes-ctrl-btn:hover {
+  transform: scale(1.08) !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+}
+
+.tapes-ctrl-btn.add-tape-btn {
+  background: linear-gradient(135deg, #f43f5e, #ec4899) !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.45) !important;
+}
+
+.tapes-feed-container {
+  width: 100% !important;
+  height: 100% !important;
+  overflow-y: scroll !important;
+  scroll-snap-type: y mandatory !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  position: relative !important;
+}
+
+.tapes-feed-container::-webkit-scrollbar {
+  display: none !important;
+}
+
+.tape-card {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  scroll-snap-align: start !important;
+  scroll-snap-stop: always !important;
+  position: relative !important;
+  background: #000 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.tape-video-wrapper {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+.tape-video-element {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  background: #000 !important;
+}
+
+.tape-play-indicator {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 72px !important;
+  height: 72px !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(8px) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+  z-index: 15 !important;
+  animation: playRipple 0.3s ease-out !important;
+}
+
+@keyframes playRipple {
+  0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+.tape-heart-burst-zone {
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  z-index: 18 !important;
+}
+
+.floating-burst-heart {
+  position: absolute !important;
+  transform: translate(-50%, -50%) scale(0) !important;
+  animation: heartPop 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  filter: drop-shadow(0 6px 14px rgba(244, 63, 94, 0.6)) !important;
+}
+
+@keyframes heartPop {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  25% { transform: translate(-50%, -50%) scale(1.35) rotate(-12deg); opacity: 1; }
+  60% { transform: translate(-50%, -75%) scale(1.1) rotate(6deg); opacity: 0.9; }
+  100% { transform: translate(-50%, -110%) scale(0.85) rotate(-4deg); opacity: 0; }
+}
+
+/* Actions Column */
+.tape-actions-column {
+  position: absolute !important;
+  right: 12px !important;
+  bottom: 80px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 16px !important;
+  z-index: 22 !important;
+}
+
+.tape-action-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  transition: transform 0.15s !important;
+}
+
+.tape-action-item:active {
+  transform: scale(0.88) !important;
+}
+
+.tape-action-btn {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+}
+
+.tape-action-item.is-liked .tape-action-btn {
+  background: rgba(244, 63, 94, 0.25) !important;
+  border-color: #f43f5e !important;
+  animation: heartPulse 0.3s ease !important;
+}
+
+@keyframes heartPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.tape-action-counter {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  margin-top: 4px !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
+}
+
+.tape-author-avatar-img,
+.tape-author-avatar-fallback {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  border: 2px solid #fff !important;
+  object-fit: cover !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Spinning Vinyl */
+.tape-vinyl-disc {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: #18181b !important;
+  border: 4px solid #27272a !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6) !important;
+}
+
+.tape-vinyl-disc.rotating {
+  animation: spinVinyl 3.5s linear infinite !important;
+}
+
+@keyframes spinVinyl {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.tape-vinyl-inner {
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #f43f5e, #8b5cf6) !important;
+}
+
+/* Bottom Meta Column */
+.tape-meta-info {
+  position: absolute !important;
+  left: 14px !important;
+  bottom: 18px !important;
+  right: 70px !important;
+  z-index: 22 !important;
+  color: #fff !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85) !important;
+  pointer-events: auto !important;
+}
+
+.tape-meta-author-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 6px !important;
+}
+
+.tape-meta-name {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+}
+
+.tape-meta-username {
+  font-size: 12px !important;
+  opacity: 0.85 !important;
+}
+
+.verified-badge-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+}
+
+.tape-meta-caption {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+  margin-bottom: 8px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.tape-hashtag {
+  color: #38bdf8 !important;
+  font-weight: 600 !important;
+}
+
+.tape-meta-music-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 12px !important;
+  opacity: 0.9 !important;
+  overflow: hidden !important;
+}
+
+.tape-music-marquee {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Comments Sheet & Share Sheet */
+.tape-comments-sheet,
+.tape-share-sheet,
+.tape-create-sheet {
+  background: var(--bg-card, #18181b) !important;
+  border-top-left-radius: 20px !important;
+  border-top-right-radius: 20px !important;
+  width: 100% !important;
+  max-width: 500px !important;
+  max-height: 80vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  border: 1px solid var(--border, #27272a) !important;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6) !important;
+  margin: 0 auto !important;
+}
+
+.tape-sheet-head {
+  padding: 14px 16px !important;
+  border-bottom: 1px solid var(--border, #27272a) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.tape-sheet-title {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: var(--text, #fff) !important;
+}
+
+.tape-comments-list {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 14px 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  max-height: 50vh !important;
+}
+
+.tape-comments-empty {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 30px 16px !important;
+  opacity: 0.7 !important;
+  text-align: center !important;
+}
+
+.tape-comments-empty span {
+  font-size: 32px !important;
+  margin-bottom: 8px !important;
+}
+
+.tape-comment-row {
+  display: flex !important;
+  gap: 10px !important;
+  align-items: flex-start !important;
+}
+
+.tape-comment-avatar {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: var(--primary, #6366f1) !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  flex-shrink: 0 !important;
+}
+
+.tape-comment-body {
+  flex: 1 !important;
+}
+
+.tape-comment-user {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--text, #fff) !important;
+  margin-bottom: 2px !important;
+}
+
+.tape-comment-time {
+  font-weight: 400 !important;
+  opacity: 0.6 !important;
+  font-size: 10px !important;
+}
+
+.tape-comment-text {
+  font-size: 13px !important;
+  color: var(--text, #e4e4e7) !important;
+  line-height: 1.4 !important;
+}
+
+.tape-comments-input-bar {
+  padding: 10px 14px !important;
+  border-top: 1px solid var(--border, #27272a) !important;
+  display: flex !important;
+  gap: 8px !important;
+  background: var(--bg, #09090b) !important;
+}
+
+.tape-comments-input-bar input {
+  flex: 1 !important;
+  padding: 10px 14px !important;
+  border-radius: 20px !important;
+  background: var(--bg-card, #18181b) !important;
+  border: 1px solid var(--border, #27272a) !important;
+  color: var(--text, #fff) !important;
+  font-size: 13px !important;
+}
+
+/* Share Sheet */
+.tape-share-preview-card {
+  padding: 12px 14px !important;
+  margin: 12px 16px !important;
+  border-radius: 12px !important;
+  background: var(--bg, #09090b) !important;
+  border: 1px solid var(--border, #27272a) !important;
+  display: flex !important;
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+.tape-share-preview-text strong {
+  display: block !important;
+  font-size: 13px !important;
+  color: var(--text, #fff) !important;
+}
+
+.tape-share-preview-text p {
+  font-size: 12px !important;
+  opacity: 0.75 !important;
+  margin: 2px 0 0 !important;
+}
+
+.tape-share-contacts-label {
+  padding: 0 16px 8px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--text-muted, #a1a1aa) !important;
+}
+
+.tape-share-contacts-list {
+  padding: 0 16px 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  max-height: 45vh !important;
+  overflow-y: auto !important;
+}
+
+.tape-share-contact-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 8px 10px !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  transition: background 0.15s !important;
+}
+
+.tape-share-contact-row:hover {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.05)) !important;
+}
+
+.tape-share-contact-avatar {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  background: var(--primary, #6366f1) !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 700 !important;
+}
+
+.tape-share-contact-info {
+  flex: 1 !important;
+}
+
+.tape-share-contact-name {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--text, #fff) !important;
+}
+
+.tape-share-contact-user {
+  font-size: 11px !important;
+  opacity: 0.7 !important;
+}
+
+.tape-btn-send-pill {
+  padding: 6px 14px !important;
+  border-radius: 16px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+/* Create Tape Sheet */
+.tape-create-body {
+  padding: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  overflow-y: auto !important;
+}
+
+.tape-upload-box {
+  width: 100% !important;
+  height: 180px !important;
+  border-radius: 14px !important;
+  border: 2px dashed var(--border, #3f3f46) !important;
+  background: var(--bg, #09090b) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.tape-upload-box video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.tape-hint-text {
+  font-size: 11px !important;
+  opacity: 0.65 !important;
+  display: block !important;
+  margin-top: 4px !important;
+}
+
+.tape-input-group label {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--text-muted, #a1a1aa) !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+}
+
+.tape-input-group textarea,
+.tape-input-group input {
+  width: 100% !important;
+  padding: 10px 12px !important;
+  border-radius: 10px !important;
+  background: var(--bg, #09090b) !important;
+  border: 1px solid var(--border, #27272a) !important;
+  color: var(--text, #fff) !important;
+  font-size: 13px !important;
+}
+
+.tape-tags-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.tape-tag-pill {
+  padding: 6px 12px !important;
+  border-radius: 14px !important;
+  background: var(--bg, #09090b) !important;
+  border: 1px solid var(--border, #27272a) !important;
+  color: var(--text-muted, #a1a1aa) !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  transition: all 0.15s !important;
+}
+
+.tape-tag-pill.active {
+  background: rgba(244, 63, 94, 0.2) !important;
+  border-color: #f43f5e !important;
+  color: #f43f5e !important;
+  font-weight: 700 !important;
+}
+
+.tape-btn-publish {
+  margin-top: 8px !important;
+  padding: 12px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  background: linear-gradient(135deg, #f43f5e, #ec4899) !important;
+}
+
+@media (max-width: 640px) {
+  .tapes-view-container {
+    height: calc(100vh - 65px) !important;
+    height: calc(100dvh - 65px) !important;
+    border-radius: 0 !important;
+  }
+}
+
+
 
 
 
