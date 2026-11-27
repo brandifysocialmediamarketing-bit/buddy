@@ -299,16 +299,20 @@
         </div>
       </div>
 
-      <!-- Segmented Navigation (Chats vs Games) -->
+      <!-- Segmented Navigation (Chats vs Tapes vs Games) -->
       <div class="sidebar-nav-tabs">
         <button type="button" class="sidebar-tab-btn active" id="tab-chats-btn">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <span>Chats</span>
         </button>
+        <button type="button" class="sidebar-tab-btn" id="tab-tapes-btn">
+          <span style="font-size:15px;">🎥</span>
+          <span>Tapes</span>
+          <span class="tab-badge-new">NEW</span>
+        </button>
         <button type="button" class="sidebar-tab-btn" id="tab-games-btn">
           <span style="font-size:15px;">🎮</span>
           <span>Games</span>
-          <span class="tab-badge-new">NEW</span>
         </button>
       </div>
 
@@ -319,6 +323,32 @@
 
       <!-- Chats List View -->
       <div class="chat-list" id="chat-list" role="list"></div>
+
+      <!-- Tapes / Shorts View (WAF Style Vertical Video Feed) -->
+      <div class="tapes-view-container hidden" id="tapes-hub-view">
+        <div class="tapes-top-controls">
+          <div class="tapes-feed-badge">
+            <span>🎥</span>
+            <span>Tapes Feed</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="tapes-ctrl-btn" id="tapes-global-mute-btn" title="Toggle Mute" onclick="TapesManager.toggleGlobalMute()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="1" y1="1" x2="23" y2="23"/>
+                <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/>
+                <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/>
+              </svg>
+            </button>
+            <button type="button" class="tapes-ctrl-btn add-tape-btn" id="btn-create-tape-top" title="Create / Upload Tape" onclick="TapesManager.openCreateTapeModal()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="tapes-feed-container" id="tapes-feed-container"></div>
+      </div>
 
       <!-- Games Library / Hub View -->
       <div class="games-hub-view hidden" id="games-hub-view">
