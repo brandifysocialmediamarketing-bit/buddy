@@ -2481,12 +2481,102 @@ const ChatManager = (() => {
     getFriendConversations: () => {
       return (conversations || []).map(c => ({
         id: c.id,
+        userId: c.userId || null,
         name: c.nickname || c.name || c.username || (c.isAI ? 'BUDDY AI ✨' : 'Friend'),
         avatar: c.avatar || null,
         color: c.color || '#3b82f6',
         isAI: !!c.isAI,
         username: c.username || ''
       }));
+    },
+    getConversations: () => {
+      return (conversations || []).map(c => ({
+        id: c.id,
+        userId: c.userId || null,
+        name: c.nickname || c.name || c.username || (c.isAI ? 'BUDDY AI ✨' : 'Friend'),
+        username: c.username ? (c.username.startsWith('@') ? c.username : '@' + c.username) : (c.isAI ? '@buddy_ai' : ''),
+        avatar: c.avatar || null,
+        color: c.color || '#6366F1',
+        status: c.status || (c.isAI ? 'Always Online' : 'Active now'),
+        isAI: !!c.isAI,
+        isVerified: !!c.is_verified || (window.VerifiedBadgeManager && typeof window.VerifiedBadgeManager.isVerifiedUser === 'function' && window.VerifiedBadgeManager.isVerifiedUser(c.userId || c.id))
+      }));
+    },
+    sendMessageToChat: async (chatIdOrUserId, text) => {
+      let conv = (conversations || []).find(c => c.id === chatIdOrUserId || c.userId === chatIdOrUserId);
+      if (!conv && window.BuddySupabase) {
+        try {
+          const client = window.BuddySupabase.getClient();
+          if (client) {
+            const { data: profile } = await client.from('profiles').select('*').eq('id', chatIdOrUserId).single();
+            if (profile) {
+              await _startRealChatWithUser(profile);
+              conv = (conversations || []).find(c => c.userId === profile.id || c.id === 'c_' + profile.id);
+            }
+          }
+        } catch(e) {
+          console.warn('sendMessageToChat profile resolve error:', e);
+        }
+      }
+      if (!conv) {
+        conv = (conversations || []).find(c => c.id === chatIdOrUserId);
+      }
+      if (conv) {
+        const prevActive = activeConvId;
+        activeConvId = conv.id;
+        _sendDirectMessage(text, 'text');
+        activeConvId = prevActive;
+        return true;
+      }
+      return false;
+    },
+    searchAllFriends: async (query) => {
+      const q = (query || '').toLowerCase().trim();
+      const list = (conversations || []).map(c => ({
+        id: c.id,
+        userId: c.userId || null,
+        name: c.nickname || c.name || c.username || (c.isAI ? 'BUDDY AI ✨' : 'Friend'),
+        username: c.username ? (c.username.startsWith('@') ? c.username : '@' + c.username) : (c.isAI ? '@buddy_ai' : ''),
+        avatar: c.avatar || null,
+        color: c.color || '#6366F1',
+        status: c.status || (c.isAI ? 'Always Online' : 'Active now'),
+        isAI: !!c.isAI,
+        isVerified: !!c.is_verified || (window.VerifiedBadgeManager && typeof window.VerifiedBadgeManager.isVerifiedUser === 'function' && window.VerifiedBadgeManager.isVerifiedUser(c.userId || c.id))
+      }));
+
+      if (!q) return list;
+
+      const filtered = list.filter(f => 
+        (f.name && f.name.toLowerCase().includes(q)) || 
+        (f.username && f.username.toLowerCase().includes(q))
+      );
+
+      if (q.length >= 2 && window.BuddySupabase) {
+        try {
+          const remote = await window.BuddySupabase.searchProfiles(q, currentUser?.id);
+          if (Array.isArray(remote)) {
+            remote.forEach(u => {
+              const uFormatted = u.username ? (u.username.startsWith('@') ? u.username : '@' + u.username) : '';
+              if (!filtered.some(l => (l.userId && l.userId === u.id) || l.username === uFormatted)) {
+                filtered.push({
+                  id: u.id,
+                  userId: u.id,
+                  name: u.full_name || u.username,
+                  username: uFormatted,
+                  avatar: u.avatar_url || null,
+                  color: u.avatar_color || '#6366F1',
+                  status: u.bio || 'Verified Member',
+                  isAI: false,
+                  isVerified: !!u.is_verified || (window.VerifiedBadgeManager && typeof window.VerifiedBadgeManager.isVerifiedUser === 'function' && window.VerifiedBadgeManager.isVerifiedUser(u.id))
+                });
+              }
+            });
+          }
+        } catch(e) {
+          console.warn('searchAllFriends remote query error:', e);
+        }
+      }
+      return filtered;
     },
     sendQuizInviteToUser: async (target, quizId, creatorName) => {
       let conv = (conversations || []).find(c => c.id === target.id || (target.userId && c.userId === target.userId));
