@@ -264,3 +264,45 @@ create policy "Users can delete their own stories"
   on public.stories for delete
   using (auth.uid() = user_id);
 
+-- ========================================================
+-- 10. TAPES TABLE (Vertical Short Videos / Reels - WAF Style)
+-- ========================================================
+create table if not exists public.tapes (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  user_name text not null,
+  user_username text default '',
+  user_avatar text default '',
+  user_color text default '#f43f5e',
+  is_verified boolean default false,
+  video_url text not null,
+  caption text default '',
+  music_title text default 'Original Audio',
+  tags jsonb default '[]'::jsonb,
+  likes_count integer default 0,
+  liked_by jsonb default '[]'::jsonb,
+  comments_count integer default 0,
+  comments jsonb default '[]'::jsonb,
+  shares_count integer default 0,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.tapes enable row level security;
+
+create policy "Anyone can read tapes"
+  on public.tapes for select
+  using (true);
+
+create policy "Authenticated users can post tapes"
+  on public.tapes for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update their own tapes"
+  on public.tapes for update
+  using (true);
+
+create policy "Users can delete their own tapes"
+  on public.tapes for delete
+  using (auth.uid() = user_id);
+
+
