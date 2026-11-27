@@ -12430,7 +12430,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #0f0f14;
+  border: 2px solid var(--bg-card);
   box-shadow: 0 2px 8px rgba(236, 72, 153, 0.6);
   pointer-events: none;
 }
@@ -12439,6 +12439,10 @@ html, body {
 .activity-modal-sheet {
   max-width: 520px !important;
   max-height: 85vh !important;
+  max-height: 85dvh !important;
+  background: var(--bg-card) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
@@ -12449,8 +12453,8 @@ html, body {
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+  background: var(--bg-input);
+  border-bottom: 1px solid var(--border);
   overflow-x: auto;
 }
 
@@ -12488,15 +12492,15 @@ html, body {
   align-items: center;
   gap: 8px;
   padding: 10px 16px 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .activity-filter-pill {
   padding: 6px 14px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
-  color: var(--text-2, rgba(255, 255, 255, 0.75));
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-2);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -12520,7 +12524,7 @@ html, body {
 .act-section-heading {
   font-size: 12.5px;
   font-weight: 700;
-  color: var(--text-3, rgba(255, 255, 255, 0.6));
+  color: var(--text-3);
   padding: 10px 16px 6px;
   display: flex;
   align-items: center;
@@ -12544,21 +12548,22 @@ html, body {
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--border-soft);
   transition: background 0.2s ease, transform 0.25s ease, opacity 0.25s ease;
 }
 
 .act-row:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-hover);
 }
 
 .act-row.act-unread {
-  background: rgba(236, 72, 153, 0.06);
+  background: rgba(236, 72, 153, 0.08);
 }
 
 .act-request-card {
-  background: rgba(99, 102, 241, 0.06);
+  background: var(--bg-input);
   border-left: 3px solid #6366f1;
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .act-avatar-wrap {
@@ -12597,7 +12602,7 @@ html, body {
 }
 
 .story-ring-active .act-avatar {
-  border: 2px solid #14141e;
+  border: 2px solid var(--bg-card);
 }
 
 .act-sub-badge {
@@ -12605,14 +12610,15 @@ html, body {
   bottom: -2px;
   right: -2px;
   font-size: 11px;
-  background: rgba(20, 20, 30, 0.9);
+  background: var(--bg-card);
+  color: var(--text);
   border-radius: 50%;
   width: 18px;
   height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
 .act-content {
@@ -12677,10 +12683,10 @@ html, body {
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border);
   cursor: pointer;
   flex-shrink: 0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
@@ -12724,7 +12730,7 @@ html, body {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: #181824;
+  background: var(--bg-card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12744,9 +12750,9 @@ html, body {
   border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
-  color: var(--text-2, rgba(255, 255, 255, 0.8));
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-2);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -12793,15 +12799,15 @@ html, body {
   gap: 12px;
   padding: 11px 14px;
   margin: 4px 0 10px;
-  background: linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(99, 102, 241, 0.12));
-  border: 1px solid rgba(236, 72, 153, 0.3);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .tape-share-story-btn-row:hover {
-  background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(99, 102, 241, 0.2));
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(99, 102, 241, 0.15));
   border-color: rgba(236, 72, 153, 0.5);
   transform: translateY(-1px);
 }
@@ -12827,13 +12833,13 @@ html, body {
 .tape-story-btn-label strong {
   display: block;
   font-size: 13px;
-  color: var(--text-1, #fff);
+  color: var(--text);
 }
 
 .tape-story-btn-label span {
   display: block;
   font-size: 11px;
-  color: var(--text-3, rgba(255, 255, 255, 0.6));
+  color: var(--text-3);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -12851,15 +12857,135 @@ html, body {
   box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4);
 }
 
+/* ══════════════════════════════════════════════════════════════
+   UNIVERSAL CROSS-DEVICE RESPONSIVE SUITE (iOS, Android, Tablet, PC)
+   ══════════════════════════════════════════════════════════════ */
 
+/* Light Mode Radar Specific Contrast Tweaks */
+[data-theme="light"] .radar-dish-card {
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, rgba(244, 246, 255, 0.98) 85%) !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06) !important;
+}
 
+[data-theme="light"] .radar-scope-circle {
+  border-color: rgba(14, 165, 233, 0.5) !important;
+  box-shadow: inset 0 0 16px rgba(14, 165, 233, 0.15) !important;
+}
 
+/* All Screen Containers: Dynamic Viewport & Safe Inset Resiliency */
+html, body {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
 
+#app-screen, .screen {
+  height: 100vh !important;
+  height: 100dvh !important;
+}
 
+/* Mobile & Tablet Modal Sheets: Full Bottom Sheet Behavior with iOS Home Indicator Guard */
+@media (max-width: 640px) {
+  .modal-sheet,
+  .activity-modal-sheet,
+  .requests-modal-sheet,
+  .tape-comments-sheet,
+  .tape-share-sheet,
+  .tape-create-sheet,
+  .radar-broadcast-sheet,
+  .verification-modal-sheet,
+  .add-story-sheet {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
+    padding-bottom: max(20px, env(safe-area-inset-bottom, 20px)) !important;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.35) !important;
+  }
 
+  /* Prevent auto-zooming on iOS inputs when focused */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
 
+  /* Composer padding on touch screens */
+  .composer {
+    margin: 6px 8px calc(6px + env(safe-area-inset-bottom, 8px)) !important;
+  }
 
+  .chat-request-bar {
+    margin: 6px 8px calc(6px + env(safe-area-inset-bottom, 8px)) !important;
+  }
+}
 
+/* Narrow Android & iPhone Mini/SE Devices (<= 380px) */
+@media (max-width: 380px) {
+  .sidebar-header {
+    padding: calc(10px + env(safe-area-inset-top, 0px)) 10px 8px !important;
+    gap: 6px !important;
+  }
 
+  .sidebar-header .app-brand {
+    font-size: 18px !important;
+  }
 
+  .sidebar-nav-tabs {
+    gap: 3px !important;
+    padding: 3px !important;
+    margin: 4px 6px 8px !important;
+  }
+
+  .sidebar-tab-btn {
+    padding: 6px 5px !important;
+    font-size: 11px !important;
+    gap: 3px !important;
+  }
+
+  .sidebar-tab-btn svg,
+  .sidebar-tab-btn span.tab-icon {
+    font-size: 13px !important;
+  }
+
+  .chat-header {
+    padding: calc(10px + env(safe-area-inset-top, 0px)) 8px 8px !important;
+    gap: 6px !important;
+  }
+
+  .chat-peer-name {
+    font-size: 13px !important;
+    max-width: 110px !important;
+  }
+
+  .chat-peer-status {
+    font-size: 10.5px !important;
+    max-width: 100px !important;
+  }
+
+  .rbc-actions-row {
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+
+  .rbc-btn-wave, .rbc-btn-chat {
+    width: 100% !important;
+  }
+
+  .act-btn-delete, .act-btn-confirm {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* Ultra-Compact screens (<= 330px) */
+@media (max-width: 330px) {
+  .sidebar-tab-btn span.tab-label {
+    display: none !important;
+  }
+  .sidebar-tab-btn {
+    padding: 7px 8px !important;
+    justify-content: center !important;
+  }
+}
 
