@@ -10265,12 +10265,20 @@ html, body {
   display: flex !important;
   flex-direction: column !important;
   width: 100% !important;
-  height: calc(100vh - 120px) !important;
-  height: calc(100dvh - 120px) !important;
+  flex: 1 1 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
   position: relative !important;
   background: #09090b !important;
   overflow: hidden !important;
   border-radius: 16px !important;
+}
+
+.tapes-view-container.hidden,
+#tapes-hub-view.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .tapes-top-controls {
@@ -11170,12 +11178,20 @@ html, body {
   display: flex !important;
   flex-direction: column !important;
   width: 100% !important;
-  height: calc(100vh - 120px) !important;
-  height: calc(100dvh - 120px) !important;
+  flex: 1 1 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
   background: var(--bg, #09090b) !important;
   overflow-y: auto !important;
   padding: 12px 14px !important;
   gap: 14px !important;
+}
+
+.radar-view-container.hidden,
+#radar-hub-view.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .radar-dish-card {
