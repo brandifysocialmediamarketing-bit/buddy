@@ -198,27 +198,71 @@ const RadarManager = (() => {
     _triggerWaveAnimation();
 
     if (window.showToast) {
-      window.showToast(`👋 You waved at ${buddyName}! A private connection has been established.`);
+      window.showToast(`👋 You waved at ${buddyName}! Connecting in direct chat...`);
     } else {
       alert(`👋 You waved at ${buddyName}!`);
     }
 
-    // Open chat
+    // Open chat with initial wave message
     setTimeout(() => {
-      startChatWithBuddy(buddyId, buddyName);
-    }, 700);
+      startChatWithBuddy(buddyId, buddyName, `Wave 👋 sent from Community Radar!`);
+    }, 600);
   }
 
-  function startChatWithBuddy(buddyId, buddyName) {
-    if (window.ChatManager && typeof window.ChatManager.openChat === 'function') {
+  async function startChatWithBuddy(buddyId, buddyName, initialMsgText) {
+    const buddy = state.buddies.find(b => b.id === buddyId) || {
+      id: buddyId,
+      name: buddyName,
+      color: '#6366F1',
+      username: '@' + (buddyName || 'buddy').toLowerCase().replace(/\s+/g, '_')
+    };
+
+    if (window.ChatManager && typeof window.ChatManager.ensureAndOpenBuddyChat === 'function') {
+      await window.ChatManager.ensureAndOpenBuddyChat(buddy, initialMsgText);
+    } else if (window.ChatManager && typeof window.ChatManager.openChat === 'function') {
       window.ChatManager.openChat(buddyId);
-    } else {
-      console.log('Open chat with buddy:', buddyId, buddyName);
     }
 
     // Switch view to Chats tab
     const tabChats = document.getElementById('tab-chats-btn');
     if (tabChats) tabChats.click();
+  }
+
+  async function syncRealBuddies() {
+    if (!window.BuddySupabase) return;
+    try {
+      const client = window.BuddySupabase.getClient();
+      if (!client) return;
+      let myId = 'guest';
+      try {
+        const sess = JSON.parse(localStorage.getItem('buddy-session') || '{}');
+        if (sess && sess.id) myId = sess.id;
+      } catch(e) {}
+
+      const { data: profiles } = await client.from('profiles').select('*').neq('id', myId).limit(8);
+      if (Array.isArray(profiles) && profiles.length > 0) {
+        const realBuddies = profiles.map((p, i) => ({
+          id: p.id,
+          userId: p.id,
+          name: p.full_name || p.username,
+          username: p.username ? (p.username.startsWith('@') ? p.username : '@' + p.username) : '@buddy',
+          avatar: p.avatar_url || 'assets/avatar-default.svg',
+          color: p.avatar_color || '#6366f1',
+          is_verified: !!p.is_verified || (window.VerifiedBadgeManager && typeof window.VerifiedBadgeManager.isVerifiedUser === 'function' && window.VerifiedBadgeManager.isVerifiedUser(p.id)),
+          distance: `${(1.2 + (i * 0.8)).toFixed(1)} km away`,
+          vibe: p.bio || '☕ Open for Good Conversations',
+          category: (i % 2 === 0) ? 'chill' : 'couples',
+          bio: p.bio || 'BUDDY Community Member. Let\'s chat and share positive vibes!',
+          is_online: true
+        }));
+
+        const existingIds = new Set(realBuddies.map(r => r.id));
+        state.buddies = [...realBuddies, ...SAMPLE_BUDDIES.filter(s => !existingIds.has(s.id))];
+        renderRadar();
+      }
+    } catch(err) {
+      console.warn('Sync real buddies error:', err);
+    }
   }
 
   function focusBuddy(buddyId) {
