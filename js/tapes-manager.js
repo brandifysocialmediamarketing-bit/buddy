@@ -215,7 +215,22 @@ const TapesManager = (() => {
         return INITIAL_TAPES;
       }
       const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) && parsed.length > 0 ? parsed : INITIAL_TAPES;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // Merge any new curated initial tapes
+        const existingIds = new Set(parsed.map(t => t.id));
+        let updated = false;
+        INITIAL_TAPES.forEach(initTape => {
+          if (!existingIds.has(initTape.id)) {
+            parsed.push(initTape);
+            updated = true;
+          }
+        });
+        if (updated) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+        }
+        return parsed;
+      }
+      return INITIAL_TAPES;
     } catch (e) {
       return INITIAL_TAPES;
     }
