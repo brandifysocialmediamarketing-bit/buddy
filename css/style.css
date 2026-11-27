@@ -12234,7 +12234,7 @@ html, body {
 .request-name {
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--text-1, #fff);
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -12242,18 +12242,18 @@ html, body {
 
 .request-username {
   font-size: 11px;
-  color: var(--text-3, rgba(255, 255, 255, 0.5));
+  color: var(--text-3);
 }
 
 .request-time {
   font-size: 10.5px;
-  color: var(--text-3, rgba(255, 255, 255, 0.4));
+  color: var(--text-3);
   margin-left: auto;
 }
 
 .request-preview-text {
   font-size: 12px;
-  color: var(--text-2, rgba(255, 255, 255, 0.75));
+  color: var(--text-2);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -12271,9 +12271,9 @@ html, body {
   border-radius: 10px;
   font-size: 12px;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
-  color: var(--text-2, rgba(255, 255, 255, 0.8));
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-2);
   cursor: pointer;
   transition: all 0.15s ease;
 }
