@@ -225,6 +225,8 @@ const ChatManager = (() => {
           status: c.status,
           nickname: c.nickname || '',
           pinned: !!c.pinned,
+          isRequest: !!c.isRequest,
+          requestStatus: c.requestStatus || (c.isRequest ? 'pending' : 'accepted'),
           accent: c.accent || 'indigo',
           unread: c.unread || 0,
           lastMsgPreview: c.lastMsgPreview || '',
@@ -244,10 +246,14 @@ const ChatManager = (() => {
           if (Array.isArray(cached)) {
             cached.forEach(c => {
               const isRemoved = localStorage.getItem('buddy_removed_conv_' + c.id + '_' + currentUser.id) === 'true' ||
-                                (c.userId && localStorage.getItem('buddy_removed_peer_' + c.userId + '_' + currentUser.id) === 'true');
+                                (c.userId && localStorage.getItem('buddy_removed_peer_' + c.userId + '_' + currentUser.id) === 'true') ||
+                                localStorage.getItem('buddy_declined_req_' + c.id + '_' + currentUser.id) === 'true' ||
+                                (c.userId && localStorage.getItem('buddy_blocked_' + c.userId) === 'true');
               if (!isRemoved) {
                 c.messages = c.messages || [];
                 c.isAI = false;
+                c.isRequest = !!c.isRequest;
+                c.requestStatus = c.requestStatus || (c.isRequest ? 'pending' : 'accepted');
                 conversations.push(c);
               }
             });
