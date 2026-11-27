@@ -1279,6 +1279,9 @@ const TapesManager = (() => {
     openCreateTapeModal,
     closeCreateTapeModal,
     submitNewTape,
+    addReelToStory,
+    focusTape,
+    getTapes: () => state.tapes || [],
     openAuthorProfile: (id) => console.log('View author profile:', id)
   };
 })();
