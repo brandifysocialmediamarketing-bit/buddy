@@ -12606,34 +12606,34 @@ html, body {
 .act-sender-name {
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--text-1, #fff);
+  color: var(--text);
 }
 
 .act-sender-uname {
   font-size: 11px;
-  color: var(--text-3, rgba(255, 255, 255, 0.5));
+  color: var(--text-3);
 }
 
 .act-description {
   font-size: 12.5px;
-  color: var(--text-2, rgba(255, 255, 255, 0.8));
+  color: var(--text-2);
   margin-top: 1px;
 }
 
 .act-description-inline {
   font-size: 13px;
-  color: var(--text-2, rgba(255, 255, 255, 0.85));
+  color: var(--text-2);
   line-height: 1.4;
 }
 
 .act-action-desc {
-  color: var(--text-1, #fff);
+  color: var(--text);
   margin-left: 3px;
 }
 
 .act-time-stamp, .act-time-row {
   font-size: 11px;
-  color: var(--text-3, rgba(255, 255, 255, 0.45));
+  color: var(--text-3);
   margin-top: 2px;
 }
 
