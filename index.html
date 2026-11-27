@@ -1172,7 +1172,7 @@
       }
 
       // 2. Production Live Cloud Auto-Updater (Detects new git deployments on mobile & web)
-      var currentVersion = 'v208';
+      var currentVersion = 'v209';
       function checkLiveDeploy() {
         try {
           fetch('/api/version?t=' + Date.now(), { cache: 'no-store' })
@@ -1597,6 +1597,11 @@
   <!-- TAPES CREATE / UPLOAD OVERLAY -->
   <div class="modal-overlay hidden" id="tapes-create-overlay" onclick="if(event.target===this)TapesManager.closeCreateTapeModal()">
     <div id="tapes-create-content"></div>
+  </div>
+
+  <!-- VERIFICATION MODAL OVERLAY (WAF Style 100% Free Blue Tick) -->
+  <div class="modal-overlay hidden" id="verification-modal-overlay" onclick="if(event.target===this)VerifiedBadgeManager.closeVerificationModal()">
+    <div id="verification-modal-content"></div>
   </div>
 </body>
 
