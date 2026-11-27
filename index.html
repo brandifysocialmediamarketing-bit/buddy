@@ -283,8 +283,9 @@
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
           </button>
-          <button class="user-avatar-btn" id="profile-open-btn" aria-label="Profile">
+          <button class="user-avatar-btn" id="profile-open-btn" aria-label="Profile" style="position:relative;">
             <span id="sidebar-user-initials">U</span>
+            <span id="sidebar-user-verified-badge" style="position:absolute; bottom:-3px; right:-3px;"></span>
           </button>
         </div>
       </header>
@@ -678,9 +679,28 @@
       <div class="profile-body">
         <div class="profile-big-avatar" id="profile-big-avatar">U</div>
         <div class="profile-details">
-          <div class="profile-full-name" id="profile-full-name">User Name</div>
+          <div class="profile-full-name" style="display:flex; align-items:center; justify-content:center; gap:6px;">
+            <span id="profile-full-name">User Name</span>
+            <span id="profile-verified-badge"></span>
+          </div>
           <div class="profile-uname" id="profile-uname">@username</div>
           <div class="profile-email-text" id="profile-email-text">user@example.com</div>
+        </div>
+
+        <!-- WAF STYLE FREE VERIFIED BADGE CARD -->
+        <div class="profile-verified-card" id="profile-verified-card">
+          <div class="pvc-left">
+            <span class="pvc-icon">🛡️</span>
+            <div>
+              <div class="pvc-title">Verified Profile Badge <span class="free-pill">100% FREE</span></div>
+              <div class="pvc-desc" id="pvc-status-desc">Get authentic blue tick next to your name across chats, stories & tapes.</div>
+            </div>
+          </div>
+          <div id="pvc-action-wrap">
+            <button type="button" class="btn-primary pvc-btn" onclick="VerifiedBadgeManager.openVerificationModal()">
+              <span>Get Verified ✨</span>
+            </button>
+          </div>
         </div>
 
         <div class="profile-section-title">Avatar Color Preset</div>
@@ -1108,19 +1128,20 @@
 
   <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/theme.js?v=208"></script>
-  <script src="js/wallpaper.js?v=208"></script>
+  <script src="js/theme.js?v=209"></script>
+  <script src="js/wallpaper.js?v=209"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=208"></script>
-  <script src="js/webrtc-call.js?v=208"></script>
-  <script src="js/chat.js?v=208"></script>
-  <script src="js/auth.js?v=208"></script>
-  <script src="js/app.js?v=208"></script>
-  <script src="js/dont-block-me-game.js?v=208"></script>
-  <script src="js/truth-or-dare-data.js?v=208"></script>
-  <script src="js/truth-or-dare-game.js?v=208"></script>
-  <script src="js/stories-manager.js?v=208"></script>
-  <script src="js/tapes-manager.js?v=208"></script>
+  <script src="js/supabase-config.js?v=209"></script>
+  <script src="js/webrtc-call.js?v=209"></script>
+  <script src="js/chat.js?v=209"></script>
+  <script src="js/auth.js?v=209"></script>
+  <script src="js/app.js?v=209"></script>
+  <script src="js/dont-block-me-game.js?v=209"></script>
+  <script src="js/truth-or-dare-data.js?v=209"></script>
+  <script src="js/truth-or-dare-game.js?v=209"></script>
+  <script src="js/stories-manager.js?v=209"></script>
+  <script src="js/tapes-manager.js?v=209"></script>
+  <script src="js/verified-badge-manager.js?v=209"></script>
   <!-- Live Auto-Reload & Cloud Auto-Updater -->
   <script>
     (function () {
