@@ -202,7 +202,7 @@ const TapesManager = (() => {
     try {
       const sess = localStorage.getItem('buddy-session');
       if (sess) return JSON.parse(sess);
-    } catch (e) {}
+    } catch (e) { }
     return { id: 'guest', name: 'You', username: '@you', color: '#f43f5e', is_verified: false };
   }
 
@@ -239,7 +239,7 @@ const TapesManager = (() => {
   function _saveLocalTapes(list) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function _loadLikedMap() {
@@ -254,7 +254,7 @@ const TapesManager = (() => {
   function _saveLikedMap(map) {
     try {
       localStorage.setItem(LIKES_KEY, JSON.stringify(map));
-    } catch (e) {}
+    } catch (e) { }
   }
 
   // ── Cloud Supabase Sync ──
@@ -450,7 +450,7 @@ const TapesManager = (() => {
     if (!video) return;
     const indicator = document.getElementById(`tape-play-ind-${tapeId}`);
     if (video.paused) {
-      video.play().catch(() => {});
+      video.play().catch(() => { });
       if (indicator) {
         indicator.innerHTML = '<svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
         indicator.classList.remove('hidden');
@@ -575,8 +575,8 @@ const TapesManager = (() => {
         .from('tapes')
         .update({ likes_count: tape.likes_count })
         .eq('id', tapeId)
-        .then(() => {})
-        .catch(() => {});
+        .then(() => { })
+        .catch(() => { });
     }
   }
 
@@ -706,8 +706,8 @@ const TapesManager = (() => {
         .from('tapes')
         .update({ comments: tape.comments, comments_count: tape.comments.length })
         .eq('id', tapeId)
-        .then(() => {})
-        .catch(() => {});
+        .then(() => { })
+        .catch(() => { });
     }
   }
 
@@ -777,8 +777,8 @@ const TapesManager = (() => {
           let filtered = state.shareContacts || [];
           if (query) {
             const q = query.toLowerCase();
-            filtered = state.shareContacts.filter(c => 
-              (c.name && c.name.toLowerCase().includes(q)) || 
+            filtered = state.shareContacts.filter(c =>
+              (c.name && c.name.toLowerCase().includes(q)) ||
               (c.username && c.username.toLowerCase().includes(q))
             );
 
@@ -793,7 +793,7 @@ const TapesManager = (() => {
                     }
                   });
                 }
-              } catch(e) {}
+              } catch (e) { }
             }
           }
           _renderShareFriendsList(tape, filtered);
@@ -840,8 +840,8 @@ const TapesManager = (() => {
         ${quickContacts.length > 0 ? `
           <div class="tape-share-quick-tray">
             ${quickContacts.map(c => {
-              const initial = (c.name || 'F').charAt(0).toUpperCase();
-              return `
+      const initial = (c.name || 'F').charAt(0).toUpperCase();
+      return `
                 <div class="tape-share-quick-item" title="Send to ${c.name}" onclick="TapesManager.sendTapeToChat('${c.id}', '${_escapeHtml(c.name)}', this.querySelector('.tape-btn-send-pill') || this)">
                   <div class="tape-share-quick-avatar" style="background:${c.color || '#6366F1'};">
                     ${c.avatar ? `<img src="${c.avatar}" alt="${c.name}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" />` : (c.isAI ? '✨' : initial)}
@@ -850,7 +850,7 @@ const TapesManager = (() => {
                   <span class="tape-share-quick-name">${_escapeHtml((c.name || 'Friend').split(' ')[0])}</span>
                 </div>
               `;
-            }).join('')}
+    }).join('')}
           </div>
         ` : ''}
 
@@ -963,7 +963,7 @@ const TapesManager = (() => {
   function copyTapeLink(tapeId) {
     const tape = state.tapes.find(t => t.id === tapeId);
     const url = `${window.location.origin}/?tape=${tapeId}`;
-    
+
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url).then(() => {
         const copyText = document.getElementById('copy-tape-link-text');
@@ -988,7 +988,7 @@ const TapesManager = (() => {
       title: `${tape.user_name}'s Tape on BUDDY`,
       text: tape.caption || 'Watch this fun tape on BUDDY!',
       url: `${window.location.origin}/?tape=${tapeId}`
-    }).catch(() => {});
+    }).catch(() => { });
   }
 
   // ── Create & Upload Tape Modal (+) ──
@@ -1066,7 +1066,7 @@ const TapesManager = (() => {
         if (previewWrap) previewWrap.classList.remove('hidden');
         if (video) {
           video.src = url;
-          video.play().catch(() => {});
+          video.play().catch(() => { });
         }
       };
     }
@@ -1164,8 +1164,8 @@ const TapesManager = (() => {
           comments_count: 0,
           comments: []
         }])
-        .then(() => {})
-        .catch(() => {});
+        .then(() => { })
+        .catch(() => { });
     }
   }
 
