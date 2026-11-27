@@ -365,9 +365,14 @@
               <h3><span>🌐</span> BUDDY As Family Radar</h3>
               <p>Discover real buddies nearby & globally</p>
             </div>
-            <button type="button" class="radar-btn-broadcast" onclick="RadarManager.openBroadcastModal()">
-              <span>📡 Broadcast Vibe</span>
-            </button>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <button type="button" class="radar-test-req-btn" onclick="RadarManager.simulateIncomingRequest()" title="Simulate Incoming Instagram-style Friend Request">
+                <span>⚡ Test Request</span>
+              </button>
+              <button type="button" class="radar-btn-broadcast" onclick="RadarManager.openBroadcastModal()">
+                <span>📡 Broadcast Vibe</span>
+              </button>
+            </div>
           </div>
 
           <div class="radar-scope-circle">
