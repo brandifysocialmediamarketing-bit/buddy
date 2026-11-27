@@ -10015,9 +10015,9 @@ html, body {
 
 .sv-progress-row {
   position: absolute !important;
-  top: 12px !important;
-  left: 14px !important;
-  right: 14px !important;
+  top: max(12px, env(safe-area-inset-top, 12px)) !important;
+  left: max(14px, env(safe-area-inset-left, 14px)) !important;
+  right: max(14px, env(safe-area-inset-right, 14px)) !important;
   display: flex !important;
   gap: 5px !important;
   z-index: 30 !important;
