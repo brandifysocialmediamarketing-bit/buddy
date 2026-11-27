@@ -441,8 +441,38 @@ const ChatManager = (() => {
     if (!list) return;
     list.innerHTML = '';
 
+    // Instagram-style Message Requests Banner
+    const pendingRequests = (conversations || []).filter(c => c.isRequest && c.requestStatus !== 'accepted');
+    const reqBanner = document.getElementById('chat-requests-banner');
+    if (reqBanner) {
+      if (pendingRequests.length > 0) {
+        reqBanner.classList.remove('hidden');
+        reqBanner.innerHTML = `
+          <div class="chat-requests-pill-btn" onclick="ChatManager.showRequestsModal()">
+            <div class="requests-pill-left">
+              <div class="requests-icon-badge">📩</div>
+              <div class="requests-text-wrap">
+                <span class="requests-pill-title">Message Requests</span>
+                <span class="requests-pill-sub">${pendingRequests.length} pending request${pendingRequests.length > 1 ? 's' : ''}</span>
+              </div>
+            </div>
+            <div class="requests-pill-right">
+              <span class="requests-badge-bubble">${pendingRequests.length}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+          </div>
+        `;
+      } else {
+        reqBanner.classList.add('hidden');
+        reqBanner.innerHTML = '';
+      }
+    }
+
     const q = (filter || '').toLowerCase().trim();
     let filtered = conversations.filter(c => {
+      // Quarantine pending requests from primary inbox
+      if (c.isRequest && c.requestStatus !== 'accepted') return false;
+
       const displayName = c.nickname || c.name || '';
       const uname = c.username || '';
       return displayName.toLowerCase().includes(q) || uname.toLowerCase().includes(q);
@@ -524,17 +554,44 @@ const ChatManager = (() => {
     const conv = conversations.find(c => c.id === convId);
     if (!conv) return;
 
+    const isPendingReq = !!(conv.isRequest && conv.requestStatus !== 'accepted');
+
     // Immediately reset unread count and re-render so badge disappears instantly
     conv.unread = 0;
     _saveCachedConversations();
     _renderChatList();
 
-    // Mark all unseen messages as seen in Supabase database
-    if (!conv.isAI && window.BuddySupabase && currentUser && currentUser.id) {
+    // Mark all unseen messages as seen in Supabase database ONLY if accepted / not a pending request
+    if (!isPendingReq && !conv.isAI && window.BuddySupabase && currentUser && currentUser.id) {
       BuddySupabase.markConversationMessagesAsSeen(conv.id, currentUser.id);
     }
 
     const displayName = conv.nickname || conv.name;
+
+    // Handle Instagram request mode vs normal chat
+    const composerEl = document.querySelector('.composer');
+    const reqBarEl = document.getElementById('chat-request-bar');
+
+    if (isPendingReq) {
+      if (composerEl) composerEl.classList.add('hidden');
+      if (reqBarEl) {
+        reqBarEl.classList.remove('hidden');
+        const reqTitle = document.getElementById('request-bar-title');
+        const reqSub = document.getElementById('request-bar-sub');
+        if (reqTitle) reqTitle.textContent = `${displayName} wants to send you a message`;
+        if (reqSub) reqSub.textContent = `Do you want to let ${_esc(displayName)} send you messages? They won't know you've seen it until you accept.`;
+        
+        const btnBlock = document.getElementById('req-btn-block');
+        const btnDelete = document.getElementById('req-btn-delete');
+        const btnAccept = document.getElementById('req-btn-accept');
+        if (btnBlock) btnBlock.onclick = () => ChatManager.blockRequest(conv.id);
+        if (btnDelete) btnDelete.onclick = () => ChatManager.declineRequest(conv.id);
+        if (btnAccept) btnAccept.onclick = () => ChatManager.acceptRequest(conv.id);
+      }
+    } else {
+      if (composerEl) composerEl.classList.remove('hidden');
+      if (reqBarEl) reqBarEl.classList.add('hidden');
+    }
 
     const av = document.getElementById('chat-peer-avatar');
     if (av) {
