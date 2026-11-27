@@ -344,6 +344,7 @@ const RadarManager = (() => {
   function init() {
     console.log('🌐 [BUDDY Radar] Initializing Community Discover Engine...');
     renderRadar();
+    syncRealBuddies();
   }
 
   return {
