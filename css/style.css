@@ -12372,6 +12372,460 @@ html, body {
   }
 }
 
+/* ══════════════════════════════════════════════════════════════
+   INSTAGRAM-STYLE ACTIVITY & FRIEND REQUESTS HUB (v216)
+   ══════════════════════════════════════════════════════════════ */
+
+/* 1. Header Activity Heart Button */
+.activity-hub-btn {
+  position: relative !important;
+  color: var(--text-2, rgba(255, 255, 255, 0.8)) !important;
+  transition: all 0.2s ease !important;
+}
+
+.activity-hub-btn:hover {
+  color: #ec4899 !important;
+  transform: scale(1.08) !important;
+  filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.5)) !important;
+}
+
+.activity-badge-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #ec4899, #f43f5e);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0f0f14;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.6);
+  pointer-events: none;
+}
+
+/* 2. Activity Modal Sheet */
+.activity-modal-sheet {
+  max-width: 520px !important;
+  max-height: 85vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.activity-quick-test-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+  overflow-x: auto;
+}
+
+.test-bar-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ec4899;
+  white-space: nowrap;
+}
+
+.act-test-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  background: rgba(236, 72, 153, 0.12);
+  border: 1px solid rgba(236, 72, 153, 0.35);
+  border-radius: 14px;
+  color: #f472b6;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.act-test-btn:hover {
+  background: rgba(236, 72, 153, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 10px rgba(236, 72, 153, 0.3);
+}
+
+.activity-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.activity-filter-pill {
+  padding: 6px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  color: var(--text-2, rgba(255, 255, 255, 0.75));
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.activity-filter-pill.active {
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 3px 10px rgba(236, 72, 153, 0.35);
+}
+
+.activity-list-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0 16px;
+}
+
+/* 3. Section Headers */
+.act-section-heading {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-3, rgba(255, 255, 255, 0.6));
+  padding: 10px 16px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.act-counter-tag {
+  background: #ec4899;
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 800;
+}
+
+/* 4. Activity Rows & Cards */
+.act-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.2s ease, transform 0.25s ease, opacity 0.25s ease;
+}
+
+.act-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.act-row.act-unread {
+  background: rgba(236, 72, 153, 0.06);
+}
+
+.act-request-card {
+  background: rgba(99, 102, 241, 0.06);
+  border-left: 3px solid #6366f1;
+}
+
+.act-avatar-wrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.act-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  overflow: hidden;
+}
+
+.act-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.story-ring-active {
+  padding: 2.5px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-ring-active .act-avatar {
+  border: 2px solid #14141e;
+}
+
+.act-sub-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  font-size: 11px;
+  background: rgba(20, 20, 30, 0.9);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.act-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.act-text-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.act-sender-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-1, #fff);
+}
+
+.act-sender-uname {
+  font-size: 11px;
+  color: var(--text-3, rgba(255, 255, 255, 0.5));
+}
+
+.act-description {
+  font-size: 12.5px;
+  color: var(--text-2, rgba(255, 255, 255, 0.8));
+  margin-top: 1px;
+}
+
+.act-description-inline {
+  font-size: 13px;
+  color: var(--text-2, rgba(255, 255, 255, 0.85));
+  line-height: 1.4;
+}
+
+.act-action-desc {
+  color: var(--text-1, #fff);
+  margin-left: 3px;
+}
+
+.act-time-stamp, .act-time-row {
+  font-size: 11px;
+  color: var(--text-3, rgba(255, 255, 255, 0.45));
+  margin-top: 2px;
+}
+
+.act-sub-detail {
+  font-size: 11.5px;
+  color: #f472b6;
+  margin-top: 3px;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 5. Right-side Media Thumbnail (Instagram Style!) */
+.act-media-thumbnail {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.act-media-thumbnail:hover {
+  transform: scale(1.08);
+  border-color: #ec4899;
+}
+
+.act-thumb-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.act-thumb-overlay {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 4px;
+  padding: 2px;
+  display: flex;
+}
+
+.act-story-thumbnail {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  padding: 2px;
+  background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.act-story-thumbnail:hover {
+  transform: scale(1.1);
+}
+
+.act-story-ring-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #181824;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* 6. Action Buttons on Requests */
+.act-actions-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.act-btn-delete {
+  padding: 7px 13px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+  color: var(--text-2, rgba(255, 255, 255, 0.8));
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.act-btn-delete:hover {
+  background: rgba(239, 68, 68, 0.18);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.act-btn-confirm {
+  padding: 7px 16px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(236, 72, 153, 0.35);
+  transition: all 0.15s ease;
+}
+
+.act-btn-confirm:hover {
+  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.55);
+  transform: translateY(-1px);
+}
+
+.act-confirmed-pill {
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  display: inline-block;
+}
+
+/* 7. Share Sheet "Add Reel to Story" Row */
+.tape-share-story-btn-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  margin: 4px 0 10px;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(99, 102, 241, 0.12));
+  border: 1px solid rgba(236, 72, 153, 0.3);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tape-share-story-btn-row:hover {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(99, 102, 241, 0.2));
+  border-color: rgba(236, 72, 153, 0.5);
+  transform: translateY(-1px);
+}
+
+.tape-story-icon-ring {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(220, 39, 67, 0.4);
+}
+
+.tape-story-btn-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.tape-story-btn-label strong {
+  display: block;
+  font-size: 13px;
+  color: var(--text-1, #fff);
+}
+
+.tape-story-btn-label span {
+  display: block;
+  font-size: 11px;
+  color: var(--text-3, rgba(255, 255, 255, 0.6));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tape-story-pill-action {
+  padding: 6px 13px;
+  border-radius: 12px;
+  background: #ec4899;
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4);
+}
+
+
 
 
 
