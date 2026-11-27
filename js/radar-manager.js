@@ -207,6 +207,14 @@ const RadarManager = (() => {
     setTimeout(() => {
       startChatWithBuddy(buddyId, buddyName, `Wave 👋 sent from Community Radar!`);
     }, 600);
+
+    // Simulate reciprocal incoming friend request
+    setTimeout(() => {
+      if (window.ChatManager && typeof window.ChatManager.receiveFriendRequest === 'function') {
+        const buddy = state.buddies.find(b => b.id === buddyId) || { id: buddyId, name: buddyName, color: '#6366f1' };
+        window.ChatManager.receiveFriendRequest(buddy, `Hey! 👋 Loved your wave on BUDDY Radar! Sent you a friend request to connect ✨`);
+      }
+    }, 2800);
   }
 
   async function startChatWithBuddy(buddyId, buddyName, initialMsgText) {
@@ -341,6 +349,25 @@ const RadarManager = (() => {
     }
   }
 
+  function simulateIncomingRequest() {
+    const list = (state.buddies && state.buddies.length > 0) ? state.buddies : SAMPLE_BUDDIES;
+    const randomBuddy = list[Math.floor(Math.random() * list.length)];
+    const messages = [
+      `Hey! 👋 Saw your profile on BUDDY Radar! Let's connect & share travel/music stories! ✨`,
+      `Hi there! Loved your vibe on Radar 🌟 Would love to be friends and chat!`,
+      `Hey! 👋 Up for a coffee convo or music chat sometime? Sent you a friend request!`
+    ];
+    const msg = messages[Math.floor(Math.random() * messages.length)];
+
+    if (window.ChatManager && typeof window.ChatManager.receiveFriendRequest === 'function') {
+      window.ChatManager.receiveFriendRequest(randomBuddy, msg);
+    }
+
+    if (window.showToast) {
+      window.showToast(`📩 New request received from ${randomBuddy.name}! Check Chats.`);
+    }
+  }
+
   function init() {
     console.log('🌐 [BUDDY Radar] Initializing Community Discover Engine...');
     renderRadar();
@@ -356,7 +383,8 @@ const RadarManager = (() => {
     focusBuddy,
     openBroadcastModal,
     closeBroadcastModal,
-    saveBroadcast
+    saveBroadcast,
+    simulateIncomingRequest
   };
 })();
 
