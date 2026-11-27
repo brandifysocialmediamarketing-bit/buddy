@@ -11586,6 +11586,35 @@ html, body {
   font-weight: 700 !important;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   MASTER SIDEBAR & HUB VIEWS VISIBILITY & LAYOUT RULES
+   ══════════════════════════════════════════════════════════════ */
+.chat-list {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.chat-list.hidden,
+#chat-list.hidden,
+.stories-rail-wrap.hidden,
+#stories-rail-wrap.hidden,
+.tapes-view-container.hidden,
+#tapes-hub-view.hidden,
+.radar-view-container.hidden,
+#radar-hub-view.hidden,
+.games-hub-view.hidden,
+#games-hub-view.hidden,
+.hidden,
+[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+
 
 
 
