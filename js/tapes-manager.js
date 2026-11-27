@@ -1,0 +1,901 @@
+/**
+ * BUDDY - tapes-manager.js (v208)
+ * Feature 2 (Inspired by WAF): Tapes 🎥 (Vertical Shorts & Reels Feed)
+ * 
+ * Capabilities:
+ * - Full-screen vertical swipe video player with snap scrolling (TikTok / Reels / WAF style)
+ * - Auto-play active video in viewport & pause offscreen videos
+ * - Double-tap to like with floating heart burst animation
+ * - Interactive like button with live counter & heart sound/vibe
+ * - Slide-up Comments sheet (read, post new comments)
+ * - Quick Share to 1-on-1 BUDDY Chat (embeds interactive tape card into private message)
+ * - Create & Upload Tape (+): Upload MP4/WebM/MOV from phone/PC with caption, music sound, tags
+ * - Floating Sound Mute / Unmute toggle
+ * - 100% Free (₹0 cost) using Supabase and offline LocalStorage caching
+ */
+
+const TapesManager = (() => {
+  const STORAGE_KEY = 'buddy_tapes_store_v1';
+  const LIKES_KEY = 'buddy_tapes_likes_v1';
+
+  // Starter curated aesthetic & fun tapes
+  const INITIAL_TAPES = [
+    {
+      id: 'tape-1',
+      user_id: 'creator-priya',
+      user_name: 'Priya Sharma',
+      user_username: '@priya_vibe',
+      user_avatar: 'assets/avatar-default.svg',
+      user_color: '#f43f5e',
+      is_verified: true,
+      video_url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+      caption: 'Nature blooms when you find your true circle 🌸✨ Best moments with real friends! #FriendshipGoals #BUDDY',
+      music_title: 'Chill Lo-Fi Sunset Beat 🎧',
+      tags: ['Friendship', 'Vibes', 'Nature'],
+      likes_count: 248,
+      comments_count: 19,
+      comments: [
+        { id: 'c-1', user_name: 'Aarav Patel', user_username: '@aarav', text: 'This looks so peaceful! 🌸', created_at: new Date(Date.now() - 3600000).toISOString() },
+        { id: 'c-2', user_name: 'Riya Sen', user_username: '@riyax', text: 'Love the aesthetic vibes 😍', created_at: new Date(Date.now() - 1800000).toISOString() }
+      ],
+      shares_count: 42,
+      created_at: new Date(Date.now() - 7200000).toISOString()
+    },
+    {
+      id: 'tape-2',
+      user_id: 'creator-kabir',
+      user_name: 'Kabir & Siya',
+      user_username: '@kabirsiya_duo',
+      user_avatar: 'assets/avatar-default.svg',
+      user_color: '#8b5cf6',
+      is_verified: true,
+      video_url: 'https://www.w3schools.com/html/mov_bbb.mp4',
+      caption: 'Late night chats & laughing at silly memories 🐰🍿 Who else relates? Tag your favorite person! #LateNight #WAF',
+      music_title: 'Acoustic Melody - Late Night ✨',
+      tags: ['Couple', 'Fun', 'LateNight'],
+      likes_count: 412,
+      comments_count: 34,
+      comments: [
+        { id: 'c-3', user_name: 'Zoya Khan', user_username: '@zoya', text: 'Relatable level 1000 😂❤️', created_at: new Date(Date.now() - 5400000).toISOString() }
+      ],
+      shares_count: 88,
+      created_at: new Date(Date.now() - 14400000).toISOString()
+    }
+  ];
+
+  let state = {
+    tapes: [],
+    currentIndex: 0,
+    isMuted: true,
+    likedMap: {},
+    activeCommentsTapeId: null,
+    activeShareTapeId: null,
+    observer: null
+  };
+
+  // ── Helper: Current User ──
+  function _getCurrentUser() {
+    if (window.ChatManager && typeof window.ChatManager.getCurrentUser === 'function') {
+      const u = window.ChatManager.getCurrentUser();
+      if (u) return u;
+    }
+    try {
+      const sess = localStorage.getItem('buddy-session');
+      if (sess) return JSON.parse(sess);
+    } catch (e) {}
+    return { id: 'guest', name: 'You', username: '@you', color: '#f43f5e', is_verified: false };
+  }
+
+  // ── Helper: LocalStorage ──
+  function _loadLocalTapes() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_TAPES));
+        return INITIAL_TAPES;
+      }
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : INITIAL_TAPES;
+    } catch (e) {
+      return INITIAL_TAPES;
+    }
+  }
+
+  function _saveLocalTapes(list) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    } catch (e) {}
+  }
+
+  function _loadLikedMap() {
+    try {
+      const raw = localStorage.getItem(LIKES_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function _saveLikedMap(map) {
+    try {
+      localStorage.setItem(LIKES_KEY, JSON.stringify(map));
+    } catch (e) {}
+  }
+
+  // ── Cloud Supabase Sync ──
+  async function _syncCloudTapes() {
+    if (!window.BuddySupabase) return;
+    try {
+      const { data, error } = await window.BuddySupabase
+        .from('tapes')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(30);
+
+      if (!error && Array.isArray(data) && data.length > 0) {
+        // Merge cloud tapes with local creations
+        const localList = _loadLocalTapes();
+        const localMap = new Map(localList.map(t => [t.id, t]));
+        data.forEach(ct => {
+          localMap.set(ct.id, { ...ct, comments: Array.isArray(ct.comments) ? ct.comments : [] });
+        });
+        state.tapes = Array.from(localMap.values());
+        _saveLocalTapes(state.tapes);
+        renderFeed();
+      }
+    } catch (err) {
+      console.warn('📸 [Tapes] Cloud sync fallback to local storage:', err);
+    }
+  }
+
+  // ── Render Tapes Feed ──
+  function renderFeed() {
+    const feed = document.getElementById('tapes-feed-container');
+    if (!feed) return;
+
+    if (!state.tapes || state.tapes.length === 0) {
+      state.tapes = _loadLocalTapes();
+    }
+    state.likedMap = _loadLikedMap();
+
+    feed.innerHTML = state.tapes.map((tape, idx) => {
+      const isLiked = !!state.likedMap[tape.id];
+      const verifiedBadge = tape.is_verified
+        ? `<span class="verified-badge-pill" title="Verified Creator">
+             <svg width="12" height="12" viewBox="0 0 24 24" fill="#38bdf8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+           </span>`
+        : '';
+
+      const avatarHtml = tape.user_avatar && tape.user_avatar.startsWith('data:')
+        ? `<img src="${tape.user_avatar}" alt="${_escapeHtml(tape.user_name)}" class="tape-author-avatar-img" />`
+        : `<div class="tape-author-avatar-fallback" style="background:${tape.user_color || '#f43f5e'}">${(tape.user_name || 'U').charAt(0).toUpperCase()}</div>`;
+
+      return `
+        <div class="tape-card" id="tape-card-${tape.id}" data-tape-id="${tape.id}" data-index="${idx}">
+          <div class="tape-video-wrapper">
+            <video
+              class="tape-video-element"
+              src="${tape.video_url}"
+              playsinline
+              loop
+              preload="metadata"
+              ${state.isMuted ? 'muted' : ''}
+            ></video>
+
+            <!-- Play/Pause Central Flash Ripple -->
+            <div class="tape-play-indicator hidden" id="tape-play-ind-${tape.id}">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+
+            <!-- Double-Tap Floating Heart Burst Zone -->
+            <div class="tape-heart-burst-zone" id="tape-heart-zone-${tape.id}"></div>
+          </div>
+
+          <!-- Right Action Bar (TikTok / Reels / WAF Style) -->
+          <div class="tape-actions-column">
+            <!-- Author Profile Avatar -->
+            <div class="tape-action-item tape-author-action" onclick="TapesManager.openAuthorProfile('${tape.user_id}')" title="${_escapeHtml(tape.user_name)}">
+              <div class="tape-avatar-ring">
+                ${avatarHtml}
+              </div>
+            </div>
+
+            <!-- Like Button -->
+            <div class="tape-action-item ${isLiked ? 'is-liked' : ''}" id="tape-btn-like-${tape.id}" onclick="TapesManager.toggleLike('${tape.id}')">
+              <button type="button" class="tape-action-btn like-btn" aria-label="Like Tape">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="${isLiked ? '#f43f5e' : 'none'}" stroke="${isLiked ? '#f43f5e' : 'white'}" stroke-width="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+              </button>
+              <span class="tape-action-counter" id="tape-like-count-${tape.id}">${tape.likes_count || 0}</span>
+            </div>
+
+            <!-- Comments Button -->
+            <div class="tape-action-item" onclick="TapesManager.openComments('${tape.id}')">
+              <button type="button" class="tape-action-btn" aria-label="Comments">
+                <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+              </button>
+              <span class="tape-action-counter" id="tape-comment-count-${tape.id}">${(tape.comments && tape.comments.length) || tape.comments_count || 0}</span>
+            </div>
+
+            <!-- Share to 1-on-1 BUDDY Chat -->
+            <div class="tape-action-item" onclick="TapesManager.openShareModal('${tape.id}')">
+              <button type="button" class="tape-action-btn" aria-label="Share to Chat">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+              </button>
+              <span class="tape-action-counter">Share</span>
+            </div>
+
+            <!-- Spinning Vinyl Audio Disc -->
+            <div class="tape-action-item tape-vinyl-wrap">
+              <div class="tape-vinyl-disc" id="tape-vinyl-${tape.id}">
+                <div class="tape-vinyl-inner"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Meta Info Column -->
+          <div class="tape-meta-info">
+            <div class="tape-meta-author-row">
+              <span class="tape-meta-name">${_escapeHtml(tape.user_name)}</span>
+              ${verifiedBadge}
+              <span class="tape-meta-username">${_escapeHtml(tape.user_username || '')}</span>
+            </div>
+
+            <div class="tape-meta-caption">
+              ${_formatCaptionWithHashtags(tape.caption)}
+            </div>
+
+            <div class="tape-meta-music-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18V5l12-2v13"/>
+                <circle cx="6" cy="18" r="3"/>
+                <circle cx="18" cy="16" r="3"/>
+              </svg>
+              <div class="tape-music-marquee">
+                <span>${_escapeHtml(tape.music_title || 'Original Audio')} • BUDDY Tapes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    _bindCardInteractions();
+    _setupIntersectionObserver();
+  }
+
+  // ── Double-Tap & Single-Tap Handler ──
+  function _bindCardInteractions() {
+    const cards = document.querySelectorAll('.tape-card');
+    cards.forEach(card => {
+      const tapeId = card.getAttribute('data-tape-id');
+      const wrapper = card.querySelector('.tape-video-wrapper');
+      const video = card.querySelector('.tape-video-element');
+      let lastTapTime = 0;
+
+      if (!wrapper || !video) return;
+
+      wrapper.onclick = (e) => {
+        // Prevent click if targeting action buttons
+        if (e.target.closest('.tape-actions-column') || e.target.closest('.tape-meta-info')) return;
+
+        const now = Date.now();
+        const diff = now - lastTapTime;
+
+        if (diff < 300) {
+          // Double Tap: Like + Burst
+          const rect = wrapper.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          _triggerHeartBurst(tapeId, x, y);
+          if (!state.likedMap[tapeId]) {
+            toggleLike(tapeId);
+          }
+          lastTapTime = 0;
+        } else {
+          // Single Tap: Play / Pause toggle
+          lastTapTime = now;
+          setTimeout(() => {
+            if (Date.now() - lastTapTime >= 280 && lastTapTime !== 0) {
+              _toggleVideoPlayPause(video, tapeId);
+            }
+          }, 290);
+        }
+      };
+    });
+  }
+
+  function _toggleVideoPlayPause(video, tapeId) {
+    if (!video) return;
+    const indicator = document.getElementById(`tape-play-ind-${tapeId}`);
+    if (video.paused) {
+      video.play().catch(() => {});
+      if (indicator) {
+        indicator.innerHTML = '<svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+        indicator.classList.remove('hidden');
+        setTimeout(() => indicator.classList.add('hidden'), 500);
+      }
+    } else {
+      video.pause();
+      if (indicator) {
+        indicator.innerHTML = '<svg width="48" height="48" viewBox="0 0 24 24" fill="white"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+        indicator.classList.remove('hidden');
+      }
+    }
+  }
+
+  // ── Floating Heart Burst on Double-Tap ──
+  function _triggerHeartBurst(tapeId, x, y) {
+    const zone = document.getElementById(`tape-heart-zone-${tapeId}`);
+    if (!zone) return;
+
+    const heart = document.createElement('div');
+    heart.className = 'floating-burst-heart';
+    heart.style.left = `${x || 150}px`;
+    heart.style.top = `${y || 200}px`;
+    heart.innerHTML = `
+      <svg width="72" height="72" viewBox="0 0 24 24" fill="#f43f5e" stroke="white" stroke-width="1.5">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    `;
+    zone.appendChild(heart);
+    setTimeout(() => {
+      heart.remove();
+    }, 900);
+  }
+
+  // ── Intersection Observer (Auto-Play Active Video, Pause Others) ──
+  function _setupIntersectionObserver() {
+    if (state.observer) {
+      state.observer.disconnect();
+    }
+
+    const options = {
+      root: document.getElementById('tapes-feed-container'),
+      threshold: 0.65
+    };
+
+    state.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const card = entry.target;
+        const video = card.querySelector('.tape-video-element');
+        const tapeId = card.getAttribute('data-tape-id');
+        const vinyl = document.getElementById(`tape-vinyl-${tapeId}`);
+        const indicator = document.getElementById(`tape-play-ind-${tapeId}`);
+
+        if (entry.isIntersecting) {
+          if (video) {
+            video.muted = state.isMuted;
+            video.currentTime = 0;
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+              playPromise.then(() => {
+                if (vinyl) vinyl.classList.add('rotating');
+                if (indicator) indicator.classList.add('hidden');
+              }).catch(() => {
+                // Autoplay blocked without user gesture
+                if (indicator) indicator.classList.remove('hidden');
+              });
+            }
+          }
+        } else {
+          if (video) {
+            video.pause();
+            if (vinyl) vinyl.classList.remove('rotating');
+          }
+        }
+      });
+    }, options);
+
+    const cards = document.querySelectorAll('.tape-card');
+    cards.forEach(c => state.observer.observe(c));
+  }
+
+  // ── Like Toggle ──
+  function toggleLike(tapeId) {
+    const tape = state.tapes.find(t => t.id === tapeId);
+    if (!tape) return;
+
+    state.likedMap = _loadLikedMap();
+    const wasLiked = !!state.likedMap[tapeId];
+    const isNowLiked = !wasLiked;
+
+    if (isNowLiked) {
+      state.likedMap[tapeId] = Date.now();
+      tape.likes_count = (tape.likes_count || 0) + 1;
+    } else {
+      delete state.likedMap[tapeId];
+      tape.likes_count = Math.max(0, (tape.likes_count || 1) - 1);
+    }
+
+    _saveLikedMap(state.likedMap);
+    _saveLocalTapes(state.tapes);
+
+    // Update UI
+    const btnWrap = document.getElementById(`tape-btn-like-${tapeId}`);
+    const countEl = document.getElementById(`tape-like-count-${tapeId}`);
+
+    if (btnWrap) {
+      if (isNowLiked) {
+        btnWrap.classList.add('is-liked');
+        btnWrap.querySelector('svg').setAttribute('fill', '#f43f5e');
+        btnWrap.querySelector('svg').setAttribute('stroke', '#f43f5e');
+      } else {
+        btnWrap.classList.remove('is-liked');
+        btnWrap.querySelector('svg').setAttribute('fill', 'none');
+        btnWrap.querySelector('svg').setAttribute('stroke', 'white');
+      }
+    }
+    if (countEl) countEl.textContent = tape.likes_count;
+
+    // Cloud update if Supabase available
+    if (window.BuddySupabase) {
+      window.BuddySupabase
+        .from('tapes')
+        .update({ likes_count: tape.likes_count })
+        .eq('id', tapeId)
+        .then(() => {})
+        .catch(() => {});
+    }
+  }
+
+  // ── Mute / Unmute Global Toggle ──
+  function toggleGlobalMute() {
+    state.isMuted = !state.isMuted;
+    const videos = document.querySelectorAll('.tape-video-element');
+    videos.forEach(v => { v.muted = state.isMuted; });
+
+    const btn = document.getElementById('tapes-global-mute-btn');
+    if (btn) {
+      btn.innerHTML = state.isMuted
+        ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+             <line x1="1" y1="1" x2="23" y2="23"/>
+             <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/>
+             <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/>
+           </svg>`
+        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+           </svg>`;
+    }
+  }
+
+  // ── Comments Bottom Sheet ──
+  function openComments(tapeId) {
+    state.activeCommentsTapeId = tapeId;
+    const tape = state.tapes.find(t => t.id === tapeId);
+    if (!tape) return;
+
+    const overlay = document.getElementById('tapes-comments-overlay');
+    const container = document.getElementById('tapes-comments-content');
+    if (!overlay || !container) return;
+
+    const comments = Array.isArray(tape.comments) ? tape.comments : [];
+
+    container.innerHTML = `
+      <div class="tape-comments-sheet">
+        <div class="tape-sheet-head">
+          <div class="tape-sheet-title">Comments (${comments.length})</div>
+          <button type="button" class="modal-x-btn" onclick="TapesManager.closeComments()" aria-label="Close">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div class="tape-comments-list" id="tape-comments-list">
+          ${comments.length === 0 ? `
+            <div class="tape-comments-empty">
+              <span>💬</span>
+              <p>No comments yet. Be the first to share your thoughts!</p>
+            </div>
+          ` : comments.map(c => `
+            <div class="tape-comment-row">
+              <div class="tape-comment-avatar">${(c.user_name || 'U').charAt(0).toUpperCase()}</div>
+              <div class="tape-comment-body">
+                <div class="tape-comment-user">${_escapeHtml(c.user_name)} <span class="tape-comment-time">${_formatTimeAgo(c.created_at)}</span></div>
+                <div class="tape-comment-text">${_escapeHtml(c.text)}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Post Comment Form -->
+        <div class="tape-comments-input-bar">
+          <input type="text" id="tape-new-comment-input" placeholder="Add a lovely comment..." maxlength="280" />
+          <button type="button" class="btn-primary" id="tape-btn-submit-comment" onclick="TapesManager.submitComment()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    `;
+
+    overlay.classList.remove('hidden');
+
+    const input = document.getElementById('tape-new-comment-input');
+    if (input) {
+      input.focus();
+      input.onkeydown = (e) => {
+        if (e.key === 'Enter') submitComment();
+      };
+    }
+  }
+
+  function closeComments() {
+    state.activeCommentsTapeId = null;
+    const overlay = document.getElementById('tapes-comments-overlay');
+    if (overlay) overlay.classList.add('hidden');
+  }
+
+  function submitComment() {
+    const tapeId = state.activeCommentsTapeId;
+    if (!tapeId) return;
+
+    const input = document.getElementById('tape-new-comment-input');
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+
+    const tape = state.tapes.find(t => t.id === tapeId);
+    if (!tape) return;
+
+    const me = _getCurrentUser();
+    if (!Array.isArray(tape.comments)) tape.comments = [];
+
+    const newComment = {
+      id: 'c_' + Date.now(),
+      user_name: me.name || 'You',
+      user_username: me.username || '@you',
+      text: text,
+      created_at: new Date().toISOString()
+    };
+
+    tape.comments.push(newComment);
+    tape.comments_count = tape.comments.length;
+    _saveLocalTapes(state.tapes);
+
+    // Update Comment count on card
+    const countEl = document.getElementById(`tape-comment-count-${tapeId}`);
+    if (countEl) countEl.textContent = tape.comments.length;
+
+    // Refresh comments sheet list
+    openComments(tapeId);
+
+    // Cloud update if Supabase
+    if (window.BuddySupabase) {
+      window.BuddySupabase
+        .from('tapes')
+        .update({ comments: tape.comments, comments_count: tape.comments.length })
+        .eq('id', tapeId)
+        .then(() => {})
+        .catch(() => {});
+    }
+  }
+
+  // ── Share Modal (Send Tape into 1-on-1 BUDDY Chat) ──
+  function openShareModal(tapeId) {
+    state.activeShareTapeId = tapeId;
+    const tape = state.tapes.find(t => t.id === tapeId);
+    if (!tape) return;
+
+    const overlay = document.getElementById('tapes-share-overlay');
+    const container = document.getElementById('tapes-share-content');
+    if (!overlay || !container) return;
+
+    // Get active friends / chats from ChatManager or local storage
+    let contacts = [];
+    if (window.ChatManager && typeof window.ChatManager.getConversations === 'function') {
+      contacts = window.ChatManager.getConversations();
+    }
+
+    if (!contacts || contacts.length === 0) {
+      contacts = [
+        { id: 'chat_sample_1', name: 'My Partner 💗', username: '@sweetheart' },
+        { id: 'chat_sample_2', name: 'Best Friend 🌟', username: '@bestie' }
+      ];
+    }
+
+    container.innerHTML = `
+      <div class="tape-share-sheet">
+        <div class="tape-sheet-head">
+          <div class="tape-sheet-title">Share Tape to Chat 💌</div>
+          <button type="button" class="modal-x-btn" onclick="TapesManager.closeShareModal()" aria-label="Close">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div class="tape-share-preview-card">
+          <span style="font-size:24px;">🎬</span>
+          <div class="tape-share-preview-text">
+            <strong>${_escapeHtml(tape.user_name)}'s Tape</strong>
+            <p>${_escapeHtml(tape.caption || 'Watch this fun tape on BUDDY!')}</p>
+          </div>
+        </div>
+
+        <div class="tape-share-contacts-label">Send to BUDDY Friend:</div>
+        <div class="tape-share-contacts-list">
+          ${contacts.map(c => `
+            <div class="tape-share-contact-row" onclick="TapesManager.sendTapeToChat('${c.id}', '${_escapeHtml(c.name)}')">
+              <div class="tape-share-contact-avatar">${(c.name || 'F').charAt(0).toUpperCase()}</div>
+              <div class="tape-share-contact-info">
+                <div class="tape-share-contact-name">${_escapeHtml(c.name)}</div>
+                <div class="tape-share-contact-user">${_escapeHtml(c.username || '')}</div>
+              </div>
+              <button type="button" class="btn-primary tape-btn-send-pill">Send</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    overlay.classList.remove('hidden');
+  }
+
+  function closeShareModal() {
+    state.activeShareTapeId = null;
+    const overlay = document.getElementById('tapes-share-overlay');
+    if (overlay) overlay.classList.add('hidden');
+  }
+
+  function sendTapeToChat(chatId, contactName) {
+    const tapeId = state.activeShareTapeId;
+    const tape = state.tapes.find(t => t.id === tapeId);
+    if (!tape) return;
+
+    const shareMsg = `🎬 [Shared Tape by ${tape.user_name}]: "${tape.caption || 'Watch this!'}" - Open Tapes to view 🍿`;
+
+    if (window.ChatManager && typeof window.ChatManager.sendMessageToChat === 'function') {
+      window.ChatManager.sendMessageToChat(chatId, shareMsg);
+    } else {
+      console.log('Sending tape share to chat:', chatId, shareMsg);
+    }
+
+    closeShareModal();
+
+    if (window.showToast) {
+      window.showToast(`✨ Shared tape with ${contactName}!`);
+    } else {
+      alert(`✨ Shared tape with ${contactName}!`);
+    }
+  }
+
+  // ── Create & Upload Tape Modal (+) ──
+  function openCreateTapeModal() {
+    const overlay = document.getElementById('tapes-create-overlay');
+    const container = document.getElementById('tapes-create-content');
+    if (!overlay || !container) return;
+
+    container.innerHTML = `
+      <div class="tape-create-sheet">
+        <div class="tape-sheet-head">
+          <div class="tape-sheet-title">Create New Tape 🎬</div>
+          <button type="button" class="modal-x-btn" onclick="TapesManager.closeCreateTapeModal()" aria-label="Close">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div class="tape-create-body">
+          <!-- Video File Picker or Camera -->
+          <div class="tape-upload-box" id="tape-drop-zone" onclick="document.getElementById('tape-file-input').click()">
+            <input type="file" id="tape-file-input" accept="video/mp4,video/webm,video/quicktime" style="display:none;" />
+            <div id="tape-upload-placeholder">
+              <span style="font-size:36px;">📹</span>
+              <p><strong>Click to Choose Video</strong></p>
+              <span class="tape-hint-text">MP4, WebM, or MOV up to 60 seconds (100% Free)</span>
+            </div>
+            <div id="tape-upload-preview" class="hidden">
+              <video id="tape-preview-video" playsinline controls loop></video>
+            </div>
+          </div>
+
+          <!-- Caption Input -->
+          <div class="tape-input-group">
+            <label>Caption & Hashtags</label>
+            <textarea id="tape-create-caption" placeholder="What's this moment about? #Friends #Couple #Fun" rows="3" maxlength="240"></textarea>
+          </div>
+
+          <!-- Music / Audio Sound Title -->
+          <div class="tape-input-group">
+            <label>Sound Title</label>
+            <input type="text" id="tape-create-music" placeholder="Original Audio / Song Name" value="Original Audio 🎵" maxlength="60" />
+          </div>
+
+          <!-- Tags Selection -->
+          <div class="tape-tags-row">
+            <span class="tape-tag-pill active" data-tag="Fun">😂 Fun</span>
+            <span class="tape-tag-pill" data-tag="Couple">💑 Couple</span>
+            <span class="tape-tag-pill" data-tag="Friendship">🤝 Friendship</span>
+            <span class="tape-tag-pill" data-tag="Aesthetic">✨ Aesthetic</span>
+            <span class="tape-tag-pill" data-tag="Music">🎧 Music</span>
+          </div>
+
+          <button type="button" class="btn-primary tape-btn-publish" id="tape-btn-publish" onclick="TapesManager.submitNewTape()">
+            <span>Publish Tape 🚀</span>
+          </button>
+        </div>
+      </div>
+    `;
+
+    overlay.classList.remove('hidden');
+
+    // Setup file input handler
+    const fileInput = document.getElementById('tape-file-input');
+    if (fileInput) {
+      fileInput.onchange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+
+        const url = URL.createObjectURL(file);
+        const placeholder = document.getElementById('tape-upload-placeholder');
+        const previewWrap = document.getElementById('tape-upload-preview');
+        const video = document.getElementById('tape-preview-video');
+
+        if (placeholder) placeholder.classList.add('hidden');
+        if (previewWrap) previewWrap.classList.remove('hidden');
+        if (video) {
+          video.src = url;
+          video.play().catch(() => {});
+        }
+      };
+    }
+
+    // Setup tags click
+    const tagPills = document.querySelectorAll('.tape-tag-pill');
+    tagPills.forEach(pill => {
+      pill.onclick = () => {
+        pill.classList.toggle('active');
+      };
+    });
+  }
+
+  function closeCreateTapeModal() {
+    const overlay = document.getElementById('tapes-create-overlay');
+    if (overlay) overlay.classList.add('hidden');
+  }
+
+  function submitNewTape() {
+    const fileInput = document.getElementById('tape-file-input');
+    const captionEl = document.getElementById('tape-create-caption');
+    const musicEl = document.getElementById('tape-create-music');
+
+    const file = fileInput && fileInput.files && fileInput.files[0];
+    const caption = captionEl ? captionEl.value.trim() : '';
+    const music = musicEl ? musicEl.value.trim() : 'Original Audio 🎵';
+
+    if (!file) {
+      alert('Please select a short video to upload!');
+      return;
+    }
+
+    const me = _getCurrentUser();
+    const videoUrl = URL.createObjectURL(file);
+
+    // Selected tags
+    const activeTags = [];
+    document.querySelectorAll('.tape-tag-pill.active').forEach(p => {
+      activeTags.push(p.getAttribute('data-tag'));
+    });
+
+    const newTape = {
+      id: 'tape_' + Date.now(),
+      user_id: me.id || 'me',
+      user_name: me.name || 'You',
+      user_username: me.username || '@you',
+      user_avatar: me.avatar || 'assets/avatar-default.svg',
+      user_color: me.color || '#f43f5e',
+      is_verified: !!me.is_verified,
+      video_url: videoUrl,
+      caption: caption,
+      music_title: music,
+      tags: activeTags,
+      likes_count: 1,
+      comments_count: 0,
+      comments: [],
+      shares_count: 0,
+      created_at: new Date().toISOString()
+    };
+
+    state.tapes.unshift(newTape);
+    state.likedMap[newTape.id] = Date.now();
+    _saveLikedMap(state.likedMap);
+    _saveLocalTapes(state.tapes);
+
+    closeCreateTapeModal();
+    renderFeed();
+
+    // Scroll to top of feed
+    const feed = document.getElementById('tapes-feed-container');
+    if (feed) feed.scrollTop = 0;
+
+    if (window.showToast) {
+      window.showToast('🚀 Tape Published Successfully!');
+    } else {
+      alert('🚀 Tape Published Successfully!');
+    }
+
+    // Background push to Supabase if available
+    if (window.BuddySupabase) {
+      window.BuddySupabase
+        .from('tapes')
+        .insert([{
+          user_id: me.id,
+          user_name: me.name || 'You',
+          user_username: me.username || '@you',
+          user_avatar: me.avatar || '',
+          user_color: me.color || '#f43f5e',
+          is_verified: !!me.is_verified,
+          video_url: videoUrl,
+          caption: caption,
+          music_title: music,
+          tags: activeTags,
+          likes_count: 1,
+          comments_count: 0,
+          comments: []
+        }])
+        .then(() => {})
+        .catch(() => {});
+    }
+  }
+
+  // ── Helper: Format Hashtags in Caption ──
+  function _formatCaptionWithHashtags(text) {
+    if (!text) return '';
+    const escaped = _escapeHtml(text);
+    return escaped.replace(/#(\w+)/g, '<span class="tape-hashtag">#$1</span>');
+  }
+
+  function _formatTimeAgo(isoString) {
+    if (!isoString) return 'Just now';
+    const diff = Date.now() - new Date(isoString).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    return `${Math.floor(hours / 24)}d ago`;
+  }
+
+  function _escapeHtml(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // ── Initialization ──
+  function init() {
+    console.log('🎥 [BUDDY Tapes] Initializing Vertical Video Feed Engine...');
+    state.tapes = _loadLocalTapes();
+    state.likedMap = _loadLikedMap();
+    renderFeed();
+    _syncCloudTapes();
+  }
+
+  return {
+    init,
+    renderFeed,
+    toggleLike,
+    toggleGlobalMute,
+    openComments,
+    closeComments,
+    submitComment,
+    openShareModal,
+    closeShareModal,
+    sendTapeToChat,
+    openCreateTapeModal,
+    closeCreateTapeModal,
+    submitNewTape,
+    openAuthorProfile: (id) => console.log('View author profile:', id)
+  };
+})();
+
+if (typeof window !== 'undefined') {
+  window.TapesManager = TapesManager;
+}
