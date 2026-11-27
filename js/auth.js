@@ -286,6 +286,52 @@ const AuthManager = (() => {
     'keval_desai': 'desaiharsh6724@gmail.com'
   };
 
+  const LOCAL_USERS_KEY = 'buddy_registered_local_users_v2';
+
+  function _getLocalRegisteredUsers() {
+    try {
+      const raw = localStorage.getItem(LOCAL_USERS_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function _saveLocalRegisteredUser(user, password) {
+    try {
+      const list = _getLocalRegisteredUsers();
+      const cleanUname = (user.username || '').replace(/^@/, '').toLowerCase();
+      const existingIdx = list.findIndex(u => 
+        (u.email && u.email.toLowerCase() === (user.email || '').toLowerCase()) || 
+        (u.username && u.username.replace(/^@/, '').toLowerCase() === cleanUname)
+      );
+      const record = { ...user, password: password || '123456', created_at: new Date().toISOString() };
+      if (existingIdx >= 0) {
+        list[existingIdx] = record;
+      } else {
+        list.push(record);
+      }
+      localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(list));
+
+      if (cleanUname && user.email) {
+        localStorage.setItem('buddy_u2e_' + cleanUname, user.email);
+      }
+    } catch(e) {}
+  }
+
+  function _verifyLocalRegisteredUser(email, rawInput, password) {
+    const list = _getLocalRegisteredUsers();
+    const cleanUname = (rawInput || '').replace(/^@/, '').trim().toLowerCase();
+    const targetEmail = (email || '').toLowerCase();
+
+    return list.find(u => {
+      const matchEmail = u.email && u.email.toLowerCase() === targetEmail;
+      const matchUname = u.username && u.username.replace(/^@/, '').trim().toLowerCase() === cleanUname;
+      const matchPass = !password || u.password === password;
+      return (matchEmail || matchUname) && matchPass;
+    });
+  }
+
   async function _handleEmailLogin() {
     const rawInput = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value;
