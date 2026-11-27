@@ -11,9 +11,18 @@
   --primary-glow: rgba(255, 46, 126, 0.35);
   --text-on-primary: #FFFFFF;
 
+  /* App Dimensions & Dynamic Transforms */
+  --app-height: 100vh;
+  --tx: 0px;
+  --ty: 0px;
+  --scale: 1;
+  --rot: 0deg;
+  --accent: #FF2E7E;
+
   /* Light Theme (White theme) Tokens */
   --bg: #F8F9FE;
   --bg-card: #FFFFFF;
+  --bg-surface: #FFFFFF;
   --bg-input: #EEF0F8;
   --bg-hover: #E4E7F4;
   --bg-msg-rx: #FFFFFF;
@@ -22,6 +31,10 @@
   --text-1: #0E101E;
   --text-2: #484C6B;
   --text-3: #75799D;
+  --text-secondary: #484C6B;
+  --text-tertiary: #75799D;
+  --text-muted: #5A5E82;
+  --text-dim: #7B80A5;
 
   --border: rgba(0, 0, 0, 0.10);
   --border-soft: rgba(0, 0, 0, 0.05);
@@ -52,6 +65,7 @@
 [data-theme="light"] {
   --bg: #F8F9FE;
   --bg-card: #FFFFFF;
+  --bg-surface: #FFFFFF;
   --bg-input: #EEF0F8;
   --bg-hover: #E4E7F4;
   --bg-msg-rx: #FFFFFF;
@@ -60,6 +74,10 @@
   --text-1: #0E101E;
   --text-2: #484C6B;
   --text-3: #75799D;
+  --text-secondary: #484C6B;
+  --text-tertiary: #75799D;
+  --text-muted: #5A5E82;
+  --text-dim: #7B80A5;
 
   --border: rgba(0, 0, 0, 0.10);
   --border-soft: rgba(0, 0, 0, 0.05);
@@ -77,6 +95,7 @@
 [data-theme="dark"] {
   --bg: #090A11;
   --bg-card: rgba(17, 19, 31, 0.88);
+  --bg-surface: rgba(17, 19, 31, 0.88);
   --bg-input: rgba(25, 28, 45, 0.80);
   --bg-hover: rgba(255, 255, 255, 0.07);
   --bg-msg-rx: rgba(22, 24, 38, 0.92);
@@ -85,6 +104,10 @@
   --text-1: #F3F4FE;
   --text-2: #9DA1C2;
   --text-3: #6B6F92;
+  --text-secondary: #9DA1C2;
+  --text-tertiary: #6B6F92;
+  --text-muted: #9DA1C2;
+  --text-dim: #6B6F92;
 
   --border: rgba(255, 255, 255, 0.09);
   --border-soft: rgba(255, 255, 255, 0.05);
