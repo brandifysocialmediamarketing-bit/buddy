@@ -300,7 +300,7 @@
         </div>
       </div>
 
-      <!-- Segmented Navigation (Chats vs Tapes vs Games) -->
+      <!-- Segmented Navigation (Chats vs Tapes vs Radar vs Games) -->
       <div class="sidebar-nav-tabs">
         <button type="button" class="sidebar-tab-btn active" id="tab-chats-btn">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -309,6 +309,10 @@
         <button type="button" class="sidebar-tab-btn" id="tab-tapes-btn">
           <span style="font-size:15px;">🎥</span>
           <span>Tapes</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" id="tab-radar-btn">
+          <span style="font-size:15px;">🌐</span>
+          <span>Radar</span>
           <span class="tab-badge-new">NEW</span>
         </button>
         <button type="button" class="sidebar-tab-btn" id="tab-games-btn">
@@ -349,6 +353,41 @@
           </div>
         </div>
         <div class="tapes-feed-container" id="tapes-feed-container"></div>
+      </div>
+
+      <!-- Community Radar / World As Family Discover View -->
+      <div class="radar-view-container hidden" id="radar-hub-view">
+        <div class="radar-dish-card">
+          <div class="radar-dish-header">
+            <div class="radar-title-group">
+              <h3><span>🌐</span> World As Family Radar</h3>
+              <p>Discover real buddies nearby & globally</p>
+            </div>
+            <button type="button" class="radar-btn-broadcast" onclick="RadarManager.openBroadcastModal()">
+              <span>📡 Broadcast Vibe</span>
+            </button>
+          </div>
+
+          <div class="radar-scope-circle">
+            <div class="radar-ring r1"></div>
+            <div class="radar-ring r2"></div>
+            <div class="radar-ring r3"></div>
+            <div class="radar-crosshair-h"></div>
+            <div class="radar-crosshair-v"></div>
+            <div class="radar-sweep-hand"></div>
+            <div id="radar-blips-container"></div>
+          </div>
+
+          <div class="radar-chips-row">
+            <button type="button" class="radar-chip active" data-filter="all" onclick="RadarManager.setFilter('all')">✨ All Buddies</button>
+            <button type="button" class="radar-chip" data-filter="nearby" onclick="RadarManager.setFilter('nearby')">📍 Nearby (&lt; 3km)</button>
+            <button type="button" class="radar-chip" data-filter="couples" onclick="RadarManager.setFilter('couples')">💑 Couples</button>
+            <button type="button" class="radar-chip" data-filter="chill" onclick="RadarManager.setFilter('chill')">☕ Chill Talks</button>
+            <button type="button" class="radar-chip" data-filter="gaming" onclick="RadarManager.setFilter('gaming')">🎮 Gaming</button>
+          </div>
+        </div>
+
+        <div class="radar-buddies-list" id="radar-buddies-list"></div>
       </div>
 
       <!-- Games Library / Hub View -->
