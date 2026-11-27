@@ -1108,18 +1108,19 @@
 
   <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/theme.js?v=207"></script>
-  <script src="js/wallpaper.js?v=207"></script>
+  <script src="js/theme.js?v=208"></script>
+  <script src="js/wallpaper.js?v=208"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=207"></script>
-  <script src="js/webrtc-call.js?v=207"></script>
-  <script src="js/chat.js?v=207"></script>
-  <script src="js/auth.js?v=207"></script>
-  <script src="js/app.js?v=207"></script>
-  <script src="js/dont-block-me-game.js?v=207"></script>
-  <script src="js/truth-or-dare-data.js?v=207"></script>
-  <script src="js/truth-or-dare-game.js?v=207"></script>
-  <script src="js/stories-manager.js?v=207"></script>
+  <script src="js/supabase-config.js?v=208"></script>
+  <script src="js/webrtc-call.js?v=208"></script>
+  <script src="js/chat.js?v=208"></script>
+  <script src="js/auth.js?v=208"></script>
+  <script src="js/app.js?v=208"></script>
+  <script src="js/dont-block-me-game.js?v=208"></script>
+  <script src="js/truth-or-dare-data.js?v=208"></script>
+  <script src="js/truth-or-dare-game.js?v=208"></script>
+  <script src="js/stories-manager.js?v=208"></script>
+  <script src="js/tapes-manager.js?v=208"></script>
   <!-- Live Auto-Reload & Cloud Auto-Updater -->
   <script>
     (function () {
@@ -1150,7 +1151,7 @@
       }
 
       // 2. Production Live Cloud Auto-Updater (Detects new git deployments on mobile & web)
-      var currentVersion = 'v207';
+      var currentVersion = 'v208';
       function checkLiveDeploy() {
         try {
           fetch('/api/version?t=' + Date.now(), { cache: 'no-store' })
@@ -1177,33 +1178,54 @@
       setInterval(checkLiveDeploy, 15000);
     })();
   
-    // Games Navigation & Don't Block Me Game Launcher
+    // Navigation & View Switching (Chats vs Tapes vs Games)
     const tabChatsBtn = document.getElementById('tab-chats-btn');
+    const tabTapesBtn = document.getElementById('tab-tapes-btn');
     const tabGamesBtn = document.getElementById('tab-games-btn');
     const chatList = document.getElementById('chat-list');
+    const tapesHub = document.getElementById('tapes-hub-view');
     const gamesHub = document.getElementById('games-hub-view');
+    const storiesRailWrap = document.getElementById('stories-rail-wrap');
     const btnLaunchDbm = document.getElementById('btn-launch-dbm');
     const cardDbm = document.getElementById('card-game-dont-block-me');
 
     function switchToChatsTab() {
       if (tabChatsBtn) tabChatsBtn.classList.add('active');
+      if (tabTapesBtn) tabTapesBtn.classList.remove('active');
       if (tabGamesBtn) tabGamesBtn.classList.remove('active');
-      const storiesRailWrap = document.getElementById('stories-rail-wrap');
       if (storiesRailWrap) storiesRailWrap.classList.remove('hidden');
       if (chatList) chatList.classList.remove('hidden');
+      if (tapesHub) tapesHub.classList.add('hidden');
+      if (gamesHub) gamesHub.classList.add('hidden');
+    }
+
+    function switchToTapesTab() {
+      if (tabTapesBtn) tabTapesBtn.classList.add('active');
+      if (tabChatsBtn) tabChatsBtn.classList.remove('active');
+      if (tabGamesBtn) tabGamesBtn.classList.remove('active');
+      if (storiesRailWrap) storiesRailWrap.classList.add('hidden');
+      if (chatList) chatList.classList.add('hidden');
+      if (tapesHub) {
+        tapesHub.classList.remove('hidden');
+        if (window.TapesManager) {
+          window.TapesManager.init();
+        }
+      }
       if (gamesHub) gamesHub.classList.add('hidden');
     }
 
     function switchToGamesTab() {
       if (tabGamesBtn) tabGamesBtn.classList.add('active');
       if (tabChatsBtn) tabChatsBtn.classList.remove('active');
-      const storiesRailWrap = document.getElementById('stories-rail-wrap');
+      if (tabTapesBtn) tabTapesBtn.classList.remove('active');
       if (storiesRailWrap) storiesRailWrap.classList.add('hidden');
       if (chatList) chatList.classList.add('hidden');
+      if (tapesHub) tapesHub.classList.add('hidden');
       if (gamesHub) gamesHub.classList.remove('hidden');
     }
 
     if (tabChatsBtn) tabChatsBtn.onclick = () => switchToChatsTab();
+    if (tabTapesBtn) tabTapesBtn.onclick = () => switchToTapesTab();
     if (tabGamesBtn) tabGamesBtn.onclick = () => switchToGamesTab();
 
     if (btnLaunchDbm) {
@@ -1539,6 +1561,21 @@
   <!-- STORY VIEWER FULLSCREEN MODAL OVERLAY -->
   <div class="modal-overlay hidden" id="story-viewer-modal-overlay">
     <div id="story-viewer-content"></div>
+  </div>
+
+  <!-- TAPES COMMENTS OVERLAY (WAF Style Reels) -->
+  <div class="modal-overlay hidden" id="tapes-comments-overlay" onclick="if(event.target===this)TapesManager.closeComments()">
+    <div id="tapes-comments-content"></div>
+  </div>
+
+  <!-- TAPES SHARE OVERLAY -->
+  <div class="modal-overlay hidden" id="tapes-share-overlay" onclick="if(event.target===this)TapesManager.closeShareModal()">
+    <div id="tapes-share-content"></div>
+  </div>
+
+  <!-- TAPES CREATE / UPLOAD OVERLAY -->
+  <div class="modal-overlay hidden" id="tapes-create-overlay" onclick="if(event.target===this)TapesManager.closeCreateTapeModal()">
+    <div id="tapes-create-content"></div>
   </div>
 </body>
 
