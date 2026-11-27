@@ -12326,8 +12326,9 @@ html, body {
 /* 4. Request in-app notification styles */
 .buddy-inapp-notif.request-notif-theme {
   border: 1.5px solid rgba(236, 72, 153, 0.6) !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(236, 72, 153, 0.3) !important;
-  background: rgba(26, 20, 32, 0.96) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(236, 72, 153, 0.3) !important;
+  background: var(--bg-card) !important;
+  color: var(--text) !important;
 }
 
 .notif-tag-pill {
@@ -12357,9 +12358,9 @@ html, body {
 }
 
 .notif-review-btn {
-  background: rgba(255, 255, 255, 0.1) !important;
-  color: var(--text-2, rgba(255, 255, 255, 0.8)) !important;
-  border: 1px solid var(--border, rgba(255, 255, 255, 0.15)) !important;
+  background: var(--bg-input) !important;
+  color: var(--text-2) !important;
+  border: 1px solid var(--border) !important;
 }
 
 /* 5. Radar Simulation Button */
