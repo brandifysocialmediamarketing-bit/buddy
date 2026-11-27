@@ -10183,9 +10183,9 @@ html, body {
 
 .sv-bottom-reply-bar {
   position: absolute !important;
-  bottom: 14px !important;
-  left: 14px !important;
-  right: 14px !important;
+  bottom: max(14px, env(safe-area-inset-bottom, 14px)) !important;
+  left: max(14px, env(safe-area-inset-left, 14px)) !important;
+  right: max(14px, env(safe-area-inset-right, 14px)) !important;
   z-index: 30 !important;
   display: flex !important;
   flex-direction: column !important;
