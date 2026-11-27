@@ -225,3 +225,42 @@ create policy "Anyone can read quiz attempts"
 create policy "Creator can delete quiz attempt"
   on public.buddy_quiz_attempts for delete
   using (true);
+
+-- ========================================================
+-- 9. STORIES TABLE (24-Hour Ephemeral Moments & Statuses)
+-- ========================================================
+create table if not exists public.stories (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  user_name text not null,
+  user_username text default '',
+  user_avatar text default '',
+  user_color text default '#6366F1',
+  type text default 'text' check (type in ('text', 'photo', 'video')),
+  media_url text,
+  text_content text,
+  bg_gradient text default 'linear-gradient(135deg, #f43f5e, #8b5cf6)',
+  caption text default '',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  expires_at timestamp with time zone default (timezone('utc'::text, now()) + interval '24 hours') not null,
+  viewers jsonb default '[]'::jsonb
+);
+
+alter table public.stories enable row level security;
+
+create policy "Anyone can read active stories"
+  on public.stories for select
+  using (expires_at > timezone('utc'::text, now()));
+
+create policy "Authenticated users can post stories"
+  on public.stories for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update their own stories"
+  on public.stories for update
+  using (auth.uid() = user_id);
+
+create policy "Users can delete their own stories"
+  on public.stories for delete
+  using (auth.uid() = user_id);
+
