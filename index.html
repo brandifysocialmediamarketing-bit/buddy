@@ -325,6 +325,9 @@
         <div class="stories-rail" id="stories-rail"></div>
       </div>
 
+      <!-- Instagram Style Message Requests Banner -->
+      <div id="chat-requests-banner" class="chat-requests-banner hidden"></div>
+
       <!-- Chats List View -->
       <div class="chat-list" id="chat-list" role="list"></div>
 
@@ -669,10 +672,47 @@
             </button>
           </div>
         </footer>
+
+        <!-- INSTAGRAM STYLE REQUEST ACTION BAR (shown when active conversation is a pending request) -->
+        <div class="chat-request-bar hidden" id="chat-request-bar">
+          <div class="request-bar-notice">
+            <div class="request-notice-title" id="request-bar-title">Message Request</div>
+            <div class="request-notice-sub" id="request-bar-sub">Do you want to let this user send you messages? They won't know you've seen it until you accept.</div>
+          </div>
+          <div class="request-bar-actions">
+            <button type="button" class="request-btn request-btn-block" id="req-btn-block" title="Block user">Block</button>
+            <button type="button" class="request-btn request-btn-delete" id="req-btn-delete" title="Delete request">Delete</button>
+            <button type="button" class="request-btn request-btn-accept" id="req-btn-accept" title="Accept request">Accept</button>
+          </div>
+        </div>
       </div>
     </main>
   </div><!-- /app-screen -->
 
+
+  <!-- INSTAGRAM STYLE MESSAGE REQUESTS MODAL -->
+  <div class="modal-overlay hidden" id="chat-requests-overlay">
+    <div class="modal-sheet requests-modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:18px;">📩</span>
+          <h2>Message Requests</h2>
+        </div>
+        <button class="modal-x-btn" id="close-requests-modal-btn" aria-label="Close" onclick="ChatManager.closeRequestsModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="requests-info-banner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span>Open a request to see the message. They won't know you've seen it until you accept.</span>
+      </div>
+      <div class="modal-list requests-list-wrap" id="requests-list-container"></div>
+    </div>
+  </div>
 
   <!-- NEW CHAT MODAL -->
   <div class="modal-overlay hidden" id="new-chat-overlay">
