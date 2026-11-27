@@ -1,4 +1,4 @@
-﻿-- ========================================================
+-- ========================================================
 -- BUDDY – Supabase Database Schema
 -- Complete schema for private 1-to-1 chat app
 -- Run this in your Supabase SQL Editor:
