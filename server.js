@@ -99,7 +99,7 @@ function resolveImageUrl(rawUrl, callback, depth = 0) {
 }
 
 const isVercel = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
-const APP_VERSION = 'v209';
+const APP_VERSION = 'v210';
 const BUILD_TIMESTAMP = Date.now();
 
 // Live Reload Clients
