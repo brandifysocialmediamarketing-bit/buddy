@@ -724,8 +724,7 @@ const ChatManager = (() => {
     const pinTag = document.getElementById('chat-pinned-tag');
     if (pinTag) pinTag.classList.toggle('hidden', !conv.pinned || conv.isAI);
 
-    const st = document.getElementById('chat-peer-status');
-    if (st) st.textContent = conv.isAI ? 'Always Online • AI Companion' : (conv.status || 'Active now');
+    _updateHeaderActiveStatus();
 
     // Respect user's active theme or custom chat color without overwriting
     if (conv.customColor) {
