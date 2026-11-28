@@ -18,7 +18,7 @@ const TapesManager = (() => {
   const STORAGE_KEY = 'buddy_tapes_store_v2';
   const LIKES_KEY = 'buddy_tapes_likes_v1';
 
-  // Starter curated aesthetic, couple, travel & fun tapes
+  // Starter curated aesthetic, couple, travel & fun tapes (100% reliable local & verified media)
   const INITIAL_TAPES = [
     {
       id: 'tape-1',
@@ -28,7 +28,7 @@ const TapesManager = (() => {
       user_avatar: 'assets/avatar-default.svg',
       user_color: '#f43f5e',
       is_verified: true,
-      video_url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+      video_url: 'assets/tapes/tape-bloom.mp4',
       caption: 'Nature blooms when you find your true circle 🌸✨ Best moments with real friends! #FriendshipGoals #BUDDY',
       music_title: 'Chill Lo-Fi Sunset Beat 🎧',
       tags: ['Friendship', 'Vibes', 'Nature'],
@@ -49,7 +49,7 @@ const TapesManager = (() => {
       user_avatar: 'assets/avatar-default.svg',
       user_color: '#8b5cf6',
       is_verified: true,
-      video_url: 'https://www.w3schools.com/html/mov_bbb.mp4',
+      video_url: 'assets/tapes/tape-animation.mp4',
       caption: 'Late night chats & laughing at silly memories 🐰🍿 Who else relates? Tag your favorite person! #LateNight #BUDDY',
       music_title: 'Acoustic Melody - Late Night ✨',
       tags: ['Couple', 'Fun', 'LateNight'],
@@ -69,14 +69,14 @@ const TapesManager = (() => {
       user_avatar: 'assets/avatar-default.svg',
       user_color: '#0ea5e9',
       is_verified: true,
-      video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      video_url: 'assets/tapes/tape-ocean.mp4',
       caption: 'Chasing sunsets with good music and best friends 🚗🌅 Life hits differently in golden hour! #RoadTrip #SunsetVibes #BUDDY',
       music_title: 'Golden Hour Acoustic - Lo-Fi Chill 🎶',
       tags: ['Travel', 'RoadTrip', 'Sunset'],
       likes_count: 584,
       comments_count: 48,
       comments: [
-        { id: 'c-4', user_name: 'Tanvi Shah', user_username: '@tanvi', text: 'Where is this road trip?! Stunning views 🌄', created_at: new Date(Date.now() - 10800000).toISOString() }
+        { id: 'c-4', user_name: 'Tanvi Shah', user_username: '@tanvi', text: 'Where is this road trip?! Stunning ocean views 🌊', created_at: new Date(Date.now() - 10800000).toISOString() }
       ],
       shares_count: 92,
       created_at: new Date(Date.now() - 18000000).toISOString()
@@ -84,19 +84,19 @@ const TapesManager = (() => {
     {
       id: 'tape-4',
       user_id: 'creator-ananya',
-      user_name: 'Ananya & Milo 🐾',
+      user_name: 'Ananya Sharma',
       user_username: '@ananya_pets',
       user_avatar: 'assets/avatar-default.svg',
       user_color: '#10b981',
       is_verified: true,
-      video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-      caption: 'When your pup refuses to wake up on Sunday morning 😂🐶 Who else has a lazy buddy like Milo? #DogLife #CuteMoments',
-      music_title: 'Sunny Sunday - Happy Whistle 🌸',
-      tags: ['Pets', 'Cute', 'Humor'],
+      video_url: 'assets/tapes/tape-nature.mp4',
+      caption: 'Deep calm blue waters 🪼✨ Take a deep breath and just float through life. Who else loves the sea? #Peace #NatureLovers',
+      music_title: 'Ocean Deep Echoes - Ambient Chill 🌸',
+      tags: ['Nature', 'Peace', 'Calm'],
       likes_count: 890,
       comments_count: 76,
       comments: [
-        { id: 'c-5', user_name: 'Rohan Mehra', user_username: '@rohan_m', text: 'Milo is an absolute cutie pie 🐶❤️', created_at: new Date(Date.now() - 7200000).toISOString() }
+        { id: 'c-5', user_name: 'Rohan Mehra', user_username: '@rohan_m', text: 'This is the most satisfying video ever 🪼❤️', created_at: new Date(Date.now() - 7200000).toISOString() }
       ],
       shares_count: 145,
       created_at: new Date(Date.now() - 21600000).toISOString()
@@ -109,77 +109,17 @@ const TapesManager = (() => {
       user_avatar: 'assets/avatar-default.svg',
       user_color: '#ec4899',
       is_verified: true,
-      video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
-      caption: '3 AM lo-fi beats cooking in the studio 🎧✨ Drop a ⚡ if you are a midnight music lover! #LoFiBeats #ProducerLife',
-      music_title: 'Cyberpunk Phonk - Neon Nights ⚡',
-      tags: ['Music', 'LoFi', 'LateNight'],
+      video_url: 'assets/tapes/tape-adventure.mp4',
+      caption: 'High in the peaks chasing the golden trail 🏔️⚡ Drop a ⚡ if you are ready for a roadtrip this weekend! #Adventure #Mountains',
+      music_title: 'Cinematic Mountain Trails - Epic Beat ⚡',
+      tags: ['Adventure', 'Travel', 'Cinematic'],
       likes_count: 672,
       comments_count: 53,
       comments: [
-        { id: 'c-6', user_name: 'Karan Joshi', user_username: '@karan_j', text: 'This bassline is insane 🔥 Need the full track!', created_at: new Date(Date.now() - 4800000).toISOString() }
+        { id: 'c-6', user_name: 'Karan Joshi', user_username: '@karan_j', text: 'The visuals are next level 🔥 Where was this filmed?', created_at: new Date(Date.now() - 4800000).toISOString() }
       ],
       shares_count: 110,
       created_at: new Date(Date.now() - 25200000).toISOString()
-    },
-    {
-      id: 'tape-6',
-      user_id: 'creator-simran',
-      user_name: 'Simran Kaur ☕',
-      user_username: '@simran_aesthetic',
-      user_avatar: 'assets/avatar-default.svg',
-      user_color: '#f59e0b',
-      is_verified: true,
-      video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
-      caption: 'Found the coziest hidden cafe in the city ☕ Rainy day + iced latte + good conversation = therapy 🌧️✨ #CafeVibes #Cozy',
-      music_title: 'Coffee & Raindrops - Soft Piano 🎹',
-      tags: ['Aesthetic', 'Cafe', 'Chill'],
-      likes_count: 735,
-      comments_count: 61,
-      comments: [
-        { id: 'c-7', user_name: 'Sneha Verma', user_username: '@snehav', text: 'Adding this to my weekend cafe hopping list! ☕', created_at: new Date(Date.now() - 3600000).toISOString() }
-      ],
-      shares_count: 128,
-      created_at: new Date(Date.now() - 28800000).toISOString()
-    },
-    {
-      id: 'tape-7',
-      user_id: 'creator-tanya',
-      user_name: 'Rahul & Tanya 🥞',
-      user_username: '@rahultanya_couple',
-      user_avatar: 'assets/avatar-default.svg',
-      user_color: '#e11d48',
-      is_verified: true,
-      video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
-      caption: 'Tried making pancakes at 1 AM... disaster turned delicious! 🥞🍓 Rate our cooking skills 1-10! #CoupleGoals #LateNightSnack',
-      music_title: 'Sweet Honey - Ukulele Rhythm 🍯',
-      tags: ['Couple', 'Foodie', 'Fun'],
-      likes_count: 945,
-      comments_count: 82,
-      comments: [
-        { id: 'c-8', user_name: 'Vikram Singh', user_username: '@vikram', text: '10/10 for the midnight effort haha 😂🥞', created_at: new Date(Date.now() - 1800000).toISOString() }
-      ],
-      shares_count: 194,
-      created_at: new Date(Date.now() - 32400000).toISOString()
-    },
-    {
-      id: 'tape-8',
-      user_id: 'creator-samar',
-      user_name: 'Samar Studio 🌃',
-      user_username: '@samar_films',
-      user_avatar: 'assets/avatar-default.svg',
-      user_color: '#3b82f6',
-      is_verified: true,
-      video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
-      caption: 'The city never truly sleeps when you are with the right people 🏙️💫 Which city skyline do you love the most? #NightDrive #CityVibe',
-      music_title: 'Midnight City Drive - Synthwave Wave 🌙',
-      tags: ['CityLights', 'NightDrive', 'Vibes'],
-      likes_count: 1120,
-      comments_count: 94,
-      comments: [
-        { id: 'c-9', user_name: 'Pooja Hegde', user_username: '@pooja_h', text: 'Those drone shots are breathtaking ✨', created_at: new Date(Date.now() - 900000).toISOString() }
-      ],
-      shares_count: 230,
-      created_at: new Date(Date.now() - 36000000).toISOString()
     }
   ];
 
