@@ -1838,7 +1838,31 @@ const ChatManager = (() => {
     }
 
     infoBtn.addEventListener('click', _openDetails);
-    if (peerClick) peerClick.addEventListener('click', _openDetails);
+    if (peerClick) {
+      peerClick.addEventListener('click', () => {
+        if (!activeConvId) return;
+        const conv = conversations.find(c => c.id === activeConvId);
+        if (conv && window.ProfileManager) {
+          window.ProfileManager.openUserProfile(conv.peerId || conv.id, conv);
+        } else {
+          _openDetails();
+        }
+      });
+    }
+
+    const viewProfBtn = document.getElementById('view-profile-item');
+    if (viewProfBtn) {
+      viewProfBtn.addEventListener('click', () => {
+        document.getElementById('chat-more-drop')?.classList.add('hidden');
+        if (!activeConvId) return;
+        const conv = conversations.find(c => c.id === activeConvId);
+        if (conv && window.ProfileManager) {
+          window.ProfileManager.openUserProfile(conv.peerId || conv.id, conv);
+        } else {
+          _openDetails();
+        }
+      });
+    }
     if (closeBtn) closeBtn.addEventListener('click', () => overlay.classList.add('hidden'));
 
     if (saveNickBtn) saveNickBtn.addEventListener('click', () => {
