@@ -12031,7 +12031,7 @@ html, body {
 /* 6. Tablet Optimization (769px to 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
   .sidebar {
-    width: 320px !important;
+    width: 340px !important;
     flex-shrink: 0 !important;
   }
 
@@ -12043,7 +12043,7 @@ html, body {
 /* 7. Desktop Mode (>= 1025px) */
 @media (min-width: 1025px) {
   .sidebar {
-    width: 350px !important;
+    width: clamp(380px, 26vw, 440px) !important;
     flex-shrink: 0 !important;
   }
 
