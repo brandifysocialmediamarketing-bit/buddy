@@ -12,7 +12,14 @@
   --text-on-primary: #FFFFFF;
 
   /* App Dimensions & Dynamic Transforms */
-  --app-height: 100vh;
+  --app-vh: 100dvh;
+  --app-vw: 100vw;
+  --app-height: var(--app-vh, 100dvh);
+  --keyboard-height: 0px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
   --tx: 0px;
   --ty: 0px;
   --scale: 1;
