@@ -41,7 +41,7 @@ const ChatManager = (() => {
 
   let _isInitialized = false;
 
-  
+
   // In-App Notification Toast (supports Instagram-style message & friend requests)
   function _showInAppNotification(conv, text, isRequest) {
     let banner = document.getElementById('buddy-inapp-notif');
@@ -127,7 +127,7 @@ const ChatManager = (() => {
         osc.start();
         osc.stop(ctx.currentTime + 0.36);
       }
-    } catch(e) {}
+    } catch (e) { }
   }
 
   // Handle global incoming realtime messages
@@ -192,7 +192,7 @@ const ChatManager = (() => {
       _isInitialized = true;
       _initConversations();
       _saveCachedConversations();
-    _renderChatList();
+      _renderChatList();
       _bindEvents();
       _bindComposer();
       _bindReactionsAndDoubleTap();
@@ -209,7 +209,7 @@ const ChatManager = (() => {
       }
     } else {
       _saveCachedConversations();
-    _renderChatList();
+      _renderChatList();
     }
 
     // Sync cloud conversations for real users
@@ -257,7 +257,7 @@ const ChatManager = (() => {
           lastMsgTime: c.lastMsgTime || ''
         }));
       localStorage.setItem('buddy_cached_convs_' + currentUser.id, JSON.stringify(toCache));
-    } catch(e) {}
+    } catch (e) { }
   }
 
   function _initConversations() {
@@ -271,10 +271,10 @@ const ChatManager = (() => {
             cached.forEach(c => {
               const isFake = FAKE_BUDDY_IDS.has(c.id) || FAKE_BUDDY_IDS.has(c.userId) || (!c.isAI && FAKE_BUDDY_NAMES.has(c.name));
               const isRemoved = isFake ||
-                                localStorage.getItem('buddy_removed_conv_' + c.id + '_' + currentUser.id) === 'true' ||
-                                (c.userId && localStorage.getItem('buddy_removed_peer_' + c.userId + '_' + currentUser.id) === 'true') ||
-                                localStorage.getItem('buddy_declined_req_' + c.id + '_' + currentUser.id) === 'true' ||
-                                (c.userId && localStorage.getItem('buddy_blocked_' + c.userId) === 'true');
+                localStorage.getItem('buddy_removed_conv_' + c.id + '_' + currentUser.id) === 'true' ||
+                (c.userId && localStorage.getItem('buddy_removed_peer_' + c.userId + '_' + currentUser.id) === 'true') ||
+                localStorage.getItem('buddy_declined_req_' + c.id + '_' + currentUser.id) === 'true' ||
+                (c.userId && localStorage.getItem('buddy_blocked_' + c.userId) === 'true');
               if (!isRemoved) {
                 c.messages = c.messages || [];
                 c.isAI = false;
@@ -285,7 +285,7 @@ const ChatManager = (() => {
             });
           }
         }
-      } catch(e) {}
+      } catch (e) { }
     }
     // Strict prune: Remove any fake friends from memory and cache
     conversations = conversations.filter(c => c.isAI || (!FAKE_BUDDY_IDS.has(c.id) && !FAKE_BUDDY_IDS.has(c.userId) && !FAKE_BUDDY_NAMES.has(c.name)));
@@ -333,7 +333,7 @@ const ChatManager = (() => {
 
         // Skip if marked as removed by user
         const isRemoved = localStorage.getItem('buddy_removed_conv_' + item.conversation_id + '_' + currentUser.id) === 'true' ||
-                          (item.peer && localStorage.getItem('buddy_removed_peer_' + item.peer.id + '_' + currentUser.id) === 'true');
+          (item.peer && localStorage.getItem('buddy_removed_peer_' + item.peer.id + '_' + currentUser.id) === 'true');
         let existing = conversations.find(c => c.id === item.conversation_id || c.userId === item.peer.id);
         if (isRemoved) {
           if (existing) {
@@ -401,7 +401,7 @@ const ChatManager = (() => {
       if (changed || !isSilent) {
         _saveCachedConversations();
         _saveCachedConversations();
-    _renderChatList();
+        _renderChatList();
       }
     } catch (err) {
       console.warn('[BUDDY] _syncConversationsFromSupabase error:', err);
@@ -465,7 +465,7 @@ const ChatManager = (() => {
             if (hasNew) {
               _renderMessages(conv);
               _saveCachedConversations();
-    _renderChatList();
+              _renderChatList();
             }
           }
         }
@@ -474,7 +474,7 @@ const ChatManager = (() => {
   }
 
   /* ── CHAT LIST RENDERING ── */
-  async function _renderChatList(filter) {
+  function _renderChatList(filter) {
     const list = document.getElementById('chat-list');
     if (!list) return;
     list.innerHTML = '';
@@ -529,11 +529,11 @@ const ChatManager = (() => {
         const rawUsers = await BuddySupabase.searchProfiles(q, currentUser?.id);
         if (Array.isArray(rawUsers)) {
           userMatches = rawUsers.filter(u => {
-            const alreadyInConvs = conversations.some(c => c.userId === u.id || (c.username && c.username.replace(/^@/,'').toLowerCase() === (u.username||'').replace(/^@/,'').toLowerCase()));
+            const alreadyInConvs = conversations.some(c => c.userId === u.id || (c.username && c.username.replace(/^@/, '').toLowerCase() === (u.username || '').replace(/^@/, '').toLowerCase()));
             return !alreadyInConvs && !FAKE_BUDDY_IDS.has(u.id);
           });
         }
-      } catch(e) {}
+      } catch (e) { }
     }
 
     if (q.length >= 1 && filtered.length > 0 && userMatches.length > 0) {
@@ -741,7 +741,7 @@ const ChatManager = (() => {
         const reqSub = document.getElementById('request-bar-sub');
         if (reqTitle) reqTitle.textContent = `${displayName} wants to send you a message`;
         if (reqSub) reqSub.textContent = `Do you want to let ${_esc(displayName)} send you messages? They won't know you've seen it until you accept.`;
-        
+
         const btnBlock = document.getElementById('req-btn-block');
         const btnDelete = document.getElementById('req-btn-delete');
         const btnAccept = document.getElementById('req-btn-accept');
@@ -834,7 +834,7 @@ const ChatManager = (() => {
 
       // Supabase Realtime Channel
       if (currentRealtimeSub) {
-        try { currentRealtimeSub.unsubscribe(); } catch(e) {}
+        try { currentRealtimeSub.unsubscribe(); } catch (e) { }
       }
       currentRealtimeSub = BuddySupabase.subscribeToMessages(conv.id, (newMsg) => {
         if (newMsg && newMsg.conversation_id === conv.id) {
@@ -1100,7 +1100,7 @@ const ChatManager = (() => {
       if (anchor) {
         try {
           anchor.scrollIntoView({ block: 'end', behavior: smooth ? 'smooth' : 'auto' });
-        } catch(e) {}
+        } catch (e) { }
       }
     };
 
@@ -1247,7 +1247,7 @@ const ChatManager = (() => {
         _lastSendTap = now;
         _sendMessage();
         if (inp && document.activeElement !== inp) {
-          try { inp.focus(); } catch (err) {}
+          try { inp.focus(); } catch (err) { }
         }
       };
 
@@ -1272,7 +1272,7 @@ const ChatManager = (() => {
         _sendDirectMessage('❤️', 'text');
         showToast('❤️ Sent');
         if (inp) {
-          try { inp.focus(); } catch (err) {}
+          try { inp.focus(); } catch (err) { }
         }
         setTimeout(() => { _heartSending = false; }, 800);
       };
@@ -1362,7 +1362,7 @@ const ChatManager = (() => {
       if (micBtn) micBtn.classList.remove('hidden');
 
       if (inp && document.activeElement !== inp) {
-        try { inp.focus(); } catch (err) {}
+        try { inp.focus(); } catch (err) { }
       }
     } catch (err) {
       console.error('[BUDDY] _sendMessage error:', err);
@@ -1446,7 +1446,7 @@ const ChatManager = (() => {
       conv.messages.push(aiMsg);
       _renderMessages(conv);
       _saveCachedConversations();
-    _renderChatList();
+      _renderChatList();
 
       if (statusEl) statusEl.textContent = 'Online • AI Companion';
     }, 1100);
@@ -1595,7 +1595,7 @@ const ChatManager = (() => {
     });
   }
 
-  
+
   function _sendVoiceRecording() {
     if (!isRecording) return;
     const recTimer = document.getElementById('rec-timer');
@@ -1616,7 +1616,7 @@ const ChatManager = (() => {
     if (_mediaRecorder && _mediaRecorder.state !== 'inactive') {
       try {
         _mediaRecorder.stop();
-      } catch (err) {}
+      } catch (err) { }
     }
     if (isCancelled) {
       _audioChunks = [];
@@ -1904,7 +1904,7 @@ const ChatManager = (() => {
       const display = conv.nickname || conv.name;
       document.getElementById('chat-peer-name').innerHTML = _esc(display) + (conv.isAI ? '<span class="ai-badge">AI</span>' : '');
       _saveCachedConversations();
-    _renderChatList();
+      _renderChatList();
       showToast('✏️ Nickname updated to "' + display + '"');
     });
 
@@ -1914,7 +1914,7 @@ const ChatManager = (() => {
       conv.pinned = pinToggle.checked;
       document.getElementById('chat-pinned-tag')?.classList.toggle('hidden', !conv.pinned);
       _saveCachedConversations();
-    _renderChatList();
+      _renderChatList();
       showToast(conv.pinned ? '📌 Chat pinned to top!' : 'Chat unpinned');
     });
 
@@ -2077,7 +2077,7 @@ const ChatManager = (() => {
       if (window.BuddySupabase) {
         try {
           recents = await BuddySupabase.searchProfiles('a', currentUser?.id);
-        } catch(e) {}
+        } catch (e) { }
       }
       if (recents && recents.length > 0) {
         const title = document.createElement('div');
@@ -2297,11 +2297,11 @@ const ChatManager = (() => {
     }
   }
 
-  
+
   /* ── FULLSCREEN IMAGE LIGHTBOX & DOWNLOAD LOGIC ── */
   let _currentLightboxSrc = '';
 
-  
+
   /* ── AUTHENTIC INSTAGRAM-STYLE SHARE / FORWARD LOGIC ── */
   let _msgToForward = null;
   const _sentTargetIds = new Set();
@@ -2593,9 +2593,9 @@ const ChatManager = (() => {
   }
 
   function _bindEvents() {
-    
+
     // Lightbox Controls
-    
+
     // Forward Modal Controls
     document.getElementById('close-forward-btn')?.addEventListener('click', _closeForwardModal);
     document.getElementById('forward-overlay')?.addEventListener('click', (e) => {
@@ -2694,7 +2694,7 @@ const ChatManager = (() => {
         window.scrollTo(0, 0);
         document.body.scrollTop = 0;
         _saveCachedConversations();
-    _renderChatList();
+        _renderChatList();
       });
     }
 
@@ -2702,14 +2702,14 @@ const ChatManager = (() => {
     let _lastVpHeight = 0;
     function syncMobileViewport() {
       if (!document.body.classList.contains('chat-open')) return;
-      
+
       const vp = window.visualViewport;
       if (!vp) return;
 
       const h = Math.round(vp.height);
-      const isKeyboard = (document.activeElement === msgInp) || 
-                         (h < (window.screen.height - 120)) || 
-                         (window.innerHeight < (window.screen.height - 120));
+      const isKeyboard = (document.activeElement === msgInp) ||
+        (h < (window.screen.height - 120)) ||
+        (window.innerHeight < (window.screen.height - 120));
 
       document.body.classList.toggle('keyboard-visible', isKeyboard);
       document.documentElement.style.setProperty('--app-height', `${h}px`);
@@ -2792,7 +2792,7 @@ const ChatManager = (() => {
       conv.pinned = !conv.pinned;
       document.getElementById('chat-pinned-tag')?.classList.toggle('hidden', !conv.pinned || conv.isAI);
       _saveCachedConversations();
-    _renderChatList();
+      _renderChatList();
       showToast(conv.pinned ? '📌 Chat pinned to top!' : 'Chat unpinned');
     },
     getAllFriendsAndProfiles: async () => {
@@ -2853,7 +2853,7 @@ const ChatManager = (() => {
               conv = (conversations || []).find(c => c.userId === profile.id || c.id === 'c_' + profile.id);
             }
           }
-        } catch(e) {
+        } catch (e) {
           console.warn('sendMessageToChat profile resolve error:', e);
         }
       }
@@ -2885,8 +2885,8 @@ const ChatManager = (() => {
 
       if (!q) return list;
 
-      const filtered = list.filter(f => 
-        (f.name && f.name.toLowerCase().includes(q)) || 
+      const filtered = list.filter(f =>
+        (f.name && f.name.toLowerCase().includes(q)) ||
         (f.username && f.username.toLowerCase().includes(q))
       );
 
@@ -2911,7 +2911,7 @@ const ChatManager = (() => {
               }
             });
           }
-        } catch(e) {
+        } catch (e) {
           console.warn('searchAllFriends remote query error:', e);
         }
       }
@@ -2924,7 +2924,7 @@ const ChatManager = (() => {
         try {
           await _startRealChatWithUser(target.rawUser);
           conv = (conversations || []).find(c => c.userId === target.rawUser.id || c.id === 'c_' + target.rawUser.id);
-        } catch(e) {
+        } catch (e) {
           console.warn('Error starting chat for invite:', e);
         }
       }
@@ -2953,7 +2953,7 @@ const ChatManager = (() => {
         try {
           await _startRealChatWithUser(target.rawUser);
           conv = (conversations || []).find(c => c.userId === target.rawUser.id || c.id === 'c_' + target.rawUser.id);
-        } catch(e) {
+        } catch (e) {
           console.warn('Error starting chat for text:', e);
         }
       }
