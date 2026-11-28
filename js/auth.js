@@ -313,6 +313,21 @@ const AuthManager = (() => {
       }
       localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(list));
 
+      // Also sync to server-side user registry for cross-device discovery
+      try {
+        fetch('/api/users/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: user.id,
+            name: user.name,
+            username: cleanUname,
+            email: user.email,
+            avatar_color: user.color || '#6366F1'
+          })
+        }).catch(() => {});
+      } catch(e) {}
+
       if (cleanUname && user.email) {
         localStorage.setItem('buddy_u2e_' + cleanUname, user.email);
       }
