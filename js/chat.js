@@ -818,7 +818,15 @@ const ChatManager = (() => {
             conv.messages.push(incoming);
             _renderMessages(conv);
             _saveCachedConversations();
-    _renderChatList();
+            _renderChatList();
+          }
+        }
+      }, (updatedMsg) => {
+        if (updatedMsg && updatedMsg.conversation_id === conv.id) {
+          const target = conv.messages.find(m => m.id === updatedMsg.id);
+          if (target && target.seen !== updatedMsg.seen) {
+            target.seen = updatedMsg.seen;
+            _renderMessages(conv);
           }
         }
       });
