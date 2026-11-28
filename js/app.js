@@ -36,6 +36,23 @@ document.addEventListener('click', (e) => {
     document.body.classList.remove('chat-open');
   }
 
+  // CALL BUTTONS (Audio & Video Calling)
+  if (e.target.closest('#call-audio-btn')) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.WebRTCCall && typeof window.WebRTCCall.startCall === 'function') {
+      window.WebRTCCall.startCall('audio');
+    }
+  }
+
+  if (e.target.closest('#call-video-btn')) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.WebRTCCall && typeof window.WebRTCCall.startCall === 'function') {
+      window.WebRTCCall.startCall('video');
+    }
+  }
+
   // 3-DOTS MORE BUTTON CLICK (Toggle Dropdown)
   if (e.target.closest('#chat-more-btn')) {
     const drop = document.getElementById('chat-more-drop');
