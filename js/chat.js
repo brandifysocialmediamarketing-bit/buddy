@@ -13,6 +13,14 @@ const ChatManager = (() => {
   let currentRealtimeSub = null;
   let pollInterval = null;
 
+  const FAKE_BUDDY_IDS = new Set([
+    'buddy_ananya', 'buddy_rohan', 'buddy_dev', 'buddy_simran',
+    'dev-kapoor', 'ananya-sharma', 'rohan-meera', 'aarav-patel', 'simran-kaur',
+    'buddy_karan', 'c_dev-kapoor', 'c_ananya-sharma', 'c_rohan-meera', 'c_aarav-patel',
+    'act_req_dev', 'act_reel_ananya', 'act_story_rohan', 'act_like_priya'
+  ]);
+  const FAKE_BUDDY_NAMES = new Set(['Dev Kapoor', 'Ananya Sharma', 'Rohan & Meera', 'Aarav Patel', 'Simran Kaur', 'Priya Sharma']);
+
   let isRecording = false;
   let recSeconds = 0;
   let recInterval = null;
