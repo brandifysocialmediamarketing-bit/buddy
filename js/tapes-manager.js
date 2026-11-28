@@ -1348,6 +1348,9 @@ const TapesManager = (() => {
     submitNewTape,
     addReelToStory,
     focusTape,
+    scrollToNextTape,
+    scrollToPrevTape,
+    toggleTheaterMode,
     getTapes: () => state.tapes || [],
     openAuthorProfile: (id) => {
       if (window.ProfileManager) window.ProfileManager.openUserProfile(id);
