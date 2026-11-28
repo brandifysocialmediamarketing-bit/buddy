@@ -403,8 +403,10 @@ const ChatManager = (() => {
         }
       });
 
+      if (!conversations.some(c => c.id === 'buddy_ai' || c.isAI)) {
+        conversations.unshift(_getBuddyAIConv());
+      }
       if (changed || !isSilent) {
-        _saveCachedConversations();
         _saveCachedConversations();
         _renderChatList();
       }
