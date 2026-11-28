@@ -1,0 +1,38 @@
+[
+  {
+    "id": "usr_kevaldesai",
+    "name": "Keval Desai",
+    "username": "keval_desai",
+    "email": "kevaldesai@gmail.com",
+    "avatar_color": "#10B981",
+    "bio": "Living life one day at a time ✨",
+    "status": "Active now",
+    "is_verified": true,
+    "thought_note": "Chilling ✨",
+    "created_at": "2026-11-20T10:00:00Z"
+  },
+  {
+    "id": "usr_keyur",
+    "name": "Keyur Sohaliya",
+    "username": "keyur_sohaliya",
+    "email": "brandifysocialmediamarketing@gmail.com",
+    "avatar_color": "#F43F5E",
+    "bio": "Founder of @brandify_social_media 🚀",
+    "status": "Active now",
+    "is_verified": true,
+    "thought_note": "Inspo needed... 💭",
+    "created_at": "2026-11-20T10:00:00Z"
+  },
+  {
+    "id": "usr_brandify",
+    "name": "Brandify Social Media Marketing",
+    "username": "brandify_social_media",
+    "email": "brandifysocialmediamarketing@gmail.com",
+    "avatar_color": "#8B5CF6",
+    "bio": "Digital Marketing & Creative Agency 💼",
+    "status": "Active now",
+    "is_verified": true,
+    "thought_note": "Growing Brands 📈",
+    "created_at": "2026-11-20T10:00:00Z"
+  }
+]
