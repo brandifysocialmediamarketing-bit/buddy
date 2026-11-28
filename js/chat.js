@@ -320,6 +320,9 @@ const ChatManager = (() => {
 
       let changed = false;
       cloudConvs.forEach(item => {
+        const isFake = FAKE_BUDDY_IDS.has(item.conversation_id) || (item.peer && (FAKE_BUDDY_IDS.has(item.peer.id) || FAKE_BUDDY_NAMES.has(item.peer.full_name)));
+        if (isFake) return;
+
         // Skip if marked as removed by user
         const isRemoved = localStorage.getItem('buddy_removed_conv_' + item.conversation_id + '_' + currentUser.id) === 'true' ||
                           (item.peer && localStorage.getItem('buddy_removed_peer_' + item.peer.id + '_' + currentUser.id) === 'true');
