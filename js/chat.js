@@ -1037,12 +1037,15 @@ const ChatManager = (() => {
 
       inp.addEventListener('input', () => {
         const val = inp.value.trim();
+        const micBtn = document.getElementById('mic-btn');
         if (val.length > 0) {
           sendBtn?.classList.remove('hidden');
           quickHeartBtn?.classList.add('hidden');
+          micBtn?.classList.add('hidden');
         } else {
           sendBtn?.classList.add('hidden');
           quickHeartBtn?.classList.remove('hidden');
+          micBtn?.classList.remove('hidden');
         }
       });
 
