@@ -100,8 +100,12 @@ document.addEventListener('click', (e) => {
 
   // 2. PROFILE BUTTON
   if (e.target.closest('#profile-open-btn')) {
-    const overlay = document.getElementById('profile-overlay');
-    if (overlay) overlay.classList.remove('hidden');
+    if (window.ProfileManager && typeof window.ProfileManager.openMyProfile === 'function') {
+      window.ProfileManager.openMyProfile();
+    } else {
+      const overlay = document.getElementById('profile-overlay');
+      if (overlay) overlay.classList.remove('hidden');
+    }
   }
 
   // CLOSE PROFILE
