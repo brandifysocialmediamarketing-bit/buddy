@@ -10389,6 +10389,7 @@ html, body {
 .sv-text-card {
   width: 100% !important;
   height: 100% !important;
+  aspect-ratio: 9 / 16 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -10404,11 +10405,13 @@ html, body {
   text-align: center !important;
   margin: 0 !important;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45) !important;
+  word-break: break-word !important;
 }
 
 .sv-media-asset {
   width: 100% !important;
   height: 100% !important;
+  aspect-ratio: 9 / 16 !important;
   object-fit: cover !important;
 }
 
