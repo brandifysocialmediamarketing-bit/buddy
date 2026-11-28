@@ -15,60 +15,7 @@ const RadarManager = (() => {
   const STORAGE_KEY = 'buddy_radar_store_v1';
   const WAVED_KEY = 'buddy_radar_waved_v1';
 
-  const SAMPLE_BUDDIES = [
-    {
-      id: 'buddy_ananya',
-      name: 'Ananya Sharma',
-      username: '@ananya_vibes',
-      avatar: 'assets/avatar-default.svg',
-      color: '#f43f5e',
-      is_verified: true,
-      distance: '1.4 km away',
-      vibe: '☕ Coffee & Late Talks',
-      category: 'chill',
-      bio: 'Always down for meaningful conversations, photography & sunset drives! ✨',
-      is_online: true
-    },
-    {
-      id: 'buddy_rohan',
-      name: 'Rohan & Meera',
-      username: '@rohan_meera',
-      avatar: 'assets/avatar-default.svg',
-      color: '#8b5cf6',
-      is_verified: true,
-      distance: '2.8 km away',
-      vibe: '💑 Couple Gaming & Movies',
-      category: 'couples',
-      bio: 'Board games, couple road trips & finding the best street food in town 🍿',
-      is_online: true
-    },
-    {
-      id: 'buddy_dev',
-      name: 'Dev Kapoor',
-      username: '@dev_beats',
-      avatar: 'assets/avatar-default.svg',
-      color: '#0ea5e9',
-      is_verified: false,
-      distance: '4.2 km away',
-      vibe: '🎧 Lo-Fi Beats & Tech',
-      category: 'gaming',
-      bio: 'Music producer by night, gamer by weekend. Hit me up for Valorant or Chill Hop!',
-      is_online: true
-    },
-    {
-      id: 'buddy_simran',
-      name: 'Simran Kaur',
-      username: '@simran_art',
-      avatar: 'assets/avatar-default.svg',
-      color: '#10b981',
-      is_verified: true,
-      distance: '6.5 km away',
-      vibe: '🎨 Art & Travel Diary',
-      category: 'creative',
-      bio: 'Exploring hidden cafes & capturing aesthetic skies across the city ✈️',
-      is_online: false
-    }
-  ];
+  const SAMPLE_BUDDIES = [];
 
   let state = {
     buddies: [],
