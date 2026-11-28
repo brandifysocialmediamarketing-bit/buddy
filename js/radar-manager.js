@@ -196,40 +196,73 @@ const RadarManager = (() => {
   }
 
   async function syncRealBuddies() {
-    if (!window.BuddySupabase) return;
+    let myId = 'guest';
     try {
-      const client = window.BuddySupabase.getClient();
-      if (!client) return;
-      let myId = 'guest';
+      const sess = JSON.parse(localStorage.getItem('buddy-session') || '{}');
+      if (sess && sess.id) myId = sess.id;
+    } catch(e) {}
+
+    let realBuddies = [];
+
+    if (window.BuddySupabase) {
       try {
-        const sess = JSON.parse(localStorage.getItem('buddy-session') || '{}');
-        if (sess && sess.id) myId = sess.id;
-      } catch(e) {}
-
-      const { data: profiles } = await client.from('profiles').select('*').neq('id', myId).limit(8);
-      if (Array.isArray(profiles) && profiles.length > 0) {
-        const realBuddies = profiles.map((p, i) => ({
-          id: p.id,
-          userId: p.id,
-          name: p.full_name || p.username,
-          username: p.username ? (p.username.startsWith('@') ? p.username : '@' + p.username) : '@buddy',
-          avatar: p.avatar_url || 'assets/avatar-default.svg',
-          color: p.avatar_color || '#6366f1',
-          is_verified: !!p.is_verified || (window.VerifiedBadgeManager && typeof window.VerifiedBadgeManager.isVerifiedUser === 'function' && window.VerifiedBadgeManager.isVerifiedUser(p.id)),
-          distance: `${(1.2 + (i * 0.8)).toFixed(1)} km away`,
-          vibe: p.bio || '☕ Open for Good Conversations',
-          category: (i % 2 === 0) ? 'chill' : 'couples',
-          bio: p.bio || 'BUDDY Community Member. Let\'s chat and share positive vibes!',
-          is_online: true
-        }));
-
-        const existingIds = new Set(realBuddies.map(r => r.id));
-        state.buddies = [...realBuddies, ...SAMPLE_BUDDIES.filter(s => !existingIds.has(s.id))];
-        renderRadar();
+        const client = window.BuddySupabase.getClient();
+        if (client) {
+          const { data: profiles } = await client.from('profiles').select('*').neq('id', myId).limit(15);
+          if (Array.isArray(profiles) && profiles.length > 0) {
+            profiles.forEach((p, i) => {
+              realBuddies.push({
+                id: p.id,
+                userId: p.id,
+                name: p.full_name || p.username,
+                username: p.username ? (p.username.startsWith('@') ? p.username : '@' + p.username) : '@buddy',
+                avatar: p.avatar_url || 'assets/avatar-default.svg',
+                color: p.avatar_color || '#6366f1',
+                is_verified: !!p.is_verified || (window.VerifiedBadgeManager && typeof window.VerifiedBadgeManager.isVerifiedUser === 'function' && window.VerifiedBadgeManager.isVerifiedUser(p.id)),
+                distance: `${(1.2 + (i * 0.8)).toFixed(1)} km away`,
+                vibe: p.bio || '☕ Open for Good Conversations',
+                category: (i % 2 === 0) ? 'chill' : 'couples',
+                bio: p.bio || 'BUDDY Community Member. Let\'s chat and share positive vibes!',
+                is_online: true
+              });
+            });
+          }
+        }
+      } catch(err) {
+        console.warn('Sync real buddies remote error:', err);
       }
-    } catch(err) {
-      console.warn('Sync real buddies error:', err);
     }
+
+    // Merge locally registered users
+    try {
+      const raw = localStorage.getItem('buddy_registered_users_v1');
+      if (raw) {
+        const localList = JSON.parse(raw);
+        if (Array.isArray(localList)) {
+          localList.forEach((u, i) => {
+            if (u.id !== myId && !realBuddies.some(r => r.id === u.id)) {
+              realBuddies.push({
+                id: u.id,
+                userId: u.id,
+                name: u.name,
+                username: u.username,
+                avatar: 'assets/avatar-default.svg',
+                color: u.color || '#6366f1',
+                is_verified: false,
+                distance: `${(0.8 + (i * 0.6)).toFixed(1)} km away`,
+                vibe: u.bio || '☕ Open for Chat',
+                category: 'chill',
+                bio: u.bio || 'BUDDY Member',
+                is_online: true
+              });
+            }
+          });
+        }
+      }
+    } catch(e) {}
+
+    state.buddies = realBuddies;
+    renderRadar();
   }
 
   function focusBuddy(buddyId) {
