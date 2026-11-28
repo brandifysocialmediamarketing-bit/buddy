@@ -674,11 +674,15 @@ function handleRequest(req, res) {
     let matches = allUsers;
 
     if (q) {
+      const qNorm = q.replace(/[@_\-\s\.]/g, '');
       matches = allUsers.filter(u => {
         const name = (u.name || u.full_name || '').toLowerCase();
         const uname = (u.username || '').replace(/^@/, '').toLowerCase();
         const email = (u.email || '').toLowerCase();
-        return name.includes(q) || uname.includes(q) || email.includes(q);
+        const nNorm = name.replace(/[@_\-\s\.]/g, '');
+        const uNorm = uname.replace(/[@_\-\s\.]/g, '');
+        return name.includes(q) || uname.includes(q) || email.includes(q) ||
+               (qNorm && (nNorm.includes(qNorm) || uNorm.includes(qNorm)));
       });
     }
 
