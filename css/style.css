@@ -10230,13 +10230,26 @@ html, body {
   background: rgba(0, 0, 0, 0.94) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
+  padding: 16px !important;
+}
+
+#story-viewer-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
 .sv-slide-container {
-  width: 100% !important;
-  max-width: 440px !important;
-  height: 94vh !important;
-  max-height: 840px !important;
+  aspect-ratio: 9 / 16 !important;
+  height: min(92vh, 820px) !important;
+  height: min(92dvh, 820px) !important;
+  width: calc(min(92vh, 820px) * 9 / 16) !important;
+  width: calc(min(92dvh, 820px) * 9 / 16) !important;
+  max-width: 95vw !important;
   border-radius: 28px !important;
   background: #09080d !important;
   border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
