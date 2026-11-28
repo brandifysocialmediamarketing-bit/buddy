@@ -9985,6 +9985,14 @@ html, body {
   background: rgba(0, 0, 0, 0.78) !important;
 }
 
+#add-story-content-wrap {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
 .add-story-sheet {
   width: 100% !important;
   max-width: 440px !important;
