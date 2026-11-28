@@ -849,8 +849,12 @@ const ChatManager = (() => {
       return /^(\p{Extended_Pictographic}|\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200D|\p{Emoji_Modifier}){1,3}$/u.test(trimmed);
     }
 
+    const mySentMsgs = (conv.messages || []).filter(m => m.from === 'me');
+    const lastSentMsgId = mySentMsgs.length > 0 ? mySentMsgs[mySentMsgs.length - 1].id : null;
+
     conv.messages.forEach((msg, idx) => {
       const isSent = msg.from === 'me';
+      const isLastSent = isSent && (msg.id === lastSentMsgId);
       const prevMsg = idx > 0 ? conv.messages[idx - 1] : null;
       const isFirstOfGroup = !prevMsg || prevMsg.from !== msg.from;
 
