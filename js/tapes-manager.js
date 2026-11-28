@@ -1043,7 +1043,7 @@ const TapesManager = (() => {
       const video = card.querySelector('.tape-video-element');
       if (video) {
         video.muted = false;
-        video.play().catch(() => {});
+        video.play().catch(() => { });
       }
     }
   }
