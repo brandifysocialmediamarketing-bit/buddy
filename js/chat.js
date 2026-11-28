@@ -474,7 +474,7 @@ const ChatManager = (() => {
   }
 
   /* ── CHAT LIST RENDERING ── */
-  function _renderChatList(filter) {
+  async function _renderChatList(filter) {
     const list = document.getElementById('chat-list');
     if (!list) return;
     list.innerHTML = '';
