@@ -1357,6 +1357,8 @@
       if (tabTapesBtn) tabTapesBtn.classList.remove('active');
       if (tabRadarBtn) tabRadarBtn.classList.remove('active');
       if (tabGamesBtn) tabGamesBtn.classList.remove('active');
+      const searchBox = document.querySelector('.sidebar-search');
+      if (searchBox) searchBox.classList.remove('hidden');
       if (storiesRailWrap) storiesRailWrap.classList.remove('hidden');
       if (chatList) chatList.classList.remove('hidden');
       if (tapesHub) tapesHub.classList.add('hidden');
@@ -1369,6 +1371,8 @@
       if (tabChatsBtn) tabChatsBtn.classList.remove('active');
       if (tabRadarBtn) tabRadarBtn.classList.remove('active');
       if (tabGamesBtn) tabGamesBtn.classList.remove('active');
+      const searchBox = document.querySelector('.sidebar-search');
+      if (searchBox) searchBox.classList.add('hidden');
       if (storiesRailWrap) storiesRailWrap.classList.add('hidden');
       if (chatList) chatList.classList.add('hidden');
       if (tapesHub) {
