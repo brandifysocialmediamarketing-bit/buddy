@@ -165,15 +165,7 @@ const RadarManager = (() => {
     // Open chat with initial wave message
     setTimeout(() => {
       startChatWithBuddy(buddyId, buddyName, `Wave 👋 sent from Community Radar!`);
-    }, 600);
-
-    // Simulate reciprocal incoming friend request
-    setTimeout(() => {
-      if (window.ChatManager && typeof window.ChatManager.receiveFriendRequest === 'function') {
-        const buddy = state.buddies.find(b => b.id === buddyId) || { id: buddyId, name: buddyName, color: '#6366f1' };
-        window.ChatManager.receiveFriendRequest(buddy, `Hey! 👋 Loved your wave on BUDDY Radar! Sent you a friend request to connect ✨`);
-      }
-    }, 2800);
+    }, 400);
   }
 
   async function startChatWithBuddy(buddyId, buddyName, initialMsgText) {
