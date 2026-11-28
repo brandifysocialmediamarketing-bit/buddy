@@ -11223,11 +11223,16 @@ html, body {
 
 .tape-upload-box {
   width: 100% !important;
-  height: 180px !important;
-  border-radius: 14px !important;
+  max-width: 220px !important;
+  aspect-ratio: 9 / 16 !important;
+  height: auto !important;
+  max-height: 380px !important;
+  margin: 0 auto 12px !important;
+  border-radius: 18px !important;
   border: 2px dashed var(--border, #3f3f46) !important;
   background: var(--bg, #09090b) !important;
   display: flex !important;
+  flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
@@ -11236,10 +11241,13 @@ html, body {
   position: relative !important;
 }
 
+#tape-upload-preview,
 .tape-upload-box video {
   width: 100% !important;
   height: 100% !important;
+  aspect-ratio: 9 / 16 !important;
   object-fit: cover !important;
+  border-radius: 16px !important;
 }
 
 .tape-hint-text {
