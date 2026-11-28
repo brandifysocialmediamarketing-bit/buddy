@@ -13270,3 +13270,150 @@ html, body {
   }
 }
 
+/* ========================================================
+   UNIVERSAL AUTO-ADAPTIVE CROSS-DEVICE ENGINE STYLES
+   Auto-scales across Mobile (Android/iPhone), Tablets,
+   Foldables (Narrow & Unfolded) and Desktops
+   ======================================================== */
+
+html, body {
+  width: 100% !important;
+  height: 100% !important;
+  height: var(--app-vh, 100dvh) !important;
+  min-height: var(--app-vh, 100dvh) !important;
+  max-height: var(--app-vh, 100dvh) !important;
+  overflow: hidden !important;
+  position: fixed !important;
+  inset: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  -webkit-tap-highlight-color: transparent !important;
+  touch-action: manipulation !important;
+}
+
+#app-screen,
+#auth-screen,
+.screen {
+  width: 100% !important;
+  height: var(--app-vh, 100dvh) !important;
+  max-height: var(--app-vh, 100dvh) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+/* Virtual Keyboard Open Adaptations */
+[data-keyboard="open"] .chat-area {
+  height: var(--app-vh, 100dvh) !important;
+}
+
+[data-keyboard="open"] .composer {
+  margin-bottom: 4px !important;
+}
+
+/* Foldable Outer Cover Screen (<= 360px) */
+[data-device="fold-narrow"] .app-brand {
+  font-size: 17px !important;
+}
+
+[data-device="fold-narrow"] .sidebar-actions .icon-btn {
+  width: 30px !important;
+  height: 30px !important;
+}
+
+[data-device="fold-narrow"] .sidebar-tab-btn {
+  padding: 5px 4px !important;
+  font-size: 10.5px !important;
+  gap: 3px !important;
+}
+
+[data-device="fold-narrow"] .chat-header {
+  padding: calc(8px + env(safe-area-inset-top, 0px)) 6px 6px !important;
+}
+
+[data-device="fold-narrow"] .chat-peer-name {
+  max-width: 110px !important;
+  font-size: 13px !important;
+}
+
+/* Tablet Devices (769px to 1024px) */
+[data-device="tablet"] .sidebar {
+  width: clamp(280px, 32vw, 340px) !important;
+  position: relative !important;
+  transform: none !important;
+  display: flex !important;
+}
+
+[data-device="tablet"] .chat-area {
+  display: flex !important;
+  flex: 1 !important;
+  position: relative !important;
+  transform: none !important;
+}
+
+[data-device="tablet"] .back-btn {
+  display: none !important;
+}
+
+/* Desktop & Ultra-wide Displays (> 1024px) */
+[data-device="desktop"] .sidebar {
+  width: 340px !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  transform: none !important;
+  display: flex !important;
+}
+
+[data-device="desktop"] .chat-area {
+  display: flex !important;
+  flex: 1 !important;
+  position: relative !important;
+  transform: none !important;
+}
+
+[data-device="desktop"] .back-btn {
+  display: none !important;
+}
+
+[data-device="desktop"] .messages-area {
+  padding-left: max(32px, calc((100% - 900px) / 2)) !important;
+  padding-right: max(32px, calc((100% - 900px) / 2)) !important;
+}
+
+[data-device="desktop"] .composer {
+  max-width: 900px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: calc(100% - 48px) !important;
+}
+
+/* Landscape Mode on Phones */
+@media (max-height: 500px) and (orientation: landscape) {
+  .sidebar-header,
+  .chat-header {
+    padding-top: max(6px, env(safe-area-inset-top, 6px)) !important;
+    padding-bottom: 6px !important;
+  }
+  .composer {
+    margin-bottom: 4px !important;
+  }
+  .stories-rail {
+    padding: 4px 8px !important;
+  }
+  .story-item {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  .tape-create-sheet,
+  .add-story-sheet,
+  .modal-sheet {
+    max-height: 92vh !important;
+  }
+}
+
+/* Universal Modal Overlay Height */
+.modal-overlay {
+  height: var(--app-vh, 100dvh) !important;
+  max-height: var(--app-vh, 100dvh) !important;
+}
+
+
