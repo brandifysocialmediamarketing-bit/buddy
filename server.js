@@ -67,9 +67,9 @@ function resolveImageUrl(rawUrl, callback, depth = 0) {
     res.on('end', () => {
       // Check og:image or twitter:image
       const ogMatch = body.match(/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i) ||
-                      body.match(/content=["']([^"']+)["']\s+property=["']og:image["']/i) ||
-                      body.match(/<meta\s+name=["']twitter:image["']\s+content=["']([^"']+)["']/i);
-      
+        body.match(/content=["']([^"']+)["']\s+property=["']og:image["']/i) ||
+        body.match(/<meta\s+name=["']twitter:image["']\s+content=["']([^"']+)["']/i);
+
       // Look for Pinterest original / high-res pinimg
       const pinImgOriginal = body.match(/https:\/\/[^"'\s]+\.pinimg\.com\/originals\/[^"'\s]+\.(jpg|jpeg|png|webp)/i);
       const pinImg736 = body.match(/https:\/\/[^"'\s]+\.pinimg\.com\/736x\/[^"'\s]+\.(jpg|jpeg|png|webp)/i);
@@ -99,7 +99,8 @@ function resolveImageUrl(rawUrl, callback, depth = 0) {
 }
 
 const isVercel = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
-const APP_VERSION = 'v227';
+const APP_VERSION = 'v225';
+const APP_VERSION = 'v226';
 const BUILD_TIMESTAMP = Date.now();
 
 // Live Reload Clients
@@ -209,7 +210,7 @@ function loadQuizzes() {
       const seedFile = path.join(ROOT, 'data', 'games_quizzes.json');
       if (fs.existsSync(seedFile)) {
         const seedData = fs.readFileSync(seedFile, 'utf8');
-        try { fs.writeFileSync(QUIZZES_FILE, seedData, 'utf8'); } catch(e){}
+        try { fs.writeFileSync(QUIZZES_FILE, seedData, 'utf8'); } catch (e) { }
         return JSON.parse(seedData);
       }
     }
@@ -236,7 +237,7 @@ function loadScratchCards() {
     if (fs.existsSync(SCRATCH_FILE)) {
       return JSON.parse(fs.readFileSync(SCRATCH_FILE, 'utf8'));
     }
-  } catch (e) {}
+  } catch (e) { }
   return {};
 }
 
@@ -245,51 +246,7 @@ function saveScratchCards(cards) {
     const dir = path.dirname(SCRATCH_FILE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(SCRATCH_FILE, JSON.stringify(cards, null, 2), 'utf8');
-  } catch (e) {}
-}
-
-// ── REGISTERED USERS REGISTRY API (Cross-Device Search & Sync) ──
-const USERS_REGISTRY_FILE = isVercel
-  ? path.join('/tmp', 'registered-users.json')
-  : path.join(ROOT, 'data', 'registered-users.json');
-
-function loadRegisteredUsers() {
-  try {
-    if (fs.existsSync(USERS_REGISTRY_FILE)) {
-      return JSON.parse(fs.readFileSync(USERS_REGISTRY_FILE, 'utf8') || '[]');
-    }
-  } catch (e) {}
-  return [];
-}
-
-function saveRegisteredUsers(users) {
-  try {
-    const dir = path.dirname(USERS_REGISTRY_FILE);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(USERS_REGISTRY_FILE, JSON.stringify(users, null, 2), 'utf8');
-  } catch (e) {}
-}
-
-// ── USER POSTS API (GET/POST/DELETE /api/posts) ──
-const POSTS_FILE = isVercel
-  ? path.join('/tmp', 'user_posts.json')
-  : path.join(ROOT, 'data', 'user_posts.json');
-
-function loadUserPosts() {
-  try {
-    if (fs.existsSync(POSTS_FILE)) {
-      return JSON.parse(fs.readFileSync(POSTS_FILE, 'utf8'));
-    }
-  } catch(e) {}
-  return [];
-}
-
-function saveUserPosts(posts) {
-  try {
-    const dir = path.dirname(POSTS_FILE);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2), 'utf8');
-  } catch(e) {}
+  } catch (e) { }
 }
 
 // Handler for /api/games/quiz
@@ -659,6 +616,24 @@ function handleRequest(req, res) {
   }
 
   // ── REGISTERED USERS REGISTRY API (Cross-Device Search & Sync) ──
+  const USERS_REGISTRY_FILE = path.join(__dirname, 'data', 'registered-users.json');
+  function loadRegisteredUsers() {
+    try {
+      if (fs.existsSync(USERS_REGISTRY_FILE)) {
+        return JSON.parse(fs.readFileSync(USERS_REGISTRY_FILE, 'utf8') || '[]');
+      }
+    } catch (e) { }
+    return [];
+  }
+
+  function saveRegisteredUsers(users) {
+    try {
+      const dir = path.dirname(USERS_REGISTRY_FILE);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(USERS_REGISTRY_FILE, JSON.stringify(users, null, 2), 'utf8');
+    } catch (e) { }
+  }
+
   // Search Registered Users API (GET /api/users/search?q=...)
   if (reqPath === '/api/users/search') {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -708,7 +683,7 @@ function handleRequest(req, res) {
 
       const allUsers = loadRegisteredUsers();
       const cleanUname = (payload.username || '').replace(/^@/, '').toLowerCase();
-      const existingIdx = allUsers.findIndex(u => 
+      const existingIdx = allUsers.findIndex(u =>
         (payload.id && u.id === payload.id) ||
         (cleanUname && (u.username || '').replace(/^@/, '').toLowerCase() === cleanUname) ||
         (payload.email && u.email && u.email.toLowerCase() === payload.email.toLowerCase())
@@ -737,57 +712,6 @@ function handleRequest(req, res) {
       return res.end(JSON.stringify({ success: true, user: userRecord }));
     });
     return;
-  }
-
-  // ── USER POSTS API (GET/POST/DELETE /api/posts) ──
-  if (reqPath === '/api/posts') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    if (req.method === 'OPTIONS') {
-      res.writeHead(204);
-      return res.end();
-    }
-
-    if (req.method === 'GET') {
-      const targetUserId = parsedUrl.searchParams.get('userId');
-      const allPosts = loadUserPosts();
-      let filtered = allPosts;
-      if (targetUserId) {
-        filtered = allPosts.filter(p => p.user_id === targetUserId);
-      }
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ success: true, posts: filtered }));
-    }
-
-    if (req.method === 'POST') {
-      getRequestBody(req, (err, payload) => {
-        if (err || !payload || !payload.media_url) {
-          res.writeHead(400, { 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Invalid post data' }));
-        }
-        const allPosts = loadUserPosts();
-        allPosts.unshift(payload);
-        if (allPosts.length > 200) allPosts.length = 200;
-        saveUserPosts(allPosts);
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: true, post: payload }));
-      });
-      return;
-    }
-
-    if (req.method === 'DELETE') {
-      const postId = parsedUrl.searchParams.get('id');
-      if (!postId) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, error: 'Missing post id' }));
-      }
-      let allPosts = loadUserPosts();
-      allPosts = allPosts.filter(p => p.id !== postId);
-      saveUserPosts(allPosts);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ success: true }));
-    }
   }
 
   // 1. Resolve Image API endpoint (Resolves pin.it, Pinterest, Unsplash, Google URLs)
