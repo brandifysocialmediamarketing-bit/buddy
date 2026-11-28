@@ -10616,6 +10616,8 @@ html, body {
 .tape-video-wrapper {
   width: 100% !important;
   height: 100% !important;
+  aspect-ratio: 9 / 16 !important;
+  max-width: calc(100vh * 9 / 16) !important;
   position: relative !important;
   display: flex !important;
   align-items: center !important;
@@ -10626,6 +10628,7 @@ html, body {
 .tape-video-element {
   width: 100% !important;
   height: 100% !important;
+  aspect-ratio: 9 / 16 !important;
   object-fit: cover !important;
   background: #000 !important;
 }
