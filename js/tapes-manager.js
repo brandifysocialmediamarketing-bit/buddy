@@ -156,9 +156,27 @@ const TapesManager = (() => {
       }
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
+        let updated = false;
+
+        // Auto-heal any broken or legacy URLs (commondatastorage, googleapis, w3schools, mdn flower)
+        parsed.forEach(t => {
+          if (!t.video_url ||
+              t.video_url.includes('commondatastorage') ||
+              t.video_url.includes('googleapis.com') ||
+              t.video_url.includes('w3schools.com') ||
+              t.video_url.includes('interactive-examples.mdn')) {
+            const matched = INITIAL_TAPES.find(it => it.id === t.id);
+            if (matched) {
+              t.video_url = matched.video_url;
+            } else {
+              t.video_url = 'assets/tapes/tape-ocean.mp4';
+            }
+            updated = true;
+          }
+        });
+
         // Merge any new curated initial tapes
         const existingIds = new Set(parsed.map(t => t.id));
-        let updated = false;
         INITIAL_TAPES.forEach(initTape => {
           if (!existingIds.has(initTape.id)) {
             parsed.push(initTape);
