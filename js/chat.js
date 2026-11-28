@@ -261,7 +261,9 @@ const ChatManager = (() => {
           const cached = JSON.parse(raw);
           if (Array.isArray(cached)) {
             cached.forEach(c => {
-              const isRemoved = localStorage.getItem('buddy_removed_conv_' + c.id + '_' + currentUser.id) === 'true' ||
+              const isFake = FAKE_BUDDY_IDS.has(c.id) || FAKE_BUDDY_IDS.has(c.userId) || (!c.isAI && FAKE_BUDDY_NAMES.has(c.name));
+              const isRemoved = isFake ||
+                                localStorage.getItem('buddy_removed_conv_' + c.id + '_' + currentUser.id) === 'true' ||
                                 (c.userId && localStorage.getItem('buddy_removed_peer_' + c.userId + '_' + currentUser.id) === 'true') ||
                                 localStorage.getItem('buddy_declined_req_' + c.id + '_' + currentUser.id) === 'true' ||
                                 (c.userId && localStorage.getItem('buddy_blocked_' + c.userId) === 'true');
@@ -277,6 +279,9 @@ const ChatManager = (() => {
         }
       } catch(e) {}
     }
+    // Strict prune: Remove any fake friends from memory and cache
+    conversations = conversations.filter(c => c.isAI || (!FAKE_BUDDY_IDS.has(c.id) && !FAKE_BUDDY_IDS.has(c.userId) && !FAKE_BUDDY_NAMES.has(c.name)));
+    _saveCachedConversations();
   }
 
   function _getBuddyAIConv() {
