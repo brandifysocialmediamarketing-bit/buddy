@@ -222,9 +222,17 @@ const ChatManager = (() => {
 
     // Start background live polling (every 2.5 seconds) for instant sync across tabs & devices
     _startLiveSync();
-      if (window.BuddySupabase && BuddySupabase.subscribeToAllMessages) {
+    if (window.BuddySupabase) {
+      if (currentUser && currentUser.id && currentUser.id !== 'guest') {
+        BuddySupabase.trackPresence(currentUser, () => {
+          _renderChatList();
+          _updateHeaderActiveStatus();
+        });
+      }
+      if (BuddySupabase.subscribeToAllMessages) {
         BuddySupabase.subscribeToAllMessages(_handleGlobalIncomingMessage);
       }
+    }
   }
 
   function _saveCachedConversations() {
