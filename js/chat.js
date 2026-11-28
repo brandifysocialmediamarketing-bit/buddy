@@ -617,16 +617,47 @@ const ChatManager = (() => {
               ${_initials(u.full_name || u.username)}
             </div>
             <div class="sui-info">
-              <div class="sui-name">${_esc(u.full_name || u.username)}</div>
+              <div class="sui-name">
+                ${_esc(u.full_name || u.username)}
+                ${u.is_verified ? '<span style="color:#0095f6; font-size:13px; margin-left:3px;">🛡️</span>' : ''}
+              </div>
               <div class="sui-username">@${_esc((u.username || '').replace(/^@/, ''))}</div>
               <div class="sui-bio">${_esc(u.bio || 'Verified Member')}</div>
             </div>
           </div>
-          <button type="button" class="btn-primary sui-btn">Message 💌</button>
+          <div class="sui-actions" style="display:flex; gap:6px; align-items:center;">
+            <button type="button" class="btn-primary sui-btn btn-sui-msg">Message 💌</button>
+            <button type="button" class="btn-secondary sui-btn btn-sui-prof" style="padding:6px 10px; font-size:11.5px; border-radius:8px;">Profile 👤</button>
+          </div>
         `;
+
+        const msgBtn = uEl.querySelector('.btn-sui-msg');
+        if (msgBtn) {
+          msgBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const inp = document.getElementById('chat-search-input');
+            if (inp) inp.value = '';
+            const storiesRail = document.getElementById('stories-rail-wrap');
+            if (storiesRail) storiesRail.classList.remove('hidden');
+            await _startRealChatWithUser(u);
+          });
+        }
+
+        const profBtn = uEl.querySelector('.btn-sui-prof');
+        if (profBtn) {
+          profBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (window.ProfileManager) {
+              window.ProfileManager.openUserProfile(u.id, u);
+            }
+          });
+        }
+
         uEl.addEventListener('click', async () => {
           const inp = document.getElementById('chat-search-input');
           if (inp) inp.value = '';
+          const storiesRail = document.getElementById('stories-rail-wrap');
+          if (storiesRail) storiesRail.classList.remove('hidden');
           await _startRealChatWithUser(u);
         });
         list.appendChild(uEl);
