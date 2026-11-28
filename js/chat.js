@@ -508,12 +508,35 @@ const ChatManager = (() => {
       return 0;
     });
 
+    // If search query entered, also search registered BUDDY users
+    let userMatches = [];
+    if (q.length >= 1 && window.BuddySupabase) {
+      try {
+        const rawUsers = await BuddySupabase.searchProfiles(q, currentUser?.id);
+        if (Array.isArray(rawUsers)) {
+          userMatches = rawUsers.filter(u => {
+            const alreadyInConvs = conversations.some(c => c.userId === u.id || (c.username && c.username.replace(/^@/,'').toLowerCase() === (u.username||'').replace(/^@/,'').toLowerCase()));
+            return !alreadyInConvs && !FAKE_BUDDY_IDS.has(u.id);
+          });
+        }
+      } catch(e) {}
+    }
+
+    if (q.length >= 1 && filtered.length > 0 && userMatches.length > 0) {
+      const chatHeader = document.createElement('div');
+      chatHeader.className = 'chat-search-section-title';
+      chatHeader.textContent = 'Chats';
+      list.appendChild(chatHeader);
+    }
+
     filtered.forEach(conv => {
       const last = conv.messages && conv.messages.length > 0 ? conv.messages[conv.messages.length - 1] : null;
       const isActive = conv.id === activeConvId;
       const displayName = conv.nickname || conv.name;
 
-      let rawPreview = conv.lastMsgPreview || (conv.isAI ? 'AI Companion' : 'Tap to start chat');
+      const isOnline = conv.isAI || (window.BuddySupabase && typeof window.BuddySupabase.isUserOnline === 'function' && window.BuddySupabase.isUserOnline(conv.userId));
+
+      let rawPreview = conv.lastMsgPreview || (conv.isAI ? 'AI Companion' : (isOnline ? 'Active now' : 'Tap to start chat'));
       let timeLabel = conv.lastMsgTime || '';
       let isMine = false;
 
@@ -542,7 +565,7 @@ const ChatManager = (() => {
           <div class="chat-item-avatar ${conv.isAI ? 'ai-avatar' : ''}" style="background:${conv.color}">
             ${conv.isAI ? '✨' : _initials(displayName)}
           </div>
-          <span class="online-dot ${conv.isAI ? 'ai-dot' : ''}"></span>
+          ${isOnline ? '<span class="online-dot active-now" title="Active now"></span>' : ''}
         </div>
         <div class="chat-item-info">
           <div class="chat-item-row-top">
@@ -564,11 +587,60 @@ const ChatManager = (() => {
       list.appendChild(el);
     });
 
-    if (conversations.length === 1 && conversations[0].isAI) {
-      const hint = document.createElement('div');
-      hint.style.cssText = 'padding: 16px; text-align: center; color: var(--text-3); font-size: 12px; line-height: 1.5;';
-      hint.innerHTML = '🔍 Search friends above by <b>@username</b> to start private 1-to-1 chats!';
-      list.appendChild(hint);
+    // Render registered real user search results (Instagram Direct Search style)
+    if (userMatches.length > 0) {
+      const userHeader = document.createElement('div');
+      userHeader.className = 'chat-search-section-title';
+      userHeader.textContent = 'Discover Buddies on BUDDY';
+      list.appendChild(userHeader);
+
+      userMatches.forEach(u => {
+        const uEl = document.createElement('div');
+        uEl.className = 'search-user-item';
+        uEl.innerHTML = `
+          <div class="sui-left">
+            <div class="sui-avatar" style="background:${u.avatar_color || '#6366F1'};">
+              ${_initials(u.full_name || u.username)}
+            </div>
+            <div class="sui-info">
+              <div class="sui-name">${_esc(u.full_name || u.username)}</div>
+              <div class="sui-username">@${_esc((u.username || '').replace(/^@/, ''))}</div>
+              <div class="sui-bio">${_esc(u.bio || 'Verified Member')}</div>
+            </div>
+          </div>
+          <button type="button" class="btn-primary sui-btn">Message 💌</button>
+        `;
+        uEl.addEventListener('click', async () => {
+          const inp = document.getElementById('chat-search-input');
+          if (inp) inp.value = '';
+          await _startRealChatWithUser(u);
+        });
+        list.appendChild(uEl);
+      });
+    }
+
+    // Empty search state vs Empty chat list state
+    if (q.length >= 1 && filtered.length === 0 && userMatches.length === 0) {
+      const emptySearch = document.createElement('div');
+      emptySearch.style.cssText = 'padding: 36px 16px; text-align: center; color: var(--text-3); font-size: 13px; line-height: 1.6;';
+      emptySearch.innerHTML = `
+        <div style="font-size:32px; margin-bottom:8px;">🔍</div>
+        No users or chats found for "<b>${_esc(q)}</b>"<br/>
+        <span style="font-size:11.5px; opacity:0.8;">Make sure your friend has registered their @username on BUDDY!</span>
+      `;
+      list.appendChild(emptySearch);
+    } else if (!q && conversations.length === 1 && conversations[0].isAI) {
+      const findCard = document.createElement('div');
+      findCard.className = 'find-friends-card';
+      findCard.innerHTML = `
+        <div class="ffc-icon">👥</div>
+        <div class="ffc-title">Find Friends on BUDDY</div>
+        <div class="ffc-sub">Search registered buddies by @username or name above to connect privately!</div>
+        <button type="button" class="btn-primary ffc-btn" onclick="document.getElementById('new-chat-btn')?.click()">
+          <span>🔍 Discover & Connect</span>
+        </button>
+      `;
+      list.appendChild(findCard);
     }
   }
 
