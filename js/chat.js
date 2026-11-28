@@ -1186,8 +1186,10 @@ const ChatManager = (() => {
 
       const sendBtn = document.getElementById('send-btn');
       const quickHeartBtn = document.getElementById('quick-heart-btn');
+      const micBtn = document.getElementById('mic-btn');
       if (sendBtn) sendBtn.classList.add('hidden');
       if (quickHeartBtn) quickHeartBtn.classList.remove('hidden');
+      if (micBtn) micBtn.classList.remove('hidden');
 
       if (inp && document.activeElement !== inp) {
         try { inp.focus(); } catch (err) {}
