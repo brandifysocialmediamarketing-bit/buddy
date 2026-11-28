@@ -1282,7 +1282,10 @@ const TapesManager = (() => {
     addReelToStory,
     focusTape,
     getTapes: () => state.tapes || [],
-    openAuthorProfile: (id) => console.log('View author profile:', id)
+    openAuthorProfile: (id) => {
+      if (window.ProfileManager) window.ProfileManager.openUserProfile(id);
+      else console.log('View author profile:', id);
+    }
   };
 })();
 
