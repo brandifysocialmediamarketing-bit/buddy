@@ -72,6 +72,7 @@ const AuthManager = (() => {
           full_name: u.name,
           avatar_color: u.color
         });
+        _saveLocalRegisteredUser(u);
         _enterApp(u, true);
         return;
       }
