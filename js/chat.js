@@ -195,7 +195,10 @@ const ChatManager = (() => {
       _bindSearch();
       _bindNewChat();
       _bindProfile();
-      // App always opens on Home screen / conversations list (never auto-opens buddy_ai)
+      // On desktop / wide screens, auto-open the first conversation so right pane is never an empty void
+      if (window.innerWidth >= 900 && conversations.length > 0 && !activeConvId) {
+        openChat(conversations[0].id);
+      }
     } else {
       _saveCachedConversations();
     _renderChatList();
@@ -203,6 +206,11 @@ const ChatManager = (() => {
 
     // Sync cloud conversations for real users
     await _syncConversationsFromSupabase();
+
+    // On desktop, if still no conversation selected after cloud sync, open the top conversation
+    if (window.innerWidth >= 900 && conversations.length > 0 && !activeConvId) {
+      openChat(conversations[0].id);
+    }
 
     // Start background live polling (every 2.5 seconds) for instant sync across tabs & devices
     _startLiveSync();
