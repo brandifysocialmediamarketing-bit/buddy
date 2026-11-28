@@ -46,8 +46,8 @@ const RadarManager = (() => {
     if (!listContainer) return;
 
     state.wavedMap = _loadWavedMap();
-    if (!state.buddies || state.buddies.length === 0) {
-      state.buddies = SAMPLE_BUDDIES;
+    if (!state.buddies) {
+      state.buddies = [];
     }
 
     // Filter
@@ -56,6 +56,18 @@ const RadarManager = (() => {
       filtered = state.buddies.filter(b => parseFloat(b.distance) < 3.0);
     } else if (state.activeFilter !== 'all') {
       filtered = state.buddies.filter(b => b.category === state.activeFilter);
+    }
+
+    if (!filtered || filtered.length === 0) {
+      if (blipsContainer) blipsContainer.innerHTML = '';
+      listContainer.innerHTML = `
+        <div style="padding:48px 20px; text-align:center; color:var(--text-3); font-size:13px; line-height:1.6;">
+          <div style="font-size:36px; margin-bottom:10px;">🌐</div>
+          <strong style="color:var(--text); font-size:15px;">Discovering Buddies Nearby</strong><br/>
+          <span style="font-size:12px; opacity:0.85;">No other registered users found nearby right now.<br/>Type a friend's @username in Chats or invite them to BUDDY to chat privately!</span>
+        </div>
+      `;
+      return;
     }
 
     // Render Blips on the Radar Dish
