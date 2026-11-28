@@ -644,6 +644,26 @@ const ChatManager = (() => {
     }
   }
 
+  function _updateHeaderActiveStatus() {
+    if (!activeConvId) return;
+    const conv = conversations.find(c => c.id === activeConvId);
+    if (!conv) return;
+    const st = document.getElementById('chat-peer-status');
+    if (!st) return;
+
+    if (conv.isAI) {
+      st.innerHTML = '<span class="status-live-dot"></span> Active now • AI Companion';
+      return;
+    }
+
+    const isOnline = window.BuddySupabase && typeof window.BuddySupabase.isUserOnline === 'function' && window.BuddySupabase.isUserOnline(conv.userId);
+    if (isOnline) {
+      st.innerHTML = '<span class="status-live-dot"></span> Active now';
+    } else {
+      st.innerHTML = '<span class="status-offline-dot"></span> Offline';
+    }
+  }
+
   /* ── OPEN CHAT ── */
   async function openChat(convId) {
     activeConvId = convId;
