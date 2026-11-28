@@ -518,14 +518,21 @@ const ChatManager = (() => {
       }
     }
 
-    const q = (filter || '').toLowerCase().trim();
+    const qRaw = (filter || '').trim();
+    const q = qRaw.replace(/^@/, '').toLowerCase();
+    const qNorm = q.replace(/[@_\-\s\.]/g, '');
+
     let filtered = conversations.filter(c => {
       // Quarantine pending requests from primary inbox
       if (c.isRequest && c.requestStatus !== 'accepted') return false;
 
-      const displayName = c.nickname || c.name || '';
-      const uname = c.username || '';
-      return displayName.toLowerCase().includes(q) || uname.toLowerCase().includes(q);
+      const displayName = (c.nickname || c.name || '').toLowerCase();
+      const uname = (c.username || '').replace(/^@/, '').toLowerCase();
+      const dNorm = displayName.replace(/[@_\-\s\.]/g, '');
+      const uNorm = uname.replace(/[@_\-\s\.]/g, '');
+
+      return displayName.includes(q) || uname.includes(q) ||
+             (qNorm && (dNorm.includes(qNorm) || uNorm.includes(qNorm)));
     });
 
     filtered.sort((a, b) => {
@@ -538,11 +545,13 @@ const ChatManager = (() => {
     let userMatches = [];
     if (q.length >= 1 && window.BuddySupabase) {
       try {
-        const rawUsers = await BuddySupabase.searchProfiles(q, currentUser?.id);
+        const rawUsers = await BuddySupabase.searchProfiles(q);
         if (Array.isArray(rawUsers)) {
           userMatches = rawUsers.filter(u => {
-            const alreadyInConvs = conversations.some(c => c.userId === u.id || (c.username && c.username.replace(/^@/, '').toLowerCase() === (u.username || '').replace(/^@/, '').toLowerCase()));
-            return !alreadyInConvs && !FAKE_BUDDY_IDS.has(u.id);
+            if (FAKE_BUDDY_IDS.has(u.id)) return false;
+            // Only hide from discover section if it's already shown in the filtered chats section above
+            const inFiltered = filtered.some(c => c.userId === u.id || (c.username && c.username.replace(/^@/, '').toLowerCase() === (u.username || '').replace(/^@/, '').toLowerCase()));
+            return !inFiltered;
           });
         }
       } catch (e) { }
