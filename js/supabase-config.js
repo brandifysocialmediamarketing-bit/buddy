@@ -183,6 +183,29 @@ const BuddySupabase = (() => {
     }
 
     let results = [];
+
+    // 1. Fetch from Server-Side Registered Users Registry
+    try {
+      const apiRes = await fetch('/api/users/search?q=' + encodeURIComponent(clean));
+      if (apiRes.ok) {
+        const json = await apiRes.json();
+        if (json && Array.isArray(json.users)) {
+          json.users.forEach(u => {
+            results.push({
+              id: u.id,
+              username: u.username,
+              full_name: u.name || u.full_name,
+              avatar_color: u.avatar_color || '#10B981',
+              bio: u.bio || 'Verified Member ✨',
+              status: u.status || 'Active now',
+              is_verified: u.is_verified || false
+            });
+          });
+        }
+      }
+    } catch (e) {}
+
+    // 2. Fetch from Supabase if reachable
     const c = getClient();
     if (c) {
       try {
@@ -193,38 +216,45 @@ const BuddySupabase = (() => {
           .limit(20);
 
         if (!error && Array.isArray(data)) {
-          results = data;
+          data.forEach(d => {
+            if (!results.some(r => r.id === d.id || (r.username && d.username && r.username.toLowerCase() === d.username.toLowerCase()))) {
+              results.push(d);
+            }
+          });
         }
       } catch (err) {
         console.warn('[BUDDY Supabase] searchProfiles remote notice:', err);
       }
     }
 
-    // Always merge or fallback with locally registered users
-    try {
-      const raw = localStorage.getItem('buddy_registered_users_v1');
-      if (raw) {
-        const localList = JSON.parse(raw);
-        if (Array.isArray(localList)) {
-          localList.forEach(u => {
-            const uClean = (u.username || '').replace(/^@/, '').toLowerCase();
-            const nClean = (u.name || '').toLowerCase();
-            if (uClean.includes(clean) || nClean.includes(clean)) {
-              if (!results.some(r => r.id === u.id || r.username === u.username)) {
-                results.push({
-                  id: u.id,
-                  username: u.username,
-                  full_name: u.name,
-                  avatar_color: u.color || '#6366F1',
-                  bio: u.bio || 'Verified Member',
-                  status: 'Active now'
-                });
+    // 3. Always merge with locally registered users
+    const storageKeys = ['buddy_registered_local_users_v2', 'buddy_registered_users_v1'];
+    storageKeys.forEach(key => {
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          const localList = JSON.parse(raw);
+          if (Array.isArray(localList)) {
+            localList.forEach(u => {
+              const uClean = (u.username || '').replace(/^@/, '').toLowerCase();
+              const nClean = (u.name || u.full_name || '').toLowerCase();
+              if (uClean.includes(clean) || nClean.includes(clean)) {
+                if (!results.some(r => r.id === u.id || (r.username && u.username && r.username.replace(/^@/,'').toLowerCase() === uClean))) {
+                  results.push({
+                    id: u.id,
+                    username: u.username,
+                    full_name: u.name || u.full_name,
+                    avatar_color: u.color || u.avatar_color || '#6366F1',
+                    bio: u.bio || 'Verified Member',
+                    status: 'Active now'
+                  });
+                }
               }
-            }
-          });
+            });
+          }
         }
-      }
-    } catch(e) {}
+      } catch(e) {}
+    });
 
     if (excludeUserId) {
       results = results.filter(p => p.id !== excludeUserId);
