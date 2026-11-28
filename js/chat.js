@@ -2021,10 +2021,16 @@ const ChatManager = (() => {
 
     inp.addEventListener('input', () => {
       clearTimeout(debounceTimer);
+      const q = inp.value.trim();
+      const storiesRail = document.getElementById('stories-rail-wrap');
+      if (storiesRail) {
+        if (q.length > 0) storiesRail.classList.add('hidden');
+        else storiesRail.classList.remove('hidden');
+      }
+
       debounceTimer = setTimeout(async () => {
-        const q = inp.value.trim();
         await _renderChatList(q);
-      }, 250);
+      }, 120);
     });
   }
 
