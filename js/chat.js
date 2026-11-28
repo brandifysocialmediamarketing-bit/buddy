@@ -422,13 +422,19 @@ const ChatManager = (() => {
               const msgTs = new Date(m.created_at).getTime();
               if (clearedTs && msgTs <= clearedTs) return;
 
-              // Check if pending local message matches
+              // Check if pending local message matches or seen status updated
               if (m.sender_id === currentUser.id) {
                 const pending = conv.messages.find(existing => existing.from === 'me' && existing.id.startsWith('m_') && existing.body === (m.body || '') && existing.type === (m.type || 'text'));
                 if (pending) {
                   pending.id = m.id;
-                  pending.seen = true;
+                  pending.seen = m.seen;
+                  hasNew = true;
                   return;
+                }
+                const existingSent = conv.messages.find(existing => existing.id === m.id);
+                if (existingSent && existingSent.seen !== m.seen) {
+                  existingSent.seen = m.seen;
+                  hasNew = true;
                 }
               }
 
