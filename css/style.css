@@ -6897,8 +6897,9 @@ html, body {
 
   .composer {
     flex-shrink: 0 !important;
-    margin: 6px 10px calc(8px + env(safe-area-inset-bottom, 8px)) !important;
-    padding: 6px 10px !important;
+    width: calc(100% - 16px) !important;
+    margin: 6px 8px calc(8px + env(safe-area-inset-bottom, 8px)) 8px !important;
+    padding: 5px 8px !important;
     background: var(--bg-card) !important;
     backdrop-filter: blur(24px) !important;
     -webkit-backdrop-filter: blur(24px) !important;
@@ -6908,6 +6909,9 @@ html, body {
     transition: margin 0.15s ease !important;
     position: relative !important;
     z-index: 30 !important;
+  }
+  .composer-row {
+    gap: 5px !important;
   }
 
   /* When virtual keyboard is open on any mobile phone OR composer has focus */
