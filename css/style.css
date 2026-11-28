@@ -12976,6 +12976,31 @@ html, body {
   }
 }
 
+/* Compact Mobile Devices (<= 480px) */
+@media (max-width: 480px) {
+  #chat-info-btn {
+    display: none !important;
+  }
+  .sidebar-header {
+    padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 10px !important;
+  }
+  .sidebar-actions {
+    gap: 4px !important;
+  }
+  .sidebar-actions .icon-btn,
+  .sidebar-actions .user-avatar-btn {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .chat-header-actions {
+    gap: 3px !important;
+  }
+  .chat-header-actions .icon-btn {
+    width: 31px !important;
+    height: 31px !important;
+  }
+}
+
 /* Narrow Android & iPhone Mini/SE Devices (<= 380px) */
 @media (max-width: 380px) {
   .sidebar-header {
