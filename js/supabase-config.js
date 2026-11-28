@@ -177,36 +177,60 @@ const BuddySupabase = (() => {
   }
 
   async function searchProfiles(query, excludeUserId) {
-    const c = getClient();
-    if (!c) return [];
-    try {
-      const clean = (query || '').replace(/^@/, '').trim().toLowerCase();
-      // Only return users when a specific username is searched
-      if (!clean || clean.length < 2) {
-        return [];
-      }
-
-      const { data, error } = await c
-        .from('profiles')
-        .select('id, username, full_name, avatar_color, bio, status, mood')
-        .or(`username.ilike.%${clean}%,full_name.ilike.%${clean}%`)
-        .limit(20);
-
-      if (error || !data) {
-        console.warn('[BUDDY Supabase] searchProfiles notice:', error ? error.message : 'no data');
-        return [];
-      }
-
-      let results = data;
-      if (excludeUserId) {
-        results = results.filter(p => p.id !== excludeUserId);
-      }
-
-      return results;
-    } catch (err) {
-      console.warn('[BUDDY Supabase] searchProfiles exception:', err);
+    const clean = (query || '').replace(/^@/, '').trim().toLowerCase();
+    if (!clean || clean.length < 1) {
       return [];
     }
+
+    let results = [];
+    const c = getClient();
+    if (c) {
+      try {
+        const { data, error } = await c
+          .from('profiles')
+          .select('id, username, full_name, avatar_color, bio, status, mood')
+          .or(`username.ilike.%${clean}%,full_name.ilike.%${clean}%`)
+          .limit(20);
+
+        if (!error && Array.isArray(data)) {
+          results = data;
+        }
+      } catch (err) {
+        console.warn('[BUDDY Supabase] searchProfiles remote notice:', err);
+      }
+    }
+
+    // Always merge or fallback with locally registered users
+    try {
+      const raw = localStorage.getItem('buddy_registered_users_v1');
+      if (raw) {
+        const localList = JSON.parse(raw);
+        if (Array.isArray(localList)) {
+          localList.forEach(u => {
+            const uClean = (u.username || '').replace(/^@/, '').toLowerCase();
+            const nClean = (u.name || '').toLowerCase();
+            if (uClean.includes(clean) || nClean.includes(clean)) {
+              if (!results.some(r => r.id === u.id || r.username === u.username)) {
+                results.push({
+                  id: u.id,
+                  username: u.username,
+                  full_name: u.name,
+                  avatar_color: u.color || '#6366F1',
+                  bio: u.bio || 'Verified Member',
+                  status: 'Active now'
+                });
+              }
+            }
+          });
+        }
+      }
+    } catch(e) {}
+
+    if (excludeUserId) {
+      results = results.filter(p => p.id !== excludeUserId);
+    }
+
+    return results;
   }
 
   /* ── 3. 1-TO-1 CONVERSATIONS ── */
