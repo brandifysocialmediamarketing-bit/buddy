@@ -10063,7 +10063,9 @@ html, body {
 
 .as-text-preview-card {
   width: 100% !important;
-  height: 200px !important;
+  max-width: 220px !important;
+  aspect-ratio: 9 / 16 !important;
+  margin: 0 auto !important;
   border-radius: 20px !important;
   padding: 16px !important;
   display: flex !important;
@@ -10123,7 +10125,9 @@ html, body {
 
 .as-photo-dropzone {
   width: 100% !important;
-  height: 220px !important;
+  max-width: 220px !important;
+  aspect-ratio: 9 / 16 !important;
+  margin: 0 auto !important;
   border-radius: 20px !important;
   border: 2px dashed var(--border) !important;
   background: var(--bg-input) !important;
@@ -10134,6 +10138,15 @@ html, body {
   cursor: pointer !important;
   overflow: hidden !important;
   position: relative !important;
+}
+
+.as-photo-dropzone img,
+.as-photo-dropzone video {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 9 / 16 !important;
+  object-fit: cover !important;
+  border-radius: 18px !important;
 }
 
 .as-upload-icon {
