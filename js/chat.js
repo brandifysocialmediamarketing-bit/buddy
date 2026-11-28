@@ -2505,6 +2505,15 @@ const ChatManager = (() => {
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', syncMobileViewport);
     }
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 900 && conversations.length > 0 && !activeConvId) {
+        openChat(conversations[0].id);
+      }
+      syncMobileViewport();
+    });
+    window.addEventListener('orientationchange', () => {
+      setTimeout(syncMobileViewport, 150);
+    });
     window.addEventListener('scroll', () => {
       if (document.body.classList.contains('chat-open')) {
         if (window.scrollY !== 0 || window.pageYOffset !== 0) {
