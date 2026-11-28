@@ -270,12 +270,14 @@ const TapesManager = (() => {
               class="tape-video-element"
               src="${tape.video_url}"
               playsinline
+              webkit-playsinline
               loop
-              preload="metadata"
+              preload="auto"
               ${state.isMuted ? 'muted' : ''}
+              onerror="this.onerror=null; this.src='assets/tapes/tape-ocean.mp4'; this.play().catch(()=>{});"
             ></video>
 
-            <!-- Play/Pause Central Flash Ripple -->
+            <!-- Play/Pause Central Flash Ripple & Tap to Play Indicator -->
             <div class="tape-play-indicator hidden" id="tape-play-ind-${tape.id}">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             </div>
@@ -359,8 +361,113 @@ const TapesManager = (() => {
       `;
     }).join('');
 
+    // Ensure desktop up/down nav arrows exist
+    _ensureDesktopNavControls();
     _bindCardInteractions();
     _setupIntersectionObserver();
+    _setupKeyboardNav();
+  }
+
+  // ── Desktop Next / Prev Controls ──
+  function _ensureDesktopNavControls() {
+    const hub = document.getElementById('tapes-hub-view');
+    if (!hub) return;
+    let controls = hub.querySelector('.tape-nav-controls');
+    if (!controls) {
+      controls = document.createElement('div');
+      controls.className = 'tape-nav-controls';
+      controls.innerHTML = `
+        <button type="button" class="tape-nav-btn tape-nav-prev" onclick="TapesManager.scrollToPrevTape()" title="Previous Tape (Up Arrow)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+        <button type="button" class="tape-nav-btn tape-nav-next" onclick="TapesManager.scrollToNextTape()" title="Next Tape (Down Arrow)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      `;
+      hub.appendChild(controls);
+    }
+  }
+
+  function scrollToNextTape() {
+    const container = document.getElementById('tapes-feed-container');
+    if (!container) return;
+    const cards = container.querySelectorAll('.tape-card');
+    if (!cards.length) return;
+    const scrollTop = container.scrollTop;
+    const cardHeight = container.clientHeight || 500;
+    const nextIndex = Math.min(cards.length - 1, Math.floor((scrollTop + 40) / cardHeight) + 1);
+    cards[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function scrollToPrevTape() {
+    const container = document.getElementById('tapes-feed-container');
+    if (!container) return;
+    const cards = container.querySelectorAll('.tape-card');
+    if (!cards.length) return;
+    const scrollTop = container.scrollTop;
+    const cardHeight = container.clientHeight || 500;
+    const prevIndex = Math.max(0, Math.ceil((scrollTop - 40) / cardHeight) - 1);
+    cards[prevIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function toggleTheaterMode() {
+    const hub = document.getElementById('tapes-hub-view');
+    if (!hub) return;
+    const isTheater = hub.classList.toggle('theater-mode');
+    const theaterBtn = document.getElementById('tapes-theater-btn');
+    if (theaterBtn) {
+      theaterBtn.innerHTML = isTheater
+        ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 14h6v6m10-10h-6V4m0 6l7-7M3 21l7-7"/></svg>`
+        : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>`;
+      theaterBtn.title = isTheater ? 'Exit Full Screen' : 'Expand to Full Screen';
+    }
+    setTimeout(() => {
+      _setupIntersectionObserver();
+    }, 200);
+  }
+
+  function _setupKeyboardNav() {
+    if (window._tapesKeyNavBound) return;
+    window._tapesKeyNavBound = true;
+    window.addEventListener('keydown', (e) => {
+      const hub = document.getElementById('tapes-hub-view');
+      if (!hub || hub.classList.contains('hidden')) return;
+
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        scrollToNextTape();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        scrollToPrevTape();
+      } else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        const visibleVideo = _getCurrentlyVisibleVideo();
+        if (visibleVideo) {
+          const tapeId = visibleVideo.closest('.tape-card')?.getAttribute('data-tape-id');
+          _toggleVideoPlayPause(visibleVideo, tapeId);
+        }
+      } else if (e.key === 'm' || e.key === 'M') {
+        toggleGlobalMute();
+      } else if (e.key === 'Escape' && hub.classList.contains('theater-mode')) {
+        toggleTheaterMode();
+      }
+    });
+  }
+
+  function _getCurrentlyVisibleVideo() {
+    const container = document.getElementById('tapes-feed-container');
+    if (!container) return null;
+    const cards = container.querySelectorAll('.tape-card');
+    const midY = container.getBoundingClientRect().top + (container.clientHeight / 2);
+    for (const card of cards) {
+      const rect = card.getBoundingClientRect();
+      if (rect.top <= midY && rect.bottom >= midY) {
+        return card.querySelector('.tape-video-element');
+      }
+    }
+    return null;
   }
 
   // ── Double-Tap & Single-Tap Handler ──
@@ -451,7 +558,7 @@ const TapesManager = (() => {
 
     const options = {
       root: document.getElementById('tapes-feed-container'),
-      threshold: 0.65
+      threshold: 0.5
     };
 
     state.observer = new IntersectionObserver((entries) => {
@@ -462,10 +569,9 @@ const TapesManager = (() => {
         const vinyl = document.getElementById(`tape-vinyl-${tapeId}`);
         const indicator = document.getElementById(`tape-play-ind-${tapeId}`);
 
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
           if (video) {
             video.muted = state.isMuted;
-            video.currentTime = 0;
             const playPromise = video.play();
             if (playPromise !== undefined) {
               playPromise.then(() => {
@@ -473,7 +579,10 @@ const TapesManager = (() => {
                 if (indicator) indicator.classList.add('hidden');
               }).catch(() => {
                 // Autoplay blocked without user gesture
-                if (indicator) indicator.classList.remove('hidden');
+                if (indicator) {
+                  indicator.innerHTML = '<svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+                  indicator.classList.remove('hidden');
+                }
               });
             }
           }
