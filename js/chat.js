@@ -1968,15 +1968,8 @@ const ChatManager = (() => {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(async () => {
         const q = inp.value.trim();
-        _renderChatList(q);
-
-        if (q.length >= 2 && window.BuddySupabase) {
-          const results = await BuddySupabase.searchProfiles(q, currentUser?.id);
-          if (results && results.length > 0) {
-            _showSearchMatchesInModal(results);
-          }
-        }
-      }, 300);
+        await _renderChatList(q);
+      }, 250);
     });
   }
 
@@ -2007,7 +2000,7 @@ const ChatManager = (() => {
     if (search) {
       search.addEventListener('input', () => {
         clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => _renderSearchUserList(search.value), 300);
+        searchTimer = setTimeout(() => _renderSearchUserList(search.value), 250);
       });
     }
   }
@@ -2015,10 +2008,41 @@ const ChatManager = (() => {
   async function _renderSearchUserList(query) {
     const container = document.getElementById('user-list-container');
     if (!container) return;
-    container.innerHTML = '<div style="padding:24px; text-align:center; color:var(--text-3); font-size:13px;">Type a friend&#39;s <b>@username</b> to find and connect privately...</div>';
 
     const q = (query || '').trim();
-    if (!q || q.length < 2) return;
+    if (!q) {
+      container.innerHTML = '<div style="padding:16px 14px; text-align:center; color:var(--text-3); font-size:12px;">Type a friend&#39;s <b>@username</b> to find and connect privately...</div>';
+      let recents = [];
+      if (window.BuddySupabase) {
+        try {
+          recents = await BuddySupabase.searchProfiles('a', currentUser?.id);
+        } catch(e) {}
+      }
+      if (recents && recents.length > 0) {
+        const title = document.createElement('div');
+        title.className = 'chat-search-section-title';
+        title.textContent = 'Discover Buddies';
+        container.appendChild(title);
+        recents.filter(u => !FAKE_BUDDY_IDS.has(u.id)).forEach(u => {
+          const el = document.createElement('div');
+          el.className = 'user-pick-item';
+          el.innerHTML = `
+            <div class="chat-item-avatar" style="background:${u.avatar_color || '#6366F1'}">${_initials(u.full_name || u.username)}</div>
+            <div class="user-pick-info">
+              <div class="user-pick-name">${_esc(u.full_name || 'User')}</div>
+              <div class="user-pick-uname">@${_esc((u.username || '').replace(/^@/, ''))} • ${_esc(u.bio || 'Verified Member')}</div>
+            </div>
+            <button type="button" class="btn-primary sui-btn">Chat 💬</button>
+          `;
+          el.addEventListener('click', async () => {
+            await _startRealChatWithUser(u);
+            document.getElementById('new-chat-overlay')?.classList.add('hidden');
+          });
+          container.appendChild(el);
+        });
+      }
+      return;
+    }
 
     container.innerHTML = '<div style="padding:24px; text-align:center; color:var(--text-3);">Searching registered users...</div>';
 
@@ -2026,11 +2050,12 @@ const ChatManager = (() => {
     if (window.BuddySupabase) {
       matches = await BuddySupabase.searchProfiles(q, currentUser?.id);
     }
+    matches = (matches || []).filter(u => !FAKE_BUDDY_IDS.has(u.id));
 
-    if (!matches || matches.length === 0) {
+    if (matches.length === 0) {
       container.innerHTML = `<div style="padding:28px 16px; text-align:center; color:var(--text-3); font-size:13px; line-height:1.6;">
         No user found with "<b>${_esc(q)}</b>"<br/>
-        <span style="font-size:11px;">Make sure your friend has registered and verified their @username on BUDDY!</span>
+        <span style="font-size:11px;">Make sure your friend has registered their @username on BUDDY!</span>
       </div>`;
       return;
     }
@@ -2043,8 +2068,9 @@ const ChatManager = (() => {
         <div class="chat-item-avatar" style="background:${u.avatar_color || '#6366F1'}">${_initials(u.full_name || u.username)}</div>
         <div class="user-pick-info">
           <div class="user-pick-name">${_esc(u.full_name || 'User')}</div>
-          <div class="user-pick-uname">${_esc(u.username)} • ${_esc(u.bio || 'Verified Member')}</div>
+          <div class="user-pick-uname">@${_esc((u.username || '').replace(/^@/, ''))} • ${_esc(u.bio || 'Verified Member')}</div>
         </div>
+        <button type="button" class="btn-primary sui-btn">Chat 💬</button>
       `;
       el.addEventListener('click', async () => {
         await _startRealChatWithUser(u);
