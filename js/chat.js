@@ -974,13 +974,6 @@ const ChatManager = (() => {
             ${reactionsHtml}
             <div class="msg-meta">
               <span class="msg-time">${msg.time}</span>
-              ${isSent ? `
-                <span class="msg-status" title="${msg.seen ? 'Read' : 'Delivered'}">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="${msg.seen ? '#6366F1' : 'currentColor'}" stroke-width="2.5">
-                    <polyline points="20 6 9 17 4 12" />
-                    <polyline points="20 12 15 17" />
-                  </svg>
-                </span>` : ''}
             </div>
             <div class="reaction-bar hidden" data-msg-id="${msg.id}">
               <button class="reaction-bar-btn" data-emoji="❤️">❤️</button>
@@ -1003,6 +996,11 @@ const ChatManager = (() => {
             </svg>
           </button>
         </div>
+        ${isLastSent ? `
+          <div class="insta-seen-row">
+            ${msg.seen ? '<span class="insta-seen-text">Seen</span>' : '<span class="insta-delivered-text">Delivered</span>'}
+          </div>
+        ` : ''}
       `;
 
       if (idx === conv.messages.length - 1) {
