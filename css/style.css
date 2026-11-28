@@ -6857,13 +6857,13 @@ html, body {
   .chat-header-actions {
     display: flex !important;
     align-items: center !important;
-    gap: 5px !important;
+    gap: 4px !important;
     flex-shrink: 0 !important;
   }
 
   .chat-header-actions .icon-btn {
-    width: 36px !important;
-    height: 36px !important;
+    width: 33px !important;
+    height: 33px !important;
     border-radius: 50% !important;
     background: var(--bg-input) !important;
     color: var(--text) !important;
@@ -6872,6 +6872,10 @@ html, body {
     align-items: center !important;
     justify-content: center !important;
     flex-shrink: 0 !important;
+  }
+  .chat-header-actions .icon-btn svg {
+    width: 17px !important;
+    height: 17px !important;
   }
 
   .messages-area {
