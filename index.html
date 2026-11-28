@@ -454,19 +454,29 @@
     <!-- CHAT AREA -->
     <main class="chat-area" id="chat-area">
       <div class="empty-state" id="empty-state">
-        <div class="empty-brand-center">
-          <img src="assets/logo-dark.png?v=199" alt="BUDDY" class="empty-full-logo dark-theme-logo" />
-          <img src="assets/logo.png?v=199" alt="BUDDY" class="empty-full-logo light-theme-logo" />
+        <div class="empty-state-card">
+          <div class="empty-brand-center">
+            <img src="assets/logo-dark.png?v=218" alt="BUDDY" class="empty-full-logo dark-theme-logo" />
+            <img src="assets/logo.png?v=218" alt="BUDDY" class="empty-full-logo light-theme-logo" />
+          </div>
+          <h2>Welcome to BUDDY</h2>
+          <p>Your private space for real, meaningful conversations & memories.</p>
+          <div class="empty-quick-actions">
+            <button class="btn-primary" id="empty-start-chat-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Start a Chat
+            </button>
+            <button type="button" class="btn-secondary" onclick="document.getElementById('tab-radar-btn')?.click()">
+              <span>🌐</span> Radar
+            </button>
+            <button type="button" class="btn-secondary" onclick="document.getElementById('tab-tapes-btn')?.click()">
+              <span>🎥</span> Tapes Feed
+            </button>
+          </div>
         </div>
-        <h2>Your private space</h2>
-        <p>Select a person to start chatting.</p>
-        <button class="btn-primary" id="empty-start-chat-btn" style="margin-top:16px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-          Start a Chat
-        </button>
       </div>
 
       <div class="active-chat hidden" id="active-chat">
