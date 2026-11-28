@@ -16,70 +16,7 @@ const ActivityManager = (() => {
   const STORAGE_KEY = 'buddy_instagram_activity_v2';
   const SEEN_ACTIVITIES_KEY = 'buddy_activity_seen_map_v1';
 
-  const INITIAL_ACTIVITIES = [
-    {
-      id: 'act_req_dev',
-      type: 'friend_request',
-      sender_id: 'dev-kapoor',
-      sender_name: 'Dev Kapoor',
-      sender_username: '@dev_beats',
-      sender_avatar: null,
-      sender_color: '#0ea5e9',
-      status: 'pending',
-      text: 'sent you a friend request',
-      detail: 'Producer & Gamer • 4.2 km away on Radar',
-      created_at: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
-      is_seen: false
-    },
-    {
-      id: 'act_reel_ananya',
-      type: 'reel_linked_story',
-      sender_id: 'ananya-sharma',
-      sender_name: 'Ananya Sharma',
-      sender_username: '@ananya_coffee',
-      sender_avatar: null,
-      sender_color: '#f43f5e',
-      status: 'done',
-      text: 'linked your uploaded reel in their story 🎬',
-      detail: 'Chasing sunsets with good music & friends',
-      tape_id: 'tape-3',
-      tape_video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-      created_at: new Date(Date.now() - 90 * 60 * 1000).toISOString(),
-      is_seen: false
-    },
-    {
-      id: 'act_story_rohan',
-      type: 'story_mention',
-      sender_id: 'rohan-meera',
-      sender_name: 'Rohan & Meera',
-      sender_username: '@rohan_meera',
-      sender_avatar: null,
-      sender_color: '#8b5cf6',
-      status: 'done',
-      text: 'mentioned you in a 24h story moment ✨',
-      detail: 'Midnight pancakes & laughing at memories',
-      tape_id: 'tape-2',
-      tape_video: 'https://www.w3schools.com/html/mov_bbb.mp4',
-      created_at: new Date(Date.now() - 180 * 60 * 1000).toISOString(),
-      is_seen: false
-    },
-    {
-      id: 'act_like_priya',
-      type: 'reel_like',
-      sender_id: 'creator-priya',
-      sender_name: 'Priya Sharma',
-      sender_username: '@priya_vibe',
-      sender_avatar: null,
-      sender_color: '#ec4899',
-      status: 'done',
-      text: 'liked your reel 💖',
-      detail: 'Nature blooms when you find true friends',
-      tape_id: 'tape-1',
-      tape_video: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
-      created_at: new Date(Date.now() - 360 * 60 * 1000).toISOString(),
-      is_seen: true
-    }
-  ];
+  const INITIAL_ACTIVITIES = [];
 
   let state = {
     activities: [],
