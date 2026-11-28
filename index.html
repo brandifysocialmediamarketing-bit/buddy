@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F8F9FE" />
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#090A11" />
   <meta name="theme-color" content="#090A11" />
@@ -22,8 +23,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=223" />
-  <script src="js/adaptive-engine.js?v=223"></script>
+  <link rel="stylesheet" href="css/style.css?v=222" />
+  <link rel="stylesheet" href="css/style.css?v=224" />
+  <script src="js/adaptive-engine.js?v=224"></script>
   <script>
     (function () {
       try {
@@ -36,7 +38,7 @@
             document.documentElement.classList.add('is-ios-standalone');
           }
         }
-      } catch (e) {}
+      } catch (e) { }
     })();
   </script>
 </head>
@@ -64,7 +66,8 @@
         <form id="login-form" class="auth-form" novalidate>
           <div class="field-group">
             <label for="login-email">Username or Email</label>
-            <input type="text" id="login-email" placeholder="Username (e.g. @yourname) or Email" autocomplete="username" />
+            <input type="text" id="login-email" placeholder="Username (e.g. @yourname) or Email"
+              autocomplete="username" />
           </div>
           <div class="field-group">
             <label for="login-password">Password</label>
@@ -179,7 +182,8 @@
         <form id="forgot-form" class="auth-form" novalidate>
           <div class="field-group">
             <label for="forgot-email">Registered Email Address (or Username)</label>
-            <input type="text" id="forgot-email" placeholder="e.g. yourname@gmail.com or @username" autocomplete="email" />
+            <input type="text" id="forgot-email" placeholder="e.g. yourname@gmail.com or @username"
+              autocomplete="email" />
           </div>
           <button type="submit" class="btn-primary">Send Reset Link</button>
         </form>
@@ -200,14 +204,18 @@
           <div class="field-group">
             <label for="new-password-input">New Password</label>
             <div class="pass-wrap">
-              <input type="password" id="new-password-input" placeholder="Min. 6 characters" autocomplete="new-password" required />
+              <input type="password" id="new-password-input" placeholder="Min. 6 characters" autocomplete="new-password"
+                required />
               <button type="button" class="eye-btn" data-for="new-password-input" aria-label="Show password">
-                <svg class="eye-open" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="eye-open" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                   <circle cx="12" cy="12" r="3" />
                 </svg>
-                <svg class="eye-closed" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
-                  <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                <svg class="eye-closed" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" style="display:none">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
                   <line x1="1" y1="1" x2="23" y2="23" />
                 </svg>
               </button>
@@ -216,14 +224,18 @@
           <div class="field-group">
             <label for="confirm-password-input">Confirm New Password</label>
             <div class="pass-wrap">
-              <input type="password" id="confirm-password-input" placeholder="Repeat new password" autocomplete="new-password" required />
+              <input type="password" id="confirm-password-input" placeholder="Repeat new password"
+                autocomplete="new-password" required />
               <button type="button" class="eye-btn" data-for="confirm-password-input" aria-label="Show password">
-                <svg class="eye-open" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="eye-open" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                   <circle cx="12" cy="12" r="3" />
                 </svg>
-                <svg class="eye-closed" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
-                  <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                <svg class="eye-closed" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" style="display:none">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
                   <line x1="1" y1="1" x2="23" y2="23" />
                 </svg>
               </button>
@@ -273,9 +285,11 @@
             </svg>
           </button>
           <!-- Instagram Style Activity & Friend Requests Heart Button -->
-          <button class="icon-btn activity-hub-btn" id="btn-activity-hub" onclick="ActivityManager.openActivityHub()" title="Activity & Friend Requests (Instagram Style)" aria-label="Activity" style="position:relative;">
+          <button class="icon-btn activity-hub-btn" id="btn-activity-hub" onclick="ActivityManager.openActivityHub()"
+            title="Activity & Friend Requests (Instagram Style)" aria-label="Activity" style="position:relative;">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+              <path
+                d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
             </svg>
             <span class="activity-badge-dot hidden" id="activity-badge-dot"></span>
           </button>
@@ -298,14 +312,17 @@
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
-          <input type="text" id="chat-search-input" placeholder="Search chats or find friends by @username…" aria-label="Search chats or friends" />
+          <input type="text" id="chat-search-input" placeholder="Search chats or find friends by @username…"
+            aria-label="Search chats or friends" />
         </div>
       </div>
 
       <!-- Segmented Navigation (Chats vs Tapes vs Radar vs Games) -->
       <div class="sidebar-nav-tabs">
         <button type="button" class="sidebar-tab-btn active" id="tab-chats-btn" title="Chats">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
           <span>Chats</span>
         </button>
         <button type="button" class="sidebar-tab-btn" id="tab-tapes-btn" title="Tapes (Shorts Feed)">
@@ -341,17 +358,19 @@
             <span>Tapes Feed</span>
           </div>
           <div style="display:flex; gap:8px;">
-            <button type="button" class="tapes-ctrl-btn" id="tapes-global-mute-btn" title="Toggle Mute" onclick="TapesManager.toggleGlobalMute()">
+            <button type="button" class="tapes-ctrl-btn" id="tapes-global-mute-btn" title="Toggle Mute"
+              onclick="TapesManager.toggleGlobalMute()">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="1" y1="1" x2="23" y2="23"/>
-                <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/>
-                <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/>
+                <line x1="1" y1="1" x2="23" y2="23" />
+                <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
+                <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />
               </svg>
             </button>
-            <button type="button" class="tapes-ctrl-btn add-tape-btn" id="btn-create-tape-top" title="Create / Upload Tape" onclick="TapesManager.openCreateTapeModal()">
+            <button type="button" class="tapes-ctrl-btn add-tape-btn" id="btn-create-tape-top"
+              title="Create / Upload Tape" onclick="TapesManager.openCreateTapeModal()">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="12" y1="5" x2="12" y2="19"/>
-                <line x1="5" y1="12" x2="19" y2="12"/>
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
             </button>
           </div>
@@ -368,7 +387,8 @@
               <p>Discover real buddies nearby & globally</p>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
-              <button type="button" class="radar-test-req-btn" onclick="RadarManager.simulateIncomingRequest()" title="Simulate Incoming Instagram-style Friend Request">
+              <button type="button" class="radar-test-req-btn" onclick="RadarManager.simulateIncomingRequest()"
+                title="Simulate Incoming Instagram-style Friend Request">
                 <span>⚡ Test Request</span>
               </button>
               <button type="button" class="radar-btn-broadcast" onclick="RadarManager.openBroadcastModal()">
@@ -388,11 +408,16 @@
           </div>
 
           <div class="radar-chips-row">
-            <button type="button" class="radar-chip active" data-filter="all" onclick="RadarManager.setFilter('all')">✨ All Buddies</button>
-            <button type="button" class="radar-chip" data-filter="nearby" onclick="RadarManager.setFilter('nearby')">📍 Nearby (&lt; 3km)</button>
-            <button type="button" class="radar-chip" data-filter="couples" onclick="RadarManager.setFilter('couples')">💑 Couples</button>
-            <button type="button" class="radar-chip" data-filter="chill" onclick="RadarManager.setFilter('chill')">☕ Chill Talks</button>
-            <button type="button" class="radar-chip" data-filter="gaming" onclick="RadarManager.setFilter('gaming')">🎮 Gaming</button>
+            <button type="button" class="radar-chip active" data-filter="all" onclick="RadarManager.setFilter('all')">✨
+              All Buddies</button>
+            <button type="button" class="radar-chip" data-filter="nearby" onclick="RadarManager.setFilter('nearby')">📍
+              Nearby (&lt; 3km)</button>
+            <button type="button" class="radar-chip" data-filter="couples"
+              onclick="RadarManager.setFilter('couples')">💑 Couples</button>
+            <button type="button" class="radar-chip" data-filter="chill" onclick="RadarManager.setFilter('chill')">☕
+              Chill Talks</button>
+            <button type="button" class="radar-chip" data-filter="gaming" onclick="RadarManager.setFilter('gaming')">🎮
+              Gaming</button>
           </div>
         </div>
 
@@ -426,19 +451,25 @@
           </div>
 
           <!-- Game 2: Truth or Dare 🎯 (Couples Edition) -->
-          <div class="game-hub-card active-game-card" id="card-game-truth-or-dare" onclick="window.TruthOrDareGame && window.TruthOrDareGame.openGame()" style="cursor: pointer;">
-            <div class="game-hub-card-art" style="background: linear-gradient(135deg, #18171f 0%, #292834 50%, #0d0c11 100%) !important; border-bottom: 2px solid rgba(244, 63, 94, 0.45);">
+          <div class="game-hub-card active-game-card" id="card-game-truth-or-dare"
+            onclick="window.TruthOrDareGame && window.TruthOrDareGame.openGame()" style="cursor: pointer;">
+            <div class="game-hub-card-art"
+              style="background: linear-gradient(135deg, #18171f 0%, #292834 50%, #0d0c11 100%) !important; border-bottom: 2px solid rgba(244, 63, 94, 0.45);">
               <span class="game-hub-mascot">🎯✨</span>
-              <span class="game-hub-tag" style="background: #f43f5e !important; color: #fff !important;">🔥 Couples Vibe • 600+</span>
+              <span class="game-hub-tag" style="background: #f43f5e !important; color: #fff !important;">🔥 Couples Vibe
+                • 600+</span>
             </div>
             <div class="game-hub-card-info">
               <h3 class="game-hub-name">Truth or Dare 🎯</h3>
-              <p class="game-hub-desc">Pick your vibe — Sweet, Flirty, Spicy or Extreme! Spin the dual wheel & reveal romantic truths or spicy couple dares!</p>
+              <p class="game-hub-desc">Pick your vibe — Sweet, Flirty, Spicy or Extreme! Spin the dual wheel & reveal
+                romantic truths or spicy couple dares!</p>
               <div class="game-hub-meta">
                 <span>💕 4 Heat Vibes</span> • <span>🎲 Spin Wheel</span> • <span>🔥 600+ Cards</span>
               </div>
             </div>
-            <button type="button" class="game-hub-play-btn" id="btn-launch-truth-or-dare" onclick="event.stopPropagation(); window.TruthOrDareGame && window.TruthOrDareGame.openGame();" style="background: linear-gradient(135deg, #f43f5e, #8b5cf6) !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.4) !important;">
+            <button type="button" class="game-hub-play-btn" id="btn-launch-truth-or-dare"
+              onclick="event.stopPropagation(); window.TruthOrDareGame && window.TruthOrDareGame.openGame();"
+              style="background: linear-gradient(135deg, #f43f5e, #8b5cf6) !important; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.4) !important;">
               Play Game ➔
             </button>
           </div>
@@ -549,9 +580,9 @@
                 </button>
                 <button class="more-drop-item" id="change-wallpaper-item">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                    <polyline points="21 15 16 10 5 21"/>
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
                   </svg>
                   <span>Chat Wallpaper & Theme</span>
                 </button>
@@ -694,12 +725,16 @@
         <div class="chat-request-bar hidden" id="chat-request-bar">
           <div class="request-bar-notice">
             <div class="request-notice-title" id="request-bar-title">Message Request</div>
-            <div class="request-notice-sub" id="request-bar-sub">Do you want to let this user send you messages? They won't know you've seen it until you accept.</div>
+            <div class="request-notice-sub" id="request-bar-sub">Do you want to let this user send you messages? They
+              won't know you've seen it until you accept.</div>
           </div>
           <div class="request-bar-actions">
-            <button type="button" class="request-btn request-btn-block" id="req-btn-block" title="Block user">Block</button>
-            <button type="button" class="request-btn request-btn-delete" id="req-btn-delete" title="Delete request">Delete</button>
-            <button type="button" class="request-btn request-btn-accept" id="req-btn-accept" title="Accept request">Accept</button>
+            <button type="button" class="request-btn request-btn-block" id="req-btn-block"
+              title="Block user">Block</button>
+            <button type="button" class="request-btn request-btn-delete" id="req-btn-delete"
+              title="Delete request">Delete</button>
+            <button type="button" class="request-btn request-btn-accept" id="req-btn-accept"
+              title="Accept request">Accept</button>
           </div>
         </div>
       </div>
@@ -716,7 +751,8 @@
           <span style="font-size:18px;">📩</span>
           <h2>Message Requests</h2>
         </div>
-        <button class="modal-x-btn" id="close-requests-modal-btn" aria-label="Close" onclick="ChatManager.closeRequestsModal()">
+        <button class="modal-x-btn" id="close-requests-modal-btn" aria-label="Close"
+          onclick="ChatManager.closeRequestsModal()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
@@ -724,7 +760,11 @@
         </button>
       </div>
       <div class="requests-info-banner">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12.01" y2="8" />
+        </svg>
         <span>Open a request to see the message. They won't know you've seen it until you accept.</span>
       </div>
       <div class="modal-list requests-list-wrap" id="requests-list-container"></div>
@@ -740,7 +780,8 @@
           <span style="font-size:18px;">❤️</span>
           <h2>Activity & Requests</h2>
         </div>
-        <button class="modal-x-btn" id="close-activity-hub-btn" aria-label="Close" onclick="ActivityManager.closeActivityHub()">
+        <button class="modal-x-btn" id="close-activity-hub-btn" aria-label="Close"
+          onclick="ActivityManager.closeActivityHub()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
@@ -751,19 +792,24 @@
       <!-- Quick Test & Simulation Bar -->
       <div class="activity-quick-test-bar">
         <span class="test-bar-label">⚡ Live Demos:</span>
-        <button type="button" class="act-test-btn" onclick="ActivityManager.simulateReelLinkedToStory()" title="Simulate someone linking your reel into their story">
+        <button type="button" class="act-test-btn" onclick="ActivityManager.simulateReelLinkedToStory()"
+          title="Simulate someone linking your reel into their story">
           <span>🎬 Test Reel Linked</span>
         </button>
-        <button type="button" class="act-test-btn" onclick="ActivityManager.simulateFriendRequest()" title="Simulate incoming Instagram friend request">
+        <button type="button" class="act-test-btn" onclick="ActivityManager.simulateFriendRequest()"
+          title="Simulate incoming Instagram friend request">
           <span>🤝 Test Request</span>
         </button>
       </div>
 
       <!-- Filter Chips (All | Friend Requests | Reels & Stories) -->
       <div class="activity-filter-bar">
-        <button type="button" class="activity-filter-pill active" data-filter="all" onclick="ActivityManager.setFilter('all')">All Activity</button>
-        <button type="button" class="activity-filter-pill" data-filter="requests" onclick="ActivityManager.setFilter('requests')">Friend Requests</button>
-        <button type="button" class="activity-filter-pill" data-filter="reels_stories" onclick="ActivityManager.setFilter('reels_stories')">Reels & Stories 🎬</button>
+        <button type="button" class="activity-filter-pill active" data-filter="all"
+          onclick="ActivityManager.setFilter('all')">All Activity</button>
+        <button type="button" class="activity-filter-pill" data-filter="requests"
+          onclick="ActivityManager.setFilter('requests')">Friend Requests</button>
+        <button type="button" class="activity-filter-pill" data-filter="reels_stories"
+          onclick="ActivityManager.setFilter('reels_stories')">Reels & Stories 🎬</button>
       </div>
 
       <div class="modal-list activity-list-wrap" id="activity-feed-list"></div>
@@ -827,7 +873,8 @@
             <span class="pvc-icon">🛡️</span>
             <div>
               <div class="pvc-title">Verified Profile Badge <span class="free-pill">100% FREE</span></div>
-              <div class="pvc-desc" id="pvc-status-desc">Get authentic blue tick next to your name across chats, stories & tapes.</div>
+              <div class="pvc-desc" id="pvc-status-desc">Get authentic blue tick next to your name across chats, stories
+                & tapes.</div>
             </div>
           </div>
           <div id="pvc-action-wrap">
@@ -972,7 +1019,8 @@
             title="Pick custom color" />
         </div>
 
-        <button class="btn-secondary" id="modal-wallpaper-btn" style="width:100%; margin-top:12px; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
+        <button class="btn-secondary" id="modal-wallpaper-btn"
+          style="width:100%; margin-top:12px; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
           <span style="font-size:16px;">🖼️</span>
           <span>Change Chat Wallpaper & Theme</span>
         </button>
@@ -1010,11 +1058,13 @@
   <!-- CALL MODAL (TRUE WEBRTC AUDIO & VIDEO CALLING WITH AI FACE TRACKING) -->
   <div class="modal-overlay hidden" id="call-overlay">
     <!-- VOICE CALL CARD -->
-    <audio id="webrtc-remote-audio" autoplay playsinline webkit-playsinline style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;"></audio>
+    <audio id="webrtc-remote-audio" autoplay playsinline webkit-playsinline
+      style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;"></audio>
     <div class="call-card" id="call-audio-card">
       <div class="call-type-badge" id="call-type-badge">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+          <path
+            d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
         </svg>
         <span id="call-type-label">BUDDY Voice Call</span>
       </div>
@@ -1032,7 +1082,8 @@
       <!-- ACTIVE CALL ACTIONS -->
       <div class="call-actions" id="call-active-actions">
         <button class="call-btn-circle" id="call-mute-btn" title="Mute Microphone">
-          <svg class="mic-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg class="mic-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
             <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
             <path d="M19 10v2a7 7 0 01-14 0v-2" />
             <line x1="12" y1="19" x2="12" y2="23" />
@@ -1055,12 +1106,15 @@
 
       <!-- INCOMING CALL ACTIONS -->
       <div class="call-actions hidden" id="call-incoming-actions" style="gap:24px;">
-        <button class="call-btn-circle call-accept-btn" id="call-accept-btn" title="Accept Call" style="background:#10B981; color:#fff; width:56px; height:56px;">
+        <button class="call-btn-circle call-accept-btn" id="call-accept-btn" title="Accept Call"
+          style="background:#10B981; color:#fff; width:56px; height:56px;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+            <path
+              d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
           </svg>
         </button>
-        <button class="call-btn-circle call-end-btn" id="call-decline-btn" title="Decline Call" style="width:56px; height:56px;">
+        <button class="call-btn-circle call-end-btn" id="call-decline-btn" title="Decline Call"
+          style="width:56px; height:56px;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
@@ -1097,7 +1151,8 @@
       <!-- Quick Helper Tips For Devices -->
       <div class="call-perm-guide" id="call-perm-guide">
         <div class="perm-guide-item" id="guide-perm-text">
-          💡 Tap <b>"Allow"</b> in the browser prompt. Once allowed, calls will connect automatically without asking again.
+          💡 Tap <b>"Allow"</b> in the browser prompt. Once allowed, calls will connect automatically without asking
+          again.
         </div>
       </div>
     </div>
@@ -1115,7 +1170,8 @@
           <div class="call-ring r3"></div>
           <div class="call-avatar" id="video-remote-avatar">F</div>
         </div>
-        <div class="call-peer-name" id="video-remote-name" style="margin-top:14px; color:#fff;">Connecting Video...</div>
+        <div class="call-peer-name" id="video-remote-name" style="margin-top:14px; color:#fff;">Connecting Video...
+        </div>
       </div>
 
       <!-- Top Overlay Bar -->
@@ -1198,7 +1254,8 @@
       <!-- Video Bottom Controls Bar -->
       <div class="video-bottom-controls">
         <button type="button" class="call-btn-circle" id="video-mute-btn" title="Mute Microphone">
-          <svg class="mic-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg class="mic-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
             <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
             <path d="M19 10v2a7 7 0 01-14 0v-2" />
             <line x1="12" y1="19" x2="12" y2="23" />
@@ -1231,53 +1288,68 @@
     </div>
   </div>
 
-      <div class="call-peer-name" id="call-peer-name">Aarav Shah</div>
-      <div class="call-status-timer" id="call-status-timer">Ringing...</div>
+  <div class="call-peer-name" id="call-peer-name">Aarav Shah</div>
+  <div class="call-status-timer" id="call-status-timer">Ringing...</div>
 
-      <div class="call-actions">
-        <button class="call-btn-circle" id="call-mute-btn" title="Mute Microphone">
-          <svg class="mic-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
-            <path d="M19 10v2a7 7 0 01-14 0v-2" />
-            <line x1="12" y1="19" x2="12" y2="23" />
-            <line x1="8" y1="23" x2="16" y2="23" />
-          </svg>
-        </button>
-        <button class="call-btn-circle" id="call-speaker-btn" title="Speaker">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-            <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
-          </svg>
-        </button>
-        <button class="call-btn-circle call-end-btn" id="call-hangup-btn" title="End Call">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
-      </div>
-    </div>
+  <div class="call-actions">
+    <button class="call-btn-circle" id="call-mute-btn" title="Mute Microphone">
+      <svg class="mic-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+        <path d="M19 10v2a7 7 0 01-14 0v-2" />
+        <line x1="12" y1="19" x2="12" y2="23" />
+        <line x1="8" y1="23" x2="16" y2="23" />
+      </svg>
+    </button>
+    <button class="call-btn-circle" id="call-speaker-btn" title="Speaker">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+        <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
+      </svg>
+    </button>
+    <button class="call-btn-circle call-end-btn" id="call-hangup-btn" title="End Call">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+  </div>
+  </div>
   </div>
 
   <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/theme.js?v=223"></script>
-  <script src="js/wallpaper.js?v=223"></script>
+  <script src="js/theme.js?v=222"></script>
+  <script src="js/wallpaper.js?v=222"></script>
+  <script src="js/theme.js?v=224"></script>
+  <script src="js/wallpaper.js?v=224"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=223"></script>
-  <script src="js/webrtc-call.js?v=223"></script>
-  <script src="js/chat.js?v=223"></script>
-  <script src="js/auth.js?v=223"></script>
-  <script src="js/app.js?v=223"></script>
-  <script src="js/dont-block-me-game.js?v=223"></script>
-  <script src="js/truth-or-dare-data.js?v=223"></script>
-  <script src="js/truth-or-dare-game.js?v=223"></script>
-  <script src="js/stories-manager.js?v=223"></script>
-  <script src="js/tapes-manager.js?v=223"></script>
-  <script src="js/verified-badge-manager.js?v=223"></script>
-  <script src="js/radar-manager.js?v=223"></script>
-  <script src="js/activity-manager.js?v=223"></script>
+  <script src="js/supabase-config.js?v=222"></script>
+  <script src="js/webrtc-call.js?v=222"></script>
+  <script src="js/chat.js?v=222"></script>
+  <script src="js/auth.js?v=222"></script>
+  <script src="js/app.js?v=222"></script>
+  <script src="js/dont-block-me-game.js?v=222"></script>
+  <script src="js/truth-or-dare-data.js?v=222"></script>
+  <script src="js/truth-or-dare-game.js?v=222"></script>
+  <script src="js/stories-manager.js?v=222"></script>
+  <script src="js/tapes-manager.js?v=222"></script>
+  <script src="js/verified-badge-manager.js?v=222"></script>
+  <script src="js/radar-manager.js?v=222"></script>
+  <script src="js/activity-manager.js?v=222"></script>
+  <script src="js/supabase-config.js?v=224"></script>
+  <script src="js/webrtc-call.js?v=224"></script>
+  <script src="js/chat.js?v=224"></script>
+  <script src="js/auth.js?v=224"></script>
+  <script src="js/app.js?v=224"></script>
+  <script src="js/dont-block-me-game.js?v=224"></script>
+  <script src="js/truth-or-dare-data.js?v=224"></script>
+  <script src="js/truth-or-dare-game.js?v=224"></script>
+  <script src="js/stories-manager.js?v=224"></script>
+  <script src="js/tapes-manager.js?v=224"></script>
+  <script src="js/verified-badge-manager.js?v=224"></script>
+  <script src="js/radar-manager.js?v=224"></script>
+  <script src="js/activity-manager.js?v=224"></script>
+  <script src="js/profile-manager.js?v=224"></script>
   <!-- Live Auto-Reload & Cloud Auto-Updater -->
   <script>
     (function () {
@@ -1308,7 +1380,8 @@
       }
 
       // 2. Production Live Cloud Auto-Updater (Detects new git deployments on mobile & web)
-      var currentVersion = 'v223';
+      var currentVersion = 'v222';
+      var currentVersion = 'v224';
       function checkLiveDeploy() {
         try {
           fetch('/api/version?t=' + Date.now(), { cache: 'no-store' })
@@ -1325,8 +1398,8 @@
                 }, 1000);
               }
             })
-            .catch(function () {});
-        } catch (e) {}
+            .catch(function () { });
+        } catch (e) { }
       }
 
       document.addEventListener('visibilitychange', function () {
@@ -1334,7 +1407,7 @@
       });
       setInterval(checkLiveDeploy, 15000);
     })();
-  
+
     // Navigation & View Switching (Chats vs Tapes vs Radar vs Games)
     const tabChatsBtn = document.getElementById('tab-chats-btn');
     const tabTapesBtn = document.getElementById('tab-tapes-btn');
@@ -1434,7 +1507,7 @@
       };
     }
 
-    
+
     // Mobile Connect Modal Controller
     const mobileConnectBtn = document.getElementById('mobile-connect-btn');
     const mobileConnectOverlay = document.getElementById('mobile-connect-overlay');
@@ -1488,9 +1561,9 @@
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then((reg) => {
-          reg.update().catch(() => {});
-          setInterval(() => { reg.update().catch(() => {}); }, 20000);
-        }).catch(() => {});
+          reg.update().catch(() => { });
+          setInterval(() => { reg.update().catch(() => { }); }, 20000);
+        }).catch(() => { });
       });
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         window.location.reload();
@@ -1543,21 +1616,19 @@
             <div class="dbm-invite-sheet-title">
               <span>💬</span> Send Quiz to Friends
             </div>
-            <button type="button" class="dbm-invite-sheet-close" id="dbm-btn-close-friends-modal" title="Close">✕</button>
+            <button type="button" class="dbm-invite-sheet-close" id="dbm-btn-close-friends-modal"
+              title="Close">✕</button>
           </div>
 
-          <p class="dbm-invite-sheet-sub">Select any friend in BUDDY to drop your quiz challenge directly into their chat!</p>
+          <p class="dbm-invite-sheet-sub">Select any friend in BUDDY to drop your quiz challenge directly into their
+            chat!</p>
 
           <div class="dbm-invite-search-box">
             <span class="dbm-invite-search-icon">🔍</span>
-            <input 
-              type="text" 
-              id="dbm-friends-search-input" 
-              class="dbm-invite-search-input" 
-              placeholder="Search by name or @username..." 
-              autocomplete="off" 
-            />
-            <button type="button" class="dbm-invite-clear-search hidden" id="dbm-btn-clear-search" title="Clear search">✕</button>
+            <input type="text" id="dbm-friends-search-input" class="dbm-invite-search-input"
+              placeholder="Search by name or @username..." autocomplete="off" />
+            <button type="button" class="dbm-invite-clear-search hidden" id="dbm-btn-clear-search"
+              title="Clear search">✕</button>
           </div>
 
           <div class="dbm-friends-list-scroll" id="dbm-friends-list-container">
@@ -1585,7 +1656,8 @@
           <span>🎯</span>
           <span>Truth or Dare</span>
         </div>
-        <button type="button" class="tod-close-btn" id="tod-game-close-btn" title="Close Game" onclick="window.TruthOrDareGame && window.TruthOrDareGame.closeGameModal();">✕</button>
+        <button type="button" class="tod-close-btn" id="tod-game-close-btn" title="Close Game"
+          onclick="window.TruthOrDareGame && window.TruthOrDareGame.closeGameModal();">✕</button>
       </div>
 
       <!-- Active Screen Container (Lobby, Wheel, Card) -->
@@ -1605,8 +1677,8 @@
         </div>
         <button class="modal-x-btn" id="close-mobile-connect-btn" aria-label="Close">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
       </div>
@@ -1616,7 +1688,9 @@
       <!-- QR CODE CONTAINER -->
       <div class="mobile-qr-wrap">
         <div class="mobile-qr-box">
-          <img id="mobile-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=http://192.168.1.16:3456/&bgcolor=ffffff&color=090b10&qzone=2" alt="BUDDY Mobile QR Code" />
+          <img id="mobile-qr-img"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=http://192.168.1.16:3456/&bgcolor=ffffff&color=090b10&qzone=2"
+            alt="BUDDY Mobile QR Code" />
         </div>
         <div class="mobile-qr-hint">Scan with iPhone Camera or Android Google Lens / Camera</div>
       </div>
@@ -1625,7 +1699,8 @@
       <div class="mobile-url-card">
         <div class="mobile-url-label">Direct Wi-Fi Link:</div>
         <div class="mobile-url-row">
-          <input type="text" readonly id="mobile-url-input" class="mobile-url-input" value="http://192.168.1.16:3456/" />
+          <input type="text" readonly id="mobile-url-input" class="mobile-url-input"
+            value="http://192.168.1.16:3456/" />
           <button type="button" class="btn-primary mobile-copy-btn" id="btn-copy-mobile-url">
             <span id="mobile-copy-text">Copy</span>
           </button>
@@ -1674,10 +1749,11 @@
       <div class="profile-body">
         <!-- Custom Photo Upload -->
         <div style="display:flex; gap:10px; margin-bottom:12px;">
-          <button class="btn-primary" id="upload-wallpaper-btn" style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px;">
+          <button class="btn-primary" id="upload-wallpaper-btn"
+            style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-              <circle cx="12" cy="13" r="4"/>
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+              <circle cx="12" cy="13" r="4" />
             </svg>
             <span>Upload from Phone</span>
           </button>
@@ -1687,17 +1763,22 @@
 
         <!-- Custom URL Input -->
         <div style="display:flex; gap:8px; margin-bottom:14px;">
-          <input type="text" id="custom-wallpaper-url" placeholder="Or paste image URL / Pinterest link..." style="flex:1; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:13px;" />
+          <input type="text" id="custom-wallpaper-url" placeholder="Or paste image URL / Pinterest link..."
+            style="flex:1; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--bg-input); color:var(--text); font-size:13px;" />
           <button class="btn-secondary" id="apply-wallpaper-url-btn">Apply</button>
         </div>
 
         <!-- Active Custom Preview Box -->
-        <div id="custom-wallpaper-preview-box" style="display:none; align-items:center; justify-content:space-between; padding:8px 12px; background:var(--bg-card); border-radius:10px; margin-bottom:12px; border:1px solid var(--border);">
+        <div id="custom-wallpaper-preview-box"
+          style="display:none; align-items:center; justify-content:space-between; padding:8px 12px; background:var(--bg-card); border-radius:10px; margin-bottom:12px; border:1px solid var(--border);">
           <div style="display:flex; align-items:center; gap:10px;">
-            <img id="custom-wallpaper-thumb" src="" style="width:40px; height:40px; border-radius:8px; object-fit:cover; border:1px solid var(--border);" alt="Custom Preview" />
+            <img id="custom-wallpaper-thumb" src=""
+              style="width:40px; height:40px; border-radius:8px; object-fit:cover; border:1px solid var(--border);"
+              alt="Custom Preview" />
             <span style="font-size:13px; font-weight:700;">Custom Photo Active</span>
           </div>
-          <button class="btn-secondary danger-text" id="remove-custom-wallpaper-btn" style="padding:4px 10px; font-size:12px;">Remove</button>
+          <button class="btn-secondary danger-text" id="remove-custom-wallpaper-btn"
+            style="padding:4px 10px; font-size:12px;">Remove</button>
         </div>
 
         <!-- Presets Grid -->
@@ -1710,22 +1791,26 @@
             <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
               <span>Darken / Dim</span><span id="wp-dim-val" style="font-weight:700;">35%</span>
             </div>
-            <input type="range" id="wp-dim-slider" min="0" max="85" value="35" style="width:100%; accent-color:var(--primary);" />
+            <input type="range" id="wp-dim-slider" min="0" max="85" value="35"
+              style="width:100%; accent-color:var(--primary);" />
           </div>
           <div class="adjust-control-row">
             <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
               <span>Background Blur</span><span id="wp-blur-val" style="font-weight:700;">0px</span>
             </div>
-            <input type="range" id="wp-blur-slider" min="0" max="25" value="0" style="width:100%; accent-color:var(--primary);" />
+            <input type="range" id="wp-blur-slider" min="0" max="25" value="0"
+              style="width:100%; accent-color:var(--primary);" />
           </div>
           <div class="adjust-control-row">
             <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
               <span>Zoom / Scale</span><span id="wp-scale-val" style="font-weight:700;">100%</span>
             </div>
-            <input type="range" id="wp-scale-slider" min="100" max="160" value="100" style="width:100%; accent-color:var(--primary);" />
+            <input type="range" id="wp-scale-slider" min="100" max="160" value="100"
+              style="width:100%; accent-color:var(--primary);" />
           </div>
           <div style="display:flex; justify-content:flex-end; margin-top:8px;">
-            <button class="btn-secondary" id="reset-adjust-btn" style="padding:4px 10px; font-size:11px;">Reset Sliders</button>
+            <button class="btn-secondary" id="reset-adjust-btn" style="padding:4px 10px; font-size:11px;">Reset
+              Sliders</button>
           </div>
         </div>
       </div>
@@ -1743,28 +1828,101 @@
   </div>
 
   <!-- TAPES COMMENTS OVERLAY (WAF Style Reels) -->
-  <div class="modal-overlay hidden" id="tapes-comments-overlay" onclick="if(event.target===this)TapesManager.closeComments()">
+  <div class="modal-overlay hidden" id="tapes-comments-overlay"
+    onclick="if(event.target===this)TapesManager.closeComments()">
     <div id="tapes-comments-content"></div>
   </div>
 
   <!-- TAPES SHARE OVERLAY -->
-  <div class="modal-overlay hidden" id="tapes-share-overlay" onclick="if(event.target===this)TapesManager.closeShareModal()">
+  <div class="modal-overlay hidden" id="tapes-share-overlay"
+    onclick="if(event.target===this)TapesManager.closeShareModal()">
     <div id="tapes-share-content"></div>
   </div>
 
   <!-- TAPES CREATE / UPLOAD OVERLAY -->
-  <div class="modal-overlay hidden" id="tapes-create-overlay" onclick="if(event.target===this)TapesManager.closeCreateTapeModal()">
+  <div class="modal-overlay hidden" id="tapes-create-overlay"
+    onclick="if(event.target===this)TapesManager.closeCreateTapeModal()">
     <div id="tapes-create-content"></div>
   </div>
 
   <!-- VERIFICATION MODAL OVERLAY (WAF Style 100% Free Blue Tick) -->
-  <div class="modal-overlay hidden" id="verification-modal-overlay" onclick="if(event.target===this)VerifiedBadgeManager.closeVerificationModal()">
+  <div class="modal-overlay hidden" id="verification-modal-overlay"
+    onclick="if(event.target===this)VerifiedBadgeManager.closeVerificationModal()">
     <div id="verification-modal-content"></div>
   </div>
 
   <!-- RADAR BROADCAST MODAL OVERLAY (WAF World As Family) -->
-  <div class="modal-overlay hidden" id="radar-broadcast-overlay" onclick="if(event.target===this)RadarManager.closeBroadcastModal()">
+  <div class="modal-overlay hidden" id="radar-broadcast-overlay"
+    onclick="if(event.target===this)RadarManager.closeBroadcastModal()">
     <div id="radar-broadcast-content"></div>
+  </div>
+
+  <!-- INSTAGRAM-STYLE PROFILE MODAL OVERLAY -->
+  <div class="modal-overlay hidden" id="insta-profile-overlay" onclick="if(event.target===this)ProfileManager.closeProfile()">
+    <div class="insta-profile-sheet" id="insta-profile-sheet">
+      <!-- Top Navigation Bar -->
+      <div class="insta-top-nav">
+        <div class="itn-left">
+          <button type="button" class="insta-nav-btn" id="ipn-back-btn" onclick="ProfileManager.closeProfile()" title="Back">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <div class="itn-username-wrap">
+            <span class="itn-lock-icon hidden" id="ipn-lock-badge">🔒</span>
+            <span class="itn-username" id="ipn-username">username</span>
+            <span class="itn-verified-badge" id="ipn-verified-badge"></span>
+            <svg class="itn-arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+        </div>
+        <div class="itn-right">
+          <button type="button" class="insta-nav-btn" id="ipn-create-btn" onclick="ProfileManager.openCreatePost()" title="Create Post">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+          </button>
+          <button type="button" class="insta-nav-btn" id="ipn-menu-btn" onclick="ProfileManager.openSettings()" title="Settings & Options">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Profile Scrollable Body -->
+      <div class="insta-profile-scroll-body" id="insta-profile-scroll-body">
+        <!-- Header / Bio / Stats (Rendered dynamically by ProfileManager) -->
+        <div id="insta-profile-header-container"></div>
+
+        <!-- Highlights Row -->
+        <div class="insta-highlights-rail" id="insta-highlights-rail"></div>
+
+        <!-- Content Navigation Tabs -->
+        <div class="insta-tabs-bar">
+          <button type="button" class="insta-tab active" id="iptab-posts" onclick="ProfileManager.switchTab('posts')" title="Posts">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>
+          </button>
+          <button type="button" class="insta-tab" id="iptab-reels" onclick="ProfileManager.switchTab('reels')" title="Reels">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="4"></rect><path d="M10 8l6 4-6 4V8z"></path></svg>
+          </button>
+          <button type="button" class="insta-tab" id="iptab-tagged" onclick="ProfileManager.switchTab('tagged')" title="Tagged">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </button>
+        </div>
+
+        <!-- 3-Column Posts / Reels Grid Container -->
+        <div class="insta-grid-container" id="insta-grid-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTAGRAM POST DETAIL VIEWER MODAL -->
+  <div class="modal-overlay hidden" id="insta-post-detail-overlay" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="insta-post-detail-sheet" id="insta-post-detail-content"></div>
+  </div>
+
+  <!-- INSTAGRAM CREATE POST MODAL -->
+  <div class="modal-overlay hidden" id="insta-create-post-overlay" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="insta-create-sheet" id="insta-create-post-content"></div>
+  </div>
+
+  <!-- INSTAGRAM EDIT PROFILE & PRIVACY MODAL -->
+  <div class="modal-overlay hidden" id="insta-edit-profile-overlay" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="insta-edit-sheet" id="insta-edit-profile-content"></div>
   </div>
 </body>
 

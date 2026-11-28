@@ -1838,7 +1838,31 @@ const ChatManager = (() => {
     }
 
     infoBtn.addEventListener('click', _openDetails);
-    if (peerClick) peerClick.addEventListener('click', _openDetails);
+    if (peerClick) {
+      peerClick.addEventListener('click', () => {
+        if (!activeConvId) return;
+        const conv = conversations.find(c => c.id === activeConvId);
+        if (conv && window.ProfileManager) {
+          window.ProfileManager.openUserProfile(conv.peerId || conv.id, conv);
+        } else {
+          _openDetails();
+        }
+      });
+    }
+
+    const viewProfBtn = document.getElementById('view-profile-item');
+    if (viewProfBtn) {
+      viewProfBtn.addEventListener('click', () => {
+        document.getElementById('chat-more-drop')?.classList.add('hidden');
+        if (!activeConvId) return;
+        const conv = conversations.find(c => c.id === activeConvId);
+        if (conv && window.ProfileManager) {
+          window.ProfileManager.openUserProfile(conv.peerId || conv.id, conv);
+        } else {
+          _openDetails();
+        }
+      });
+    }
     if (closeBtn) closeBtn.addEventListener('click', () => overlay.classList.add('hidden'));
 
     if (saveNickBtn) saveNickBtn.addEventListener('click', () => {
@@ -2159,7 +2183,15 @@ const ChatManager = (() => {
 
     if (!overlay) return;
 
-    if (openBtn) openBtn.addEventListener('click', () => overlay.classList.remove('hidden'));
+    if (openBtn) {
+      openBtn.addEventListener('click', () => {
+        if (window.ProfileManager) {
+          window.ProfileManager.openMyProfile();
+        } else {
+          overlay.classList.remove('hidden');
+        }
+      });
+    }
     if (closeBtn) closeBtn.addEventListener('click', () => overlay.classList.add('hidden'));
 
     if (themeBtn) {
