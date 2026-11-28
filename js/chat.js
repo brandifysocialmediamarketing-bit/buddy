@@ -632,6 +632,7 @@ const ChatManager = (() => {
       userMatches.forEach(u => {
         const uEl = document.createElement('div');
         uEl.className = 'search-user-item';
+        const isSelf = !!(currentUser && (u.id === currentUser.id || (u.username && (currentUser.username || '').replace(/^@/, '').toLowerCase() === (u.username || '').replace(/^@/, '').toLowerCase())));
         uEl.innerHTML = `
           <div class="sui-left">
             <div class="sui-avatar" style="background:${u.avatar_color || '#6366F1'};">
@@ -640,15 +641,15 @@ const ChatManager = (() => {
             <div class="sui-info">
               <div class="sui-name">
                 ${_esc(u.full_name || u.username)}
+                ${isSelf ? '<span style="font-size:11px; opacity:0.8; font-weight:normal; margin-left:4px;">(You)</span>' : ''}
                 ${u.is_verified ? '<span style="color:#0095f6; font-size:13px; margin-left:3px;">🛡️</span>' : ''}
               </div>
               <div class="sui-username">@${_esc((u.username || '').replace(/^@/, ''))}</div>
-              <div class="sui-bio">${_esc(u.bio || 'Verified Member')}</div>
+              <div class="sui-bio">${_esc(u.bio || (isSelf ? 'Your Account' : 'Verified Member'))}</div>
             </div>
           </div>
           <div class="sui-actions" style="display:flex; gap:6px; align-items:center;">
-            <button type="button" class="btn-primary sui-btn btn-sui-msg">Message 💌</button>
-            <button type="button" class="btn-secondary sui-btn btn-sui-prof" style="padding:6px 10px; font-size:11.5px; border-radius:8px;">Profile 👤</button>
+            ${isSelf ? '<button type="button" class="btn-primary sui-btn btn-sui-prof" style="padding:6px 12px; font-size:11.5px; border-radius:8px;">View Profile 👤</button>' : '<button type="button" class="btn-primary sui-btn btn-sui-msg">Message 💌</button><button type="button" class="btn-secondary sui-btn btn-sui-prof" style="padding:6px 10px; font-size:11.5px; border-radius:8px;">Profile 👤</button>'}
           </div>
         `;
 
@@ -668,7 +669,9 @@ const ChatManager = (() => {
         if (profBtn) {
           profBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (window.ProfileManager) {
+            if (isSelf) {
+              if (window.ProfileManager) window.ProfileManager.openMyProfile();
+            } else if (window.ProfileManager) {
               window.ProfileManager.openUserProfile(u.id, u);
             }
           });
@@ -679,6 +682,10 @@ const ChatManager = (() => {
           if (inp) inp.value = '';
           const storiesRail = document.getElementById('stories-rail-wrap');
           if (storiesRail) storiesRail.classList.remove('hidden');
+          if (isSelf) {
+            if (window.ProfileManager) window.ProfileManager.openMyProfile();
+            return;
+          }
           await _startRealChatWithUser(u);
         });
         list.appendChild(uEl);
