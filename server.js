@@ -99,7 +99,7 @@ function resolveImageUrl(rawUrl, callback, depth = 0) {
 }
 
 const isVercel = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
-const APP_VERSION = 'v226';
+const APP_VERSION = 'v223';
 const BUILD_TIMESTAMP = Date.now();
 
 // Live Reload Clients
@@ -612,101 +612,6 @@ function handleRequest(req, res) {
       version: APP_VERSION,
       timestamp: BUILD_TIMESTAMP
     }));
-  }
-
-  // ── REGISTERED USERS REGISTRY API (Cross-Device Search & Sync) ──
-  const USERS_REGISTRY_FILE = path.join(__dirname, 'data', 'registered-users.json');
-  function loadRegisteredUsers() {
-    try {
-      if (fs.existsSync(USERS_REGISTRY_FILE)) {
-        return JSON.parse(fs.readFileSync(USERS_REGISTRY_FILE, 'utf8') || '[]');
-      }
-    } catch (e) {}
-    return [];
-  }
-
-  function saveRegisteredUsers(users) {
-    try {
-      const dir = path.dirname(USERS_REGISTRY_FILE);
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-      fs.writeFileSync(USERS_REGISTRY_FILE, JSON.stringify(users, null, 2), 'utf8');
-    } catch (e) {}
-  }
-
-  // Search Registered Users API (GET /api/users/search?q=...)
-  if (reqPath === '/api/users/search') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    if (req.method === 'OPTIONS') {
-      res.writeHead(204);
-      return res.end();
-    }
-
-    const q = (parsedUrl.searchParams.get('q') || '').replace(/^@/, '').trim().toLowerCase();
-    const allUsers = loadRegisteredUsers();
-    let matches = allUsers;
-
-    if (q) {
-      matches = allUsers.filter(u => {
-        const name = (u.name || u.full_name || '').toLowerCase();
-        const uname = (u.username || '').replace(/^@/, '').toLowerCase();
-        const email = (u.email || '').toLowerCase();
-        return name.includes(q) || uname.includes(q) || email.includes(q);
-      });
-    }
-
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ success: true, users: matches }));
-  }
-
-  // Register / Sync User Profile API (POST /api/users/register)
-  if (reqPath === '/api/users/register') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    if (req.method === 'OPTIONS') {
-      res.writeHead(204);
-      return res.end();
-    }
-
-    getRequestBody(req, (err, payload) => {
-      if (err || !payload || (!payload.username && !payload.name)) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, error: 'Invalid user payload' }));
-      }
-
-      const allUsers = loadRegisteredUsers();
-      const cleanUname = (payload.username || '').replace(/^@/, '').toLowerCase();
-      const existingIdx = allUsers.findIndex(u => 
-        (payload.id && u.id === payload.id) ||
-        (cleanUname && (u.username || '').replace(/^@/, '').toLowerCase() === cleanUname) ||
-        (payload.email && u.email && u.email.toLowerCase() === payload.email.toLowerCase())
-      );
-
-      const userRecord = {
-        id: payload.id || 'usr_' + Date.now().toString(36),
-        name: payload.name || payload.full_name || 'Buddy User',
-        username: cleanUname,
-        email: payload.email || '',
-        avatar_color: payload.avatar_color || payload.color || '#6366F1',
-        bio: payload.bio || 'Verified Member ✨',
-        status: 'Active now',
-        is_verified: payload.is_verified || false,
-        created_at: payload.created_at || new Date().toISOString()
-      };
-
-      if (existingIdx >= 0) {
-        allUsers[existingIdx] = { ...allUsers[existingIdx], ...userRecord };
-      } else {
-        allUsers.push(userRecord);
-      }
-
-      saveRegisteredUsers(allUsers);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ success: true, user: userRecord }));
-    });
-    return;
   }
 
   // 1. Resolve Image API endpoint (Resolves pin.it, Pinterest, Unsplash, Google URLs)

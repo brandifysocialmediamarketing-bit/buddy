@@ -617,47 +617,16 @@ const ChatManager = (() => {
               ${_initials(u.full_name || u.username)}
             </div>
             <div class="sui-info">
-              <div class="sui-name">
-                ${_esc(u.full_name || u.username)}
-                ${u.is_verified ? '<span style="color:#0095f6; font-size:13px; margin-left:3px;">🛡️</span>' : ''}
-              </div>
+              <div class="sui-name">${_esc(u.full_name || u.username)}</div>
               <div class="sui-username">@${_esc((u.username || '').replace(/^@/, ''))}</div>
               <div class="sui-bio">${_esc(u.bio || 'Verified Member')}</div>
             </div>
           </div>
-          <div class="sui-actions" style="display:flex; gap:6px; align-items:center;">
-            <button type="button" class="btn-primary sui-btn btn-sui-msg">Message 💌</button>
-            <button type="button" class="btn-secondary sui-btn btn-sui-prof" style="padding:6px 10px; font-size:11.5px; border-radius:8px;">Profile 👤</button>
-          </div>
+          <button type="button" class="btn-primary sui-btn">Message 💌</button>
         `;
-
-        const msgBtn = uEl.querySelector('.btn-sui-msg');
-        if (msgBtn) {
-          msgBtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            const inp = document.getElementById('chat-search-input');
-            if (inp) inp.value = '';
-            const storiesRail = document.getElementById('stories-rail-wrap');
-            if (storiesRail) storiesRail.classList.remove('hidden');
-            await _startRealChatWithUser(u);
-          });
-        }
-
-        const profBtn = uEl.querySelector('.btn-sui-prof');
-        if (profBtn) {
-          profBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (window.ProfileManager) {
-              window.ProfileManager.openUserProfile(u.id, u);
-            }
-          });
-        }
-
         uEl.addEventListener('click', async () => {
           const inp = document.getElementById('chat-search-input');
           if (inp) inp.value = '';
-          const storiesRail = document.getElementById('stories-rail-wrap');
-          if (storiesRail) storiesRail.classList.remove('hidden');
           await _startRealChatWithUser(u);
         });
         list.appendChild(uEl);
@@ -1869,31 +1838,7 @@ const ChatManager = (() => {
     }
 
     infoBtn.addEventListener('click', _openDetails);
-    if (peerClick) {
-      peerClick.addEventListener('click', () => {
-        if (!activeConvId) return;
-        const conv = conversations.find(c => c.id === activeConvId);
-        if (conv && window.ProfileManager) {
-          window.ProfileManager.openUserProfile(conv.peerId || conv.id, conv);
-        } else {
-          _openDetails();
-        }
-      });
-    }
-
-    const viewProfBtn = document.getElementById('view-profile-item');
-    if (viewProfBtn) {
-      viewProfBtn.addEventListener('click', () => {
-        document.getElementById('chat-more-drop')?.classList.add('hidden');
-        if (!activeConvId) return;
-        const conv = conversations.find(c => c.id === activeConvId);
-        if (conv && window.ProfileManager) {
-          window.ProfileManager.openUserProfile(conv.peerId || conv.id, conv);
-        } else {
-          _openDetails();
-        }
-      });
-    }
+    if (peerClick) peerClick.addEventListener('click', _openDetails);
     if (closeBtn) closeBtn.addEventListener('click', () => overlay.classList.add('hidden'));
 
     if (saveNickBtn) saveNickBtn.addEventListener('click', () => {
@@ -2021,16 +1966,10 @@ const ChatManager = (() => {
 
     inp.addEventListener('input', () => {
       clearTimeout(debounceTimer);
-      const q = inp.value.trim();
-      const storiesRail = document.getElementById('stories-rail-wrap');
-      if (storiesRail) {
-        if (q.length > 0) storiesRail.classList.add('hidden');
-        else storiesRail.classList.remove('hidden');
-      }
-
       debounceTimer = setTimeout(async () => {
+        const q = inp.value.trim();
         await _renderChatList(q);
-      }, 120);
+      }, 250);
     });
   }
 
@@ -2220,15 +2159,7 @@ const ChatManager = (() => {
 
     if (!overlay) return;
 
-    if (openBtn) {
-      openBtn.addEventListener('click', () => {
-        if (window.ProfileManager) {
-          window.ProfileManager.openMyProfile();
-        } else {
-          overlay.classList.remove('hidden');
-        }
-      });
-    }
+    if (openBtn) openBtn.addEventListener('click', () => overlay.classList.remove('hidden'));
     if (closeBtn) closeBtn.addEventListener('click', () => overlay.classList.add('hidden'));
 
     if (themeBtn) {
