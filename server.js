@@ -659,24 +659,6 @@ function handleRequest(req, res) {
   }
 
   // ── REGISTERED USERS REGISTRY API (Cross-Device Search & Sync) ──
-  const USERS_REGISTRY_FILE = path.join(__dirname, 'data', 'registered-users.json');
-  function loadRegisteredUsers() {
-    try {
-      if (fs.existsSync(USERS_REGISTRY_FILE)) {
-        return JSON.parse(fs.readFileSync(USERS_REGISTRY_FILE, 'utf8') || '[]');
-      }
-    } catch (e) {}
-    return [];
-  }
-
-  function saveRegisteredUsers(users) {
-    try {
-      const dir = path.dirname(USERS_REGISTRY_FILE);
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-      fs.writeFileSync(USERS_REGISTRY_FILE, JSON.stringify(users, null, 2), 'utf8');
-    } catch (e) {}
-  }
-
   // Search Registered Users API (GET /api/users/search?q=...)
   if (reqPath === '/api/users/search') {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -754,27 +736,6 @@ function handleRequest(req, res) {
   }
 
   // ── USER POSTS API (GET/POST/DELETE /api/posts) ──
-  const POSTS_FILE = isVercel
-    ? path.join('/tmp', 'user_posts.json')
-    : path.join(ROOT, 'data', 'user_posts.json');
-
-  function loadUserPosts() {
-    try {
-      if (fs.existsSync(POSTS_FILE)) {
-        return JSON.parse(fs.readFileSync(POSTS_FILE, 'utf8'));
-      }
-    } catch(e) {}
-    return [];
-  }
-
-  function saveUserPosts(posts) {
-    try {
-      const dir = path.dirname(POSTS_FILE);
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-      fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2), 'utf8');
-    } catch(e) {}
-  }
-
   if (reqPath === '/api/posts') {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
