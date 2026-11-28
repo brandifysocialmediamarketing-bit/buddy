@@ -208,6 +208,7 @@ const ChatManager = (() => {
         openChat(conversations[0].id);
       }
     } else {
+      _initConversations();
       _saveCachedConversations();
       _renderChatList();
     }
@@ -289,6 +290,10 @@ const ChatManager = (() => {
     }
     // Strict prune: Remove any fake friends from memory and cache
     conversations = conversations.filter(c => c.isAI || (!FAKE_BUDDY_IDS.has(c.id) && !FAKE_BUDDY_IDS.has(c.userId) && !FAKE_BUDDY_NAMES.has(c.name)));
+    // Always ensure BUDDY AI companion is at top
+    if (!conversations.some(c => c.id === 'buddy_ai' || c.isAI)) {
+      conversations.unshift(_getBuddyAIConv());
+    }
     _saveCachedConversations();
   }
 
@@ -478,6 +483,11 @@ const ChatManager = (() => {
     const list = document.getElementById('chat-list');
     if (!list) return;
     list.innerHTML = '';
+
+    // Guarantee BUDDY AI Companion is always present at top
+    if (!conversations.some(c => c.id === 'buddy_ai' || c.isAI)) {
+      conversations.unshift(_getBuddyAIConv());
+    }
 
     // Instagram-style Message Requests Banner
     const pendingRequests = (conversations || []).filter(c => c.isRequest && c.requestStatus !== 'accepted');
@@ -797,6 +807,7 @@ const ChatManager = (() => {
     _saveCachedConversations();
     _renderChatList();
     _renderMessages(conv);
+    _bindCalls();
     _closeAttachMenu();
     _closeEmojiPicker();
 
