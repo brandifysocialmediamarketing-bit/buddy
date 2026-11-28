@@ -24,21 +24,22 @@ const ActivityManager = (() => {
     isInitialized: false
   };
 
+  const FAKE_SENDER_IDS = new Set(['dev-kapoor', 'ananya-sharma', 'rohan-meera', 'creator-priya', 'aarav-patel', 'simran-kaur']);
+
   function _loadActivities() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_ACTIVITIES));
-        return [...INITIAL_ACTIVITIES];
-      }
+      if (!raw) return [];
       const list = JSON.parse(raw);
-      if (!Array.isArray(list) || list.length === 0) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_ACTIVITIES));
-        return [...INITIAL_ACTIVITIES];
+      if (!Array.isArray(list)) return [];
+      // Clean out any old fake/mock activities
+      const clean = list.filter(a => a && a.sender_id && !FAKE_SENDER_IDS.has(a.sender_id) && !FAKE_SENDER_IDS.has(a.id));
+      if (clean.length !== list.length) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
       }
-      return list;
+      return clean;
     } catch (e) {
-      return [...INITIAL_ACTIVITIES];
+      return [];
     }
   }
 
