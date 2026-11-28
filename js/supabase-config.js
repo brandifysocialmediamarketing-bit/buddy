@@ -178,6 +178,7 @@ const BuddySupabase = (() => {
 
   async function searchProfiles(query, excludeUserId) {
     const clean = (query || '').replace(/^@/, '').trim().toLowerCase();
+    const qNorm = clean.replace(/[@_\-\s\.]/g, '');
     if (!clean || clean.length < 1) {
       return [];
     }
@@ -228,7 +229,7 @@ const BuddySupabase = (() => {
     }
 
     // 3. Always merge with locally registered users
-    const storageKeys = ['buddy_registered_local_users_v2', 'buddy_registered_users_v1'];
+    const storageKeys = ['buddy_registered_local_users_v2', 'buddy_registered_users_v1', 'buddy-registered-users'];
     storageKeys.forEach(key => {
       try {
         const raw = localStorage.getItem(key);
@@ -238,7 +239,9 @@ const BuddySupabase = (() => {
             localList.forEach(u => {
               const uClean = (u.username || '').replace(/^@/, '').toLowerCase();
               const nClean = (u.name || u.full_name || '').toLowerCase();
-              if (uClean.includes(clean) || nClean.includes(clean)) {
+              const uNorm = uClean.replace(/[@_\-\s\.]/g, '');
+              const nNorm = nClean.replace(/[@_\-\s\.]/g, '');
+              if (uClean.includes(clean) || nClean.includes(clean) || (qNorm && (uNorm.includes(qNorm) || nNorm.includes(qNorm)))) {
                 if (!results.some(r => r.id === u.id || (r.username && u.username && r.username.replace(/^@/,'').toLowerCase() === uClean))) {
                   results.push({
                     id: u.id,
@@ -255,10 +258,6 @@ const BuddySupabase = (() => {
         }
       } catch(e) {}
     });
-
-    if (excludeUserId) {
-      results = results.filter(p => p.id !== excludeUserId);
-    }
 
     return results;
   }
