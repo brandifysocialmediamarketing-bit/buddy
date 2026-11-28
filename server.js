@@ -248,6 +248,50 @@ function saveScratchCards(cards) {
   } catch (e) {}
 }
 
+// ── REGISTERED USERS REGISTRY API (Cross-Device Search & Sync) ──
+const USERS_REGISTRY_FILE = isVercel
+  ? path.join('/tmp', 'registered-users.json')
+  : path.join(ROOT, 'data', 'registered-users.json');
+
+function loadRegisteredUsers() {
+  try {
+    if (fs.existsSync(USERS_REGISTRY_FILE)) {
+      return JSON.parse(fs.readFileSync(USERS_REGISTRY_FILE, 'utf8') || '[]');
+    }
+  } catch (e) {}
+  return [];
+}
+
+function saveRegisteredUsers(users) {
+  try {
+    const dir = path.dirname(USERS_REGISTRY_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(USERS_REGISTRY_FILE, JSON.stringify(users, null, 2), 'utf8');
+  } catch (e) {}
+}
+
+// ── USER POSTS API (GET/POST/DELETE /api/posts) ──
+const POSTS_FILE = isVercel
+  ? path.join('/tmp', 'user_posts.json')
+  : path.join(ROOT, 'data', 'user_posts.json');
+
+function loadUserPosts() {
+  try {
+    if (fs.existsSync(POSTS_FILE)) {
+      return JSON.parse(fs.readFileSync(POSTS_FILE, 'utf8'));
+    }
+  } catch(e) {}
+  return [];
+}
+
+function saveUserPosts(posts) {
+  try {
+    const dir = path.dirname(POSTS_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2), 'utf8');
+  } catch(e) {}
+}
+
 // Handler for /api/games/quiz
 function handleGamesApi(req, res, reqPath, parsedUrl) {
   res.setHeader('Access-Control-Allow-Origin', '*');
