@@ -2133,7 +2133,7 @@ const WebRTCCall = (() => {
     const peerId = conv.userId || conv.id;
 
     if (peerId === 'buddy_ai') {
-      _startAICall(displayName, avatar);
+      _startAICall(displayName, avatar, type);
       return;
     }
 
@@ -2331,29 +2331,38 @@ const WebRTCCall = (() => {
   }
 
   // ── BUDDY AI Companion Call ──
-  function _startAICall(name, color) {
+  function _startAICall(name, color, callType = 'audio') {
+    const isVideo = (callType === 'video');
     activeCall = {
       state: 'connected',
       convId: 'buddy_ai',
       peerId: 'buddy_ai',
-      peerName: name,
+      peerName: name || 'BUDDY AI',
       peerAvatar: '✨',
-      type: 'audio'
+      type: callType
     };
 
-    _showCallModal('outgoing', name, '✨', 'Connecting to BUDDY AI...', 'audio');
-    _playCallTone('connected');
-
-    setTimeout(() => {
+    if (isVideo) {
+      _showVideoRoom(name || 'BUDDY AI', '✨');
       _startConnectedTimer();
-      if (window.speechSynthesis) {
+      _playCallTone('connected');
+    } else {
+      _showCallModal('outgoing', name || 'BUDDY AI', '✨', 'Connecting to BUDDY AI...', 'audio');
+      _playCallTone('connected');
+      setTimeout(() => {
+        _startConnectedTimer();
+      }, 1200);
+    }
+
+    if (window.speechSynthesis) {
+      try {
         window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance("Hello! I am your BUDDY AI voice companion. You can talk to me anytime!");
+        const utter = new SpeechSynthesisUtterance("Hello! I am your BUDDY AI companion. You can talk to me anytime!");
         utter.rate = 1.0;
         utter.pitch = 1.05;
         window.speechSynthesis.speak(utter);
-      }
-    }, 1500);
+      } catch (e) {}
+    }
   }
 
   // ── UI Modal Rendering & Controls ──
