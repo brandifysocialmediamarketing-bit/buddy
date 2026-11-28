@@ -2183,7 +2183,15 @@ const ChatManager = (() => {
 
     if (!overlay) return;
 
-    if (openBtn) openBtn.addEventListener('click', () => overlay.classList.remove('hidden'));
+    if (openBtn) {
+      openBtn.addEventListener('click', () => {
+        if (window.ProfileManager) {
+          window.ProfileManager.openMyProfile();
+        } else {
+          overlay.classList.remove('hidden');
+        }
+      });
+    }
     if (closeBtn) closeBtn.addEventListener('click', () => overlay.classList.add('hidden'));
 
     if (themeBtn) {
