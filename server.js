@@ -709,6 +709,78 @@ function handleRequest(req, res) {
     return;
   }
 
+  // ── USER POSTS API (GET/POST/DELETE /api/posts) ──
+  const POSTS_FILE = isVercel
+    ? path.join('/tmp', 'user_posts.json')
+    : path.join(ROOT, 'data', 'user_posts.json');
+
+  function loadUserPosts() {
+    try {
+      if (fs.existsSync(POSTS_FILE)) {
+        return JSON.parse(fs.readFileSync(POSTS_FILE, 'utf8'));
+      }
+    } catch(e) {}
+    return [];
+  }
+
+  function saveUserPosts(posts) {
+    try {
+      const dir = path.dirname(POSTS_FILE);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2), 'utf8');
+    } catch(e) {}
+  }
+
+  if (reqPath === '/api/posts') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') {
+      res.writeHead(204);
+      return res.end();
+    }
+
+    if (req.method === 'GET') {
+      const targetUserId = parsedUrl.searchParams.get('userId');
+      const allPosts = loadUserPosts();
+      let filtered = allPosts;
+      if (targetUserId) {
+        filtered = allPosts.filter(p => p.user_id === targetUserId);
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: true, posts: filtered }));
+    }
+
+    if (req.method === 'POST') {
+      getRequestBody(req, (err, payload) => {
+        if (err || !payload || !payload.media_url) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Invalid post data' }));
+        }
+        const allPosts = loadUserPosts();
+        allPosts.unshift(payload);
+        if (allPosts.length > 200) allPosts.length = 200;
+        saveUserPosts(allPosts);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: true, post: payload }));
+      });
+      return;
+    }
+
+    if (req.method === 'DELETE') {
+      const postId = parsedUrl.searchParams.get('id');
+      if (!postId) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: 'Missing post id' }));
+      }
+      let allPosts = loadUserPosts();
+      allPosts = allPosts.filter(p => p.id !== postId);
+      saveUserPosts(allPosts);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: true }));
+    }
+  }
+
   // 1. Resolve Image API endpoint (Resolves pin.it, Pinterest, Unsplash, Google URLs)
   if (reqPath === '/api/resolve-image') {
     const targetUrl = parsedUrl.searchParams.get('url');
